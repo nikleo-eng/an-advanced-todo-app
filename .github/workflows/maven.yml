@@ -8,7 +8,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      workdir: .
+      workdir: ..
 
     name: Build on Linux
     steps:
