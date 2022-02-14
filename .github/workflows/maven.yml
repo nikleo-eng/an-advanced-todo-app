@@ -15,11 +15,10 @@ jobs:
     - uses: actions/checkout@v2
       with:
         fetch-depth: 0
-    - name: Set up JDK 8
+    - name: Set up JDK 11
       uses: actions/setup-java@v1
       with:
-        java-version: 8
-        java-package: jdk+fx
+        java-version: 11
     - name: Cache Maven packages
       uses: actions/cache@v2
       with:
@@ -28,10 +27,16 @@ jobs:
           ~/.sonar/cache
         key: ${{ runner.os }}-m2-${{ hashFiles('pom.xml', '**/maven.yml') }}
         restore-keys: ${{ runner.os }}-m2-
-    - name: Build with Maven
+    - name: Build with Maven and SonarCloud
       run: >
-        xvfb-run mvn verify -P jacoco,mutation-testing
+        xvfb-run mvn verify -P jacoco,mutation-testing sonar:sonar
+        -Dsonar.organization=nikleo-eng-github
+        -Dsonar.host.url=https://sonarcloud.io
+        -Dsonar.projectKey=nikleo-eng_an-advanced-todo-app
       working-directory: ${{ env.workdir }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
     - name: Generate JUnit-Jacoco Reports
       run:  >
         xvfb-run mvn surefire-report:report-only site:site
@@ -51,17 +56,3 @@ jobs:
       with:
         name: surefire-report
         path: '**/target/site'
-    - name: Set up JDK 11 for SonarQube Analysis
-      uses: actions/setup-java@v1
-      with:
-        java-version: 11
-    - name: Launch SonarQube Analysis 
-      run: >
-        xvfb-run mvn sonar:sonar
-        -Dsonar.organization=nikleo-eng-github
-        -Dsonar.host.url=https://sonarcloud.io
-        -Dsonar.projectKey=nikleo-eng_an-advanced-todo-app
-      working-directory: ${{ env.workdir }}
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

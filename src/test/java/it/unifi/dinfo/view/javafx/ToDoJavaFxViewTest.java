@@ -3,15 +3,15 @@ package it.unifi.dinfo.view.javafx;
 import static it.unifi.dinfo.view.javafx.ToDoJavaFxView.*;
 import static org.testfx.api.FxAssert.*;
 import static org.testfx.matcher.base.NodeMatchers.*;
+import static org.testfx.matcher.control.LabeledMatchers.*;
 
 import org.junit.Test;
 import org.testfx.framework.junit.ApplicationTest;
 
-import it.unifi.dinfo.view.javafx.ToDoJavaFxView;
 import javafx.stage.Stage;
 
 public class ToDoJavaFxViewTest extends ApplicationTest {
-
+	
 	@Override
 	public void start(Stage stage) throws Exception {
 		new ToDoJavaFxView().start(stage);
