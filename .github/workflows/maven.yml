@@ -2,6 +2,8 @@ name: Java CI with Maven in Linux
 
 on:
   push:
+    branches: 
+    - master
   pull_request:
 
 jobs:
@@ -38,7 +40,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
     - name: Generate JUnit-Jacoco Reports
-      run:  >
+      run: >
         xvfb-run mvn surefire-report:report-only site:site
         -DgenerateReports=false
       working-directory: ${{ env.workdir }}
