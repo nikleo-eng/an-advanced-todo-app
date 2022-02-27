@@ -8,6 +8,8 @@ public interface ListRepository {
 
 	Set<List> findAllByUserId(Long userId);
 	
+	List findByNameAndUserId(String name, Long userId);
+	
 	List create(List list);
 	
 	List save(List list);

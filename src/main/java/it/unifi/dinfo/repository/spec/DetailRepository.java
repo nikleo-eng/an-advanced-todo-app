@@ -8,6 +8,8 @@ public interface DetailRepository {
 
 	Set<Detail> findAllByListId(Long listId);
 	
+	Detail findByTodoAndListId(String todo, Long listId);
+	
 	Detail create(Detail detail);
 	
 	Detail save(Detail detail);
