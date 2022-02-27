@@ -16,7 +16,11 @@
 		
 		<sonar.coverage.exclusions>
 			**/it/unifi/dinfo/app/main/*.*,
-			**/it/unifi/dinfo/model/*.*
+			**/it/unifi/dinfo/model/*.*,
+			**/it/unifi/dinfo/view/*.*,
+			**/it/unifi/dinfo/view/spec/*.*,
+			**/it/unifi/dinfo/repository/*.*,
+			**/it/unifi/dinfo/repository/spec/*.*
 		</sonar.coverage.exclusions>
 		<sonar.junit.reportPaths>
 			${project.build.directory}/surefire-reports,
@@ -189,6 +193,10 @@
 						<excludes>
 							<exclude>it/unifi/dinfo/app/main/*.*</exclude>
 							<exclude>it/unifi/dinfo/model/*.*</exclude>
+							<exclude>it/unifi/dinfo/view/*.*</exclude>
+							<exclude>it/unifi/dinfo/view/spec/*.*</exclude>
+							<exclude>it/unifi/dinfo/repository/*.*</exclude>
+							<exclude>it/unifi/dinfo/repository/spec/*.*</exclude>
 						</excludes>
 					</configuration>
 					<executions>
