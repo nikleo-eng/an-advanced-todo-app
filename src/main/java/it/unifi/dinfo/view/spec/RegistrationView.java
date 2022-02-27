@@ -16,7 +16,7 @@ public interface RegistrationView {
 		public String getValue() {
 			return value;
 		}
-	};
+	}
 	
 	void renderError(String error);
 	

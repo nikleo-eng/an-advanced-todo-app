@@ -16,7 +16,7 @@ public interface LoginView {
 		public String getValue() {
 			return value;
 		}
-	};
+	}
 	
 	void renderError(String error);
 	
