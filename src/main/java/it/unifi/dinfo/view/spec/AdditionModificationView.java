@@ -1,21 +1,22 @@
 package it.unifi.dinfo.view.spec;
 
-import it.unifi.dinfo.model.Detail;
-import it.unifi.dinfo.model.List;
-import it.unifi.dinfo.model.User;
-import it.unifi.dinfo.view.spec.base.BaseView;
+public interface AdditionModificationView {
+	
+	static enum ERRORS {
+		FIELD_EMPTY("The field is empty"),
+		LIST_ALREADY_FOUND("Already exists a list with same name"),
+		DETAIL_ALREADY_FOUND("Already exists a detail in the selected list with same todo");
+		
+		private String value;
 
-public interface AdditionModificationView extends BaseView {
-
-	void addList(String name, User user);
-	
-	void addDetail(String todo, List list);
-	
-	void saveList(List list);
-	
-	void saveDetail(Detail detail);
-	
-	void cancelAdditionModification();
+		ERRORS(String value) {
+			this.value = value;
+		}
+		
+		public String getValue() {
+			return value;
+		}
+	};
 	
 	void renderError(String error);
 	

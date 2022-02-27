@@ -1,11 +1,22 @@
 package it.unifi.dinfo.view.spec;
 
-import it.unifi.dinfo.view.spec.base.BaseView;
+public interface RegistrationView {
 
-public interface RegistrationView extends BaseView {
+	static enum ERRORS {
+		FIELD_EMPTY("A field in the form is empty"),
+		PASSWORDS_NOT_MACHING("The passwords entered do not match"),
+		USER_ALREADY_FOUND("Already exists a user with same email");
+		
+		private String value;
 
-	void register(String name, String surname, String email, String password, 
-			String repeatedPassword);
+		ERRORS(String value) {
+			this.value = value;
+		}
+		
+		public String getValue() {
+			return value;
+		}
+	};
 	
 	void renderError(String error);
 	

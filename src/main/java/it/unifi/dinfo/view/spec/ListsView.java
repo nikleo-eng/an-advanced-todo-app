@@ -3,14 +3,17 @@ package it.unifi.dinfo.view.spec;
 import java.util.Set;
 
 import it.unifi.dinfo.model.List;
-import it.unifi.dinfo.view.spec.base.BaseView;
 
-public interface ListsView extends BaseView {
+public interface ListsView {
 
-	void showAllLists(Long userId);
+	void showAll(Set<List> lists);
 	
-	void updateAllLists(Set<List> lists);
+	void updateAll(Set<List> lists);
 	
-	void deleteList(List list);
+	void delete(List list);
+	
+	void save(List list);
+	
+	void add(List list);
 	
 }
