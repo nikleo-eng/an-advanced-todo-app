@@ -1,10 +1,7 @@
 package it.unifi.dinfo.model;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,8 +9,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -36,10 +31,6 @@ public class List implements Serializable {
 	@JoinColumn(nullable = false, name = "user_id", referencedColumnName = "id")
 	private User user;
 	
-	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "list")
-	@OrderBy("id")
-	private Set<Detail> details;
-	
 	public List() {
 		super();
 	}
@@ -48,7 +39,6 @@ public class List implements Serializable {
 		this();
 		this.name = name;
 		this.user = user;
-		this.user.getLists().add(this);
 	}
 
 	public Long getId() {
@@ -65,22 +55,6 @@ public class List implements Serializable {
 	
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public Set<Detail> getDetails() {
-		if (details == null) {
-			details = new HashSet<>();
-		}
-		
-		return details;
-	}
-
-	public void setDetails(Set<Detail> details) {
-		if (details == null) {
-			details = new HashSet<>();
-		}
-		
-		this.details = details;
 	}
 
 	public User getUser() {

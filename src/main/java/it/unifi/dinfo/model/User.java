@@ -1,17 +1,12 @@
 package it.unifi.dinfo.model;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -38,10 +33,6 @@ public class User implements Serializable {
 	
 	@Column(name = "password", nullable = false)
 	private String password;
-	
-	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user")
-	@OrderBy("id")
-	private Set<List> lists;
 	
 	public User() {
 		super();
@@ -93,22 +84,6 @@ public class User implements Serializable {
 	
 	public void setPassword(String password) {
 		this.password = password;
-	}
-
-	public Set<List> getLists() {
-		if (lists == null) {
-			lists = new HashSet<>();
-		}
-		
-		return lists;
-	}
-
-	public void setLists(Set<List> lists) {
-		if (lists == null) {
-			lists = new HashSet<>();
-		}
-		
-		this.lists = lists;
 	}
 
 	@Override

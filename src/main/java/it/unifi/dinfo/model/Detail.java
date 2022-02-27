@@ -43,7 +43,6 @@ public class Detail implements Serializable {
 		this.todo = todo;
 		this.done = Boolean.FALSE;
 		this.list = list;
-		this.list.getDetails().add(this);
 	}
 
 	public Long getId() {
