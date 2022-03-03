@@ -229,7 +229,7 @@
 												<counter>LINE</counter>
 												<value>COVEREDRATIO</value>
 												<!-- Bring back to 1.00 when project is completed -->
-												<minimum>0.80</minimum>
+												<minimum>0.58</minimum>
 											</limit>
 										</limits>
 									</rule>
