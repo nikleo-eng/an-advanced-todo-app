@@ -32,7 +32,7 @@ public class DetailsControllerTest {
 	private DetailsController detailsController;
 
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() {
 		MockitoAnnotations.openMocks(this);
 		detailsController = new DetailsController(toDoView, toDoRepository);
 	}

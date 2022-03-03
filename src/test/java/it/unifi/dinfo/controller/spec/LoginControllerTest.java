@@ -28,7 +28,7 @@ public class LoginControllerTest {
 	private LoginController loginController;
 
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() {
 		MockitoAnnotations.openMocks(this);
 		loginController = new LoginController(toDoView, toDoRepository);
 	}

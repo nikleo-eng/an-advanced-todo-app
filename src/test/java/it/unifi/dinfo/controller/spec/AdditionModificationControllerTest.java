@@ -33,7 +33,7 @@ public class AdditionModificationControllerTest {
 	private AdditionModificationController additionModificationController;
 
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() {
 		MockitoAnnotations.openMocks(this);
 		additionModificationController = new AdditionModificationController(toDoView, toDoRepository);
 	}

@@ -30,7 +30,7 @@ public class ListsControllerTest {
 	private ListsController listsController;
 
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() {
 		MockitoAnnotations.openMocks(this);
 		listsController = new ListsController(toDoView, toDoRepository);
 	}

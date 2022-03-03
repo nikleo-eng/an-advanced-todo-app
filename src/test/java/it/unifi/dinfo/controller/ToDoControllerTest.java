@@ -38,7 +38,7 @@ public class ToDoControllerTest {
 	private ToDoController toDoController;
 	
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() {
 		MockitoAnnotations.openMocks(this);
 		toDoController = new ToDoController(loginController, registrationController, listsController, 
 				detailsController, additionModificationController);

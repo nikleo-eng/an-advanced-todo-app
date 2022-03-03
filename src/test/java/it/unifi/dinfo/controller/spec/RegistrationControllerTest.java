@@ -30,7 +30,7 @@ public class RegistrationControllerTest {
 	private RegistrationController registrationController;
 
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() {
 		MockitoAnnotations.openMocks(this);
 		registrationController = new RegistrationController(toDoView, toDoRepository);
 	}
