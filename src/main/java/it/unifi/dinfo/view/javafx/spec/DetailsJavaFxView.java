@@ -153,14 +153,14 @@ public class DetailsJavaFxView extends BaseJavaFxView implements DetailsView {
 
 	@Override
 	public VBox createGUI(double width, double height) {
-		VBox vBox = new VBox();
+		var vBox = new VBox();
 		vBox.setPrefSize(width, height);
 		vBox.setStyle(ToDoJavaFxView.BORDER_STYLE);
 		
-		HBox titleHBox = new HBox();
+		var titleHBox = new HBox();
 		titleHBox.setPrefSize(vBox.getPrefWidth(), ToDoJavaFxView.HEADER_FOOTER_HEIGHT);
 		titleHBox.setAlignment(Pos.CENTER);
-		Text titleText = new Text("Details Area");
+		var titleText = new Text("Details Area");
 		titleText.setStyle(ToDoJavaFxView.BOLD_STYLE);
 		titleHBox.getChildren().add(titleText);
 		
@@ -169,9 +169,9 @@ public class DetailsJavaFxView extends BaseJavaFxView implements DetailsView {
 		listView.setId(LISTVIEW_ID);
 		listView.setPrefSize(vBox.getPrefWidth(), vBox.getPrefHeight() 
 				- (2 * ToDoJavaFxView.HEADER_FOOTER_HEIGHT));
-		listView.setCellFactory(call -> { return new DetailFormatCell(); });
+		listView.setCellFactory(call -> new DetailFormatCell());
 
-		HBox buttonHBox = new HBox();
+		var buttonHBox = new HBox();
 		buttonHBox.setPrefSize(vBox.getPrefWidth(), ToDoJavaFxView.HEADER_FOOTER_HEIGHT);
 		buttonHBox.setAlignment(Pos.CENTER);
 		addButton = new Button(ADD_BUTTON_TEXT);
@@ -207,43 +207,41 @@ public class DetailsJavaFxView extends BaseJavaFxView implements DetailsView {
 				setText(null);
 				setGraphic(null);
 			} else {
-				setId(getRowId(item.getTodo()));
-				
-				CheckBox checkBox = new CheckBox();
+				var checkBox = new CheckBox();
 				checkBox.setId(getRowCheckBoxId(item.getTodo()));
 				checkBox.setSelected(item.getDone());
 				checkBox.setOnAction(ev -> getToDoController().modifyDoneDetail(
 						((CheckBox) ev.getSource()).isSelected(), item));
 				
-				Label text = new Label(item.getTodo());
+				var text = new Label(item.getTodo());
 				text.setId(getRowLabelId(item.getTodo()));
 				text.setDisable(item.getDone());
 				text.setWrapText(true);
-				HBox textHBox = new HBox();
+				var textHBox = new HBox();
 				textHBox.setMinHeight(50);
 				textHBox.getChildren().addAll(checkBox, text);
 				textHBox.setAlignment(Pos.CENTER_LEFT);
 				textHBox.setSpacing(10);
 
-				Button modifyButton = new Button();
+				var modifyButton = new Button();
 				modifyButton.setId(getRowModifyButtonId(item.getTodo()));
-				SVGPath modifySvgPath = new SVGPath();
+				var modifySvgPath = new SVGPath();
 				modifySvgPath.setContent(ToDoJavaFxView.SVG_CONTENT_MODIFY_ICON);
 				modifyButton.setGraphic(modifySvgPath);
 				modifyButton.setAlignment(Pos.CENTER);
 				modifyButton.setPrefWidth(ToDoJavaFxView.BUTTON_ICON_WIDTH);
 				modifyButton.setOnAction(ev -> clickModifyButton());
 				
-				Button deleteButton = new Button();
+				var deleteButton = new Button();
 				deleteButton.setId(getRowDeleteButtonId(item.getTodo()));
-				SVGPath deleteSvgPath = new SVGPath();
+				var deleteSvgPath = new SVGPath();
 				deleteSvgPath.setContent(ToDoJavaFxView.SVG_CONTENT_DELETE_ICON);
 				deleteButton.setGraphic(deleteSvgPath);
 				deleteButton.setAlignment(Pos.CENTER);
 				deleteButton.setPrefWidth(ToDoJavaFxView.BUTTON_ICON_WIDTH);
 				deleteButton.setOnAction(ev -> getToDoController().deleteDetail(item));
 				
-				HBox buttonsHBox = new HBox();
+				var buttonsHBox = new HBox();
 				buttonsHBox.setMinHeight(50);
 				buttonsHBox.getChildren().addAll(modifyButton, deleteButton);
 				buttonsHBox.setSpacing(10);
@@ -251,7 +249,7 @@ public class DetailsJavaFxView extends BaseJavaFxView implements DetailsView {
 						+ deleteButton.getPrefWidth() + buttonsHBox.getSpacing());
 				buttonsHBox.setAlignment(Pos.CENTER_LEFT);
 
-				GridPane gridPane = new GridPane();
+				var gridPane = new GridPane();
 				gridPane.setPrefWidth(getPrefWidth());
 				gridPane.setMinHeight(50);
 				gridPane.setHgap(20);
@@ -269,6 +267,8 @@ public class DetailsJavaFxView extends BaseJavaFxView implements DetailsView {
 
 				setText(null);
 				setGraphic(gridPane);
+				
+				setId(getRowId(item.getTodo()));
 			}
 		}
 

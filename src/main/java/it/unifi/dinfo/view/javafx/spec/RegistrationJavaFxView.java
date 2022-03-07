@@ -73,18 +73,18 @@ public class RegistrationJavaFxView extends BaseJavaFxView implements Registrati
 
 	@Override
 	public VBox createGUI(double width, double height) {
-		VBox vBox = new VBox();
+		var vBox = new VBox();
 		vBox.setPrefSize(width, height);
 		vBox.setAlignment(Pos.CENTER);
 		vBox.setStyle(ToDoJavaFxView.BORDER_STYLE);
 		
-		GridPane gridPane = new GridPane();
+		var gridPane = new GridPane();
 		gridPane.setPrefWidth(vBox.getPrefWidth());
 		gridPane.setAlignment(Pos.CENTER);
 		gridPane.setVgap(20);
 		gridPane.setHgap(10);
 		
-		Label nameLabel = new Label(NAME_LABEL_TEXT);
+		var nameLabel = new Label(NAME_LABEL_TEXT);
 		nameLabel.setId(NAME_LABEL_ID);
 		nameTextField = new TextField();
 		nameTextField.setId(NAME_TEXTFIELD_ID);
@@ -93,7 +93,7 @@ public class RegistrationJavaFxView extends BaseJavaFxView implements Registrati
 		gridPane.addColumn(0, nameLabel);
 		gridPane.addColumn(1, nameTextField);
 		
-		Label surnameLabel = new Label(SURNAME_LABEL_TEXT);
+		var surnameLabel = new Label(SURNAME_LABEL_TEXT);
 		surnameLabel.setId(SURNAME_LABEL_ID);
 		surnameTextField =  new TextField();
 		surnameTextField.setId(SURNAME_TEXTFIELD_ID);
@@ -102,7 +102,7 @@ public class RegistrationJavaFxView extends BaseJavaFxView implements Registrati
 		gridPane.addColumn(0, surnameLabel);
 		gridPane.addColumn(1, surnameTextField);
 		
-		Label emailLabel = new Label(EMAIL_LABEL_TEXT);
+		var emailLabel = new Label(EMAIL_LABEL_TEXT);
 		emailLabel.setId(EMAIL_LABEL_ID);
 		emailTextField =  new TextField();
 		emailTextField.setId(EMAIL_TEXTFIELD_ID);
@@ -111,7 +111,7 @@ public class RegistrationJavaFxView extends BaseJavaFxView implements Registrati
 		gridPane.addColumn(0, emailLabel);
 		gridPane.addColumn(1, emailTextField);
 		
-		Label passwordLabel = new Label(PASSWORD_LABEL_TEXT);
+		var passwordLabel = new Label(PASSWORD_LABEL_TEXT);
 		passwordLabel.setId(PASSWORD_LABEL_ID);
 		passwordField = new PasswordField();
 		passwordField.setId(PASSWORD_FIELD_ID);
@@ -120,7 +120,7 @@ public class RegistrationJavaFxView extends BaseJavaFxView implements Registrati
 		gridPane.addColumn(0, passwordLabel);
 		gridPane.addColumn(1, passwordField);
 		
-		Label confirmPasswordLabel = new Label(CONFIRM_PASSWORD_LABEL_TEXT);
+		var confirmPasswordLabel = new Label(CONFIRM_PASSWORD_LABEL_TEXT);
 		confirmPasswordLabel.setId(CONFIRM_PASSWORD_LABEL_ID);
 		confirmPasswordField = new PasswordField();
 		confirmPasswordField.setId(CONFIRM_PASSWORD_FIELD_ID);
@@ -129,9 +129,9 @@ public class RegistrationJavaFxView extends BaseJavaFxView implements Registrati
 		gridPane.addColumn(0, confirmPasswordLabel);
 		gridPane.addColumn(1, confirmPasswordField);
 		
-		HBox registerHBox = new HBox();
+		var registerHBox = new HBox();
 		registerHBox.setAlignment(Pos.CENTER);
-		Button registerButton = new Button(REGISTER_BUTTON_TEXT);
+		var registerButton = new Button(REGISTER_BUTTON_TEXT);
 		registerButton.setId(REGISTER_BUTTON_ID);
 		registerButton.setPrefWidth(ToDoJavaFxView.BUTTON_WIDTH);
 		registerButton.setOnAction(ev -> getToDoController().register(nameTextField.getText(), 
@@ -141,7 +141,7 @@ public class RegistrationJavaFxView extends BaseJavaFxView implements Registrati
 		gridPane.addColumn(0, registerHBox);
 		GridPane.setColumnSpan(registerHBox, 2);
 		
-		HBox registerErrorHBox = new HBox();
+		var registerErrorHBox = new HBox();
 		registerErrorHBox.setAlignment(Pos.CENTER);
 		errorText = new Text("");
 		errorText.setId(ERROR_TEXT_ID);

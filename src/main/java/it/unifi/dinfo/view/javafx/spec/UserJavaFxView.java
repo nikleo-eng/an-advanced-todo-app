@@ -86,8 +86,8 @@ public class UserJavaFxView extends BaseJavaFxView implements UserView {
 	
 	@Override
 	public VBox createGUI(double width, double height) {
-		VBox vBox = new VBox();
-		HBox hBox = new HBox();
+		var vBox = new VBox();
+		var hBox = new HBox();
 		hBox.setAlignment(Pos.CENTER_RIGHT);
 		hBox.setPrefSize(width, height);
 		hBox.setSpacing(10);
@@ -97,12 +97,12 @@ public class UserJavaFxView extends BaseJavaFxView implements UserView {
 		currUserText.setId(USER_TEXT_ID);
 		currUserText.setStyle(BOLD_STYLE);
 		
-		Button logoutButton = new Button(LOGOUT_BUTTON_TEXT);
+		var logoutButton = new Button(LOGOUT_BUTTON_TEXT);
 		logoutButton.setId(LOGOUT_BUTTON_ID);
 		logoutButton.setPrefWidth(BUTTON_WIDTH);
 		logoutButton.setOnAction(ev -> logout());
 		
-		Button refreshButton = new Button(REFRESH_BUTTON_TEXT);
+		var refreshButton = new Button(REFRESH_BUTTON_TEXT);
 		refreshButton.setId(REFRESH_BUTTON_ID);
 		refreshButton.setPrefWidth(BUTTON_WIDTH);
 		refreshButton.setOnAction(ev -> refresh());

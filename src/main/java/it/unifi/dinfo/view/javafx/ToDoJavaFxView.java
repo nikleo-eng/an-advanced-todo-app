@@ -112,26 +112,26 @@ public class ToDoJavaFxView extends Application implements ToDoView {
 		userRoot = new FlowPane();
 		appRoot = new FlowPane();
 		
-		Scene scene = new Scene(userRoot, SCENE_WIDTH, SCENE_HEIGHT);
+		var scene = new Scene(userRoot, SCENE_WIDTH, SCENE_HEIGHT);
 		
-		VBox loginVBox = loginJavaFxView.createGUI(scene.getWidth() / 2, scene.getHeight());
-		VBox registrationVBox = registrationJavaFxView.createGUI(scene.getWidth() / 2, 
+		var loginVBox = loginJavaFxView.createGUI(scene.getWidth() / 2, scene.getHeight());
+		var registrationVBox = registrationJavaFxView.createGUI(scene.getWidth() / 2, 
 				scene.getHeight());
 		userRoot.getChildren().addAll(loginVBox, registrationVBox);
 		
-		VBox appVBox1 = new VBox();
+		var appVBox1 = new VBox();
 		appVBox1.setPrefSize(scene.getWidth() / 2, scene.getHeight());
-		VBox appVBox2 = new VBox();
+		var appVBox2 = new VBox();
 		appVBox2.setPrefSize(scene.getWidth() / 2, scene.getHeight());
 		
-		VBox listVBox = listsJavaFxView.createGUI(appVBox1.getPrefWidth(), 
+		var listVBox = listsJavaFxView.createGUI(appVBox1.getPrefWidth(), 
 				appVBox1.getPrefHeight() - 300);
-		VBox additionModificationVBox = additionModificationJavaFxView.createGUI(
+		var additionModificationVBox = additionModificationJavaFxView.createGUI(
 				appVBox1.getPrefWidth(), 300);
 		appVBox1.getChildren().addAll(listVBox, additionModificationVBox);
 		
-		VBox userVBox = userJavaFxView.createGUI(appVBox2.getPrefWidth(), HEADER_FOOTER_HEIGHT);
-		VBox detailVBox = detailsJavaFxView.createGUI(appVBox2.getPrefWidth(), 
+		var userVBox = userJavaFxView.createGUI(appVBox2.getPrefWidth(), HEADER_FOOTER_HEIGHT);
+		var detailVBox = detailsJavaFxView.createGUI(appVBox2.getPrefWidth(), 
 				appVBox2.getPrefHeight() - HEADER_FOOTER_HEIGHT);
 		appVBox2.getChildren().addAll(userVBox, detailVBox);
 		appRoot.getChildren().addAll(appVBox1, appVBox2);

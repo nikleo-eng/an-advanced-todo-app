@@ -65,21 +65,18 @@ public class UserJavaFxViewTest extends ApplicationTest {
 	@Test
 	public void shouldViewContainUserTextAndRefreshAndLogoutButtons() {
 		Node userTextNode = lookup("#" + USER_TEXT_ID).tryQuery().orElse(null);
-		assertThat(userTextNode).isNotNull();
-		assertThat(userTextNode).isOfAnyClassIn(Text.class);
+		assertThat(userTextNode).isNotNull().isOfAnyClassIn(Text.class);
 		Text userText = (Text) userTextNode;
 		assertThat(userText.isVisible()).isTrue();
 		
 		Node refreshButtonNode = lookup("#" + REFRESH_BUTTON_ID).tryQuery().orElse(null);
-		assertThat(refreshButtonNode).isNotNull();
-		assertThat(refreshButtonNode).isOfAnyClassIn(Button.class);
+		assertThat(refreshButtonNode).isNotNull().isOfAnyClassIn(Button.class);
 		Button refreshButton = (Button) refreshButtonNode;
 		assertThat(refreshButton.isVisible()).isTrue();
 		assertThat(refreshButton.getText()).isEqualTo(REFRESH_BUTTON_TEXT);
 		
 		Node logoutButtonNode = lookup("#" + LOGOUT_BUTTON_ID).tryQuery().orElse(null);
-		assertThat(logoutButtonNode).isNotNull();
-		assertThat(logoutButtonNode).isOfAnyClassIn(Button.class);
+		assertThat(logoutButtonNode).isNotNull().isOfAnyClassIn(Button.class);
 		Button logoutButton = (Button) logoutButtonNode;
 		assertThat(logoutButton.isVisible()).isTrue();
 		assertThat(logoutButton.getText()).isEqualTo(LOGOUT_BUTTON_TEXT);

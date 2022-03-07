@@ -121,18 +121,18 @@ public class AdditionModificationJavaFxView extends BaseJavaFxView
 
 	@Override
 	public VBox createGUI(double width, double height) {
-		VBox vBox = new VBox();
+		var vBox = new VBox();
 		vBox.setPrefSize(width, height);
 		vBox.setStyle("-fx-border-color: black; -fx-border-insets: 10; -fx-border-width: 2;");
 		
-		HBox titleHBox = new HBox();
+		var titleHBox = new HBox();
 		titleHBox.setPrefSize(vBox.getPrefWidth(), ToDoJavaFxView.HEADER_FOOTER_HEIGHT);
 		titleHBox.setAlignment(Pos.CENTER);
-		Text titleText = new Text("Addition/Modification Area");
+		var titleText = new Text("Addition/Modification Area");
 		titleText.setStyle(ToDoJavaFxView.BOLD_STYLE);
 		titleHBox.getChildren().add(titleText);
 		
-		GridPane gridPane = new GridPane();
+		var gridPane = new GridPane();
 		gridPane.setPrefSize(vBox.getPrefWidth(), vBox.getPrefHeight() 
 				- (2 * ToDoJavaFxView.HEADER_FOOTER_HEIGHT));
 		gridPane.setAlignment(Pos.CENTER);
@@ -144,7 +144,7 @@ public class AdditionModificationJavaFxView extends BaseJavaFxView
 		textArea.setMaxWidth(450);
 		textArea.setDisable(true);
 		
-		HBox buttonsHBox = new HBox();
+		var buttonsHBox = new HBox();
 		buttonsHBox.setAlignment(Pos.CENTER);
 		buttonsHBox.setSpacing(20);
 		cancelButton = new Button(CANCEL_BUTTON_TEXT);
@@ -159,7 +159,7 @@ public class AdditionModificationJavaFxView extends BaseJavaFxView
 		saveButton.setDisable(true);
 		buttonsHBox.getChildren().addAll(cancelButton, saveButton);
 		
-		HBox errorTextHBox = new HBox();
+		var errorTextHBox = new HBox();
 		errorTextHBox.setAlignment(Pos.CENTER);
 		errorText = new Text("");
 		errorText.setId(ERROR_TEXT_ID);

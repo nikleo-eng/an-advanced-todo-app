@@ -49,73 +49,62 @@ public class RegistrationJavaFxViewTest extends ApplicationTest {
 	@Test
 	public void shouldViewContainNameSurnameEmailPasswordAndConfirmPasswordLabelsAndInputsAndRegisterButton() {
 		Node nameLabelNode = lookup("#" + NAME_LABEL_ID).tryQuery().orElse(null);
-		assertThat(nameLabelNode).isNotNull();
-		assertThat(nameLabelNode).isOfAnyClassIn(Label.class);
+		assertThat(nameLabelNode).isNotNull().isOfAnyClassIn(Label.class);
 		Label nameLabel = (Label) nameLabelNode;
 		assertThat(nameLabel.isVisible()).isTrue();
 		assertThat(nameLabel.getText()).isEqualTo(NAME_LABEL_TEXT);
 		
 		Node nameTextFieldNode = lookup("#" + NAME_TEXTFIELD_ID).tryQuery().orElse(null);
-		assertThat(nameTextFieldNode).isNotNull();
-		assertThat(nameTextFieldNode).isOfAnyClassIn(TextField.class);
+		assertThat(nameTextFieldNode).isNotNull().isOfAnyClassIn(TextField.class);
 		TextField nameTextField = (TextField) nameTextFieldNode;
 		assertThat(nameTextField.isVisible()).isTrue();
 		
 		Node surnameLabelNode = lookup("#" + SURNAME_LABEL_ID).tryQuery().orElse(null);
-		assertThat(surnameLabelNode).isNotNull();
-		assertThat(surnameLabelNode).isOfAnyClassIn(Label.class);
+		assertThat(surnameLabelNode).isNotNull().isOfAnyClassIn(Label.class);
 		Label surnameLabel = (Label) surnameLabelNode;
 		assertThat(surnameLabel.isVisible()).isTrue();
 		assertThat(surnameLabel.getText()).isEqualTo(SURNAME_LABEL_TEXT);
 		
 		Node surnameTextFieldNode = lookup("#" + SURNAME_TEXTFIELD_ID).tryQuery().orElse(null);
-		assertThat(surnameTextFieldNode).isNotNull();
-		assertThat(surnameTextFieldNode).isOfAnyClassIn(TextField.class);
+		assertThat(surnameTextFieldNode).isNotNull().isOfAnyClassIn(TextField.class);
 		TextField surnameTextField = (TextField) surnameTextFieldNode;
 		assertThat(surnameTextField.isVisible()).isTrue();
 		
 		Node emailLabelNode = lookup("#" + EMAIL_LABEL_ID).tryQuery().orElse(null);
-		assertThat(emailLabelNode).isNotNull();
-		assertThat(emailLabelNode).isOfAnyClassIn(Label.class);
+		assertThat(emailLabelNode).isNotNull().isOfAnyClassIn(Label.class);
 		Label emailLabel = (Label) emailLabelNode;
 		assertThat(emailLabel.isVisible()).isTrue();
 		assertThat(emailLabel.getText()).isEqualTo(EMAIL_LABEL_TEXT);
 		
 		Node emailTextFieldNode = lookup("#" + EMAIL_TEXTFIELD_ID).tryQuery().orElse(null);
-		assertThat(emailTextFieldNode).isNotNull();
-		assertThat(emailTextFieldNode).isOfAnyClassIn(TextField.class);
+		assertThat(emailTextFieldNode).isNotNull().isOfAnyClassIn(TextField.class);
 		TextField emailTextField = (TextField) emailTextFieldNode;
 		assertThat(emailTextField.isVisible()).isTrue();
 		
 		Node passwordLabelNode = lookup("#" + PASSWORD_LABEL_ID).tryQuery().orElse(null);
-		assertThat(passwordLabelNode).isNotNull();
-		assertThat(passwordLabelNode).isOfAnyClassIn(Label.class);
+		assertThat(passwordLabelNode).isNotNull().isOfAnyClassIn(Label.class);
 		Label passwordLabel = (Label) passwordLabelNode;
 		assertThat(passwordLabel.isVisible()).isTrue();
 		assertThat(passwordLabel.getText()).isEqualTo(PASSWORD_LABEL_TEXT);
 		
 		Node passwordFieldNode = lookup("#" + PASSWORD_FIELD_ID).tryQuery().orElse(null);
-		assertThat(passwordFieldNode).isNotNull();
-		assertThat(passwordFieldNode).isOfAnyClassIn(PasswordField.class);
+		assertThat(passwordFieldNode).isNotNull().isOfAnyClassIn(PasswordField.class);
 		PasswordField passwordField = (PasswordField) passwordFieldNode;
 		assertThat(passwordField.isVisible()).isTrue();
 		
 		Node confirmPasswordLabelNode = lookup("#" + CONFIRM_PASSWORD_LABEL_ID).tryQuery().orElse(null);
-		assertThat(confirmPasswordLabelNode).isNotNull();
-		assertThat(confirmPasswordLabelNode).isOfAnyClassIn(Label.class);
+		assertThat(confirmPasswordLabelNode).isNotNull().isOfAnyClassIn(Label.class);
 		Label confirmPasswordLabel = (Label) confirmPasswordLabelNode;
 		assertThat(confirmPasswordLabel.isVisible()).isTrue();
 		assertThat(confirmPasswordLabel.getText()).isEqualTo(CONFIRM_PASSWORD_LABEL_TEXT);
 		
 		Node confirmPasswordFieldNode = lookup("#" + CONFIRM_PASSWORD_FIELD_ID).tryQuery().orElse(null);
-		assertThat(confirmPasswordFieldNode).isNotNull();
-		assertThat(confirmPasswordFieldNode).isOfAnyClassIn(PasswordField.class);
+		assertThat(confirmPasswordFieldNode).isNotNull().isOfAnyClassIn(PasswordField.class);
 		PasswordField confirmPasswordField = (PasswordField) confirmPasswordFieldNode;
 		assertThat(confirmPasswordField.isVisible()).isTrue();
 		
 		Node registerButtonNode = lookup("#" + REGISTER_BUTTON_ID).tryQuery().orElse(null);
-		assertThat(registerButtonNode).isNotNull();
-		assertThat(registerButtonNode).isOfAnyClassIn(Button.class);
+		assertThat(registerButtonNode).isNotNull().isOfAnyClassIn(Button.class);
 		Button registerButton = (Button) registerButtonNode;
 		assertThat(registerButton.isVisible()).isTrue();
 		assertThat(registerButton.getText()).isEqualTo(REGISTER_BUTTON_TEXT);
@@ -133,8 +122,7 @@ public class RegistrationJavaFxViewTest extends ApplicationTest {
 	@Test
 	public void shouldViewContainEmptyErrorText() {
 		Node errorTextNode = lookup("#" + ERROR_TEXT_ID).tryQuery().orElse(null);
-		assertThat(errorTextNode).isNotNull();
-		assertThat(errorTextNode).isOfAnyClassIn(Text.class);
+		assertThat(errorTextNode).isNotNull().isOfAnyClassIn(Text.class);
 		Text errorText = (Text) errorTextNode;
 		assertThat(errorText.isVisible()).isFalse();
 		assertThat(errorText.getText()).isEmpty();

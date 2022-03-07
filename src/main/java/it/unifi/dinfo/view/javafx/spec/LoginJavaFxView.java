@@ -55,18 +55,18 @@ public class LoginJavaFxView extends BaseJavaFxView implements LoginView {
 
 	@Override
 	public VBox createGUI(double width, double height) {
-		VBox vBox = new VBox();
+		var vBox = new VBox();
 		vBox.setStyle(ToDoJavaFxView.BORDER_STYLE);
 		vBox.setPrefSize(width, height);
 		vBox.setAlignment(Pos.CENTER);
 		
-		GridPane gridPane = new GridPane();
+		var gridPane = new GridPane();
 		gridPane.setPrefWidth(vBox.getPrefWidth());
 		gridPane.setAlignment(Pos.CENTER);
 		gridPane.setVgap(20);
 		gridPane.setHgap(10);
 		
-		Label emailLabel = new Label(EMAIL_LABEL_TEXT);
+		var emailLabel = new Label(EMAIL_LABEL_TEXT);
 		emailLabel.setId(EMAIL_LABEL_ID);
 		emailTextField = new TextField();
 		emailTextField.setId(EMAIL_TEXTFIELD_ID);
@@ -75,7 +75,7 @@ public class LoginJavaFxView extends BaseJavaFxView implements LoginView {
 		gridPane.addColumn(0, emailLabel);
 		gridPane.addColumn(1, emailTextField);
 		
-		Label passwordLabel = new Label(PASSWORD_LABEL_TEXT);
+		var passwordLabel = new Label(PASSWORD_LABEL_TEXT);
 		passwordLabel.setId(PASSWORD_LABEL_ID);
 		passwordField = new PasswordField();
 		passwordField.setId(PASSWORD_FIELD_ID);
@@ -84,9 +84,9 @@ public class LoginJavaFxView extends BaseJavaFxView implements LoginView {
 		gridPane.addColumn(0, passwordLabel);
 		gridPane.addColumn(1, passwordField);
 		
-		HBox loginButtonHBox = new HBox();
+		var loginButtonHBox = new HBox();
 		loginButtonHBox.setAlignment(Pos.CENTER);
-		Button loginButton = new Button(LOGIN_BUTTON_TEXT);
+		var loginButton = new Button(LOGIN_BUTTON_TEXT);
 		loginButton.setId(LOGIN_BUTTON_ID);
 		loginButton.setPrefWidth(ToDoJavaFxView.BUTTON_WIDTH);
 		loginButtonHBox.getChildren().add(loginButton);
@@ -95,7 +95,7 @@ public class LoginJavaFxView extends BaseJavaFxView implements LoginView {
 		gridPane.addColumn(0, loginButtonHBox);
 		GridPane.setColumnSpan(loginButtonHBox, 2);
 		
-		HBox loginErrorHBox = new HBox();
+		var loginErrorHBox = new HBox();
 		loginErrorHBox.setAlignment(Pos.CENTER);
 		errorText = new Text("");
 		errorText.setId(ERROR_TEXT_ID);

@@ -108,24 +108,24 @@ public class ToDoJavaFxViewTest extends ApplicationTest {
 	
 	@Test
 	public void shouldViewContainInitiallyOnlyLoginAndRegistrationAreas() {
-		assertThat(lookup(LOGIN_TEXT).tryQuery().isPresent()).isTrue();
-		assertThat(lookup(REGISTRATION_TEXT).tryQuery().isPresent()).isTrue();
-		assertThat(lookup(LISTS_TEXT).tryQuery().isPresent()).isFalse();
-		assertThat(lookup(DETAILS_TEXT).tryQuery().isPresent()).isFalse();
-		assertThat(lookup(ADDITION_MODIFICATION_TEXT).tryQuery().isPresent()).isFalse();
-		assertThat(lookup(USER_TEXT).tryQuery().isPresent()).isFalse();
+		assertThat(lookup(LOGIN_TEXT).tryQuery()).isPresent();
+		assertThat(lookup(REGISTRATION_TEXT).tryQuery()).isPresent();
+		assertThat(lookup(LISTS_TEXT).tryQuery()).isEmpty();
+		assertThat(lookup(DETAILS_TEXT).tryQuery()).isEmpty();
+		assertThat(lookup(ADDITION_MODIFICATION_TEXT).tryQuery()).isEmpty();
+		assertThat(lookup(USER_TEXT).tryQuery()).isEmpty();
 		assertThat(window(STAGE_TITLE).getScene().getRoot()).isEqualTo(toDoJavaFxView.getUserRoot());
 	}
 	
 	@Test
 	public void shouldUserLoggedInChangeRootSoThatViewContainOnlyListsDetailsAdditionModificationAndUserViews() {
 		toDoJavaFxView.userLoggedIn(new User("Mario", "Rossi", "email@email.com", "password"));
-		assertThat(lookup(LOGIN_TEXT).tryQuery().isPresent()).isFalse();
-		assertThat(lookup(REGISTRATION_TEXT).tryQuery().isPresent()).isFalse();
-		assertThat(lookup(LISTS_TEXT).tryQuery().isPresent()).isTrue();
-		assertThat(lookup(DETAILS_TEXT).tryQuery().isPresent()).isTrue();
-		assertThat(lookup(ADDITION_MODIFICATION_TEXT).tryQuery().isPresent()).isTrue();
-		assertThat(lookup(USER_TEXT).tryQuery().isPresent()).isTrue();
+		assertThat(lookup(LOGIN_TEXT).tryQuery()).isEmpty();
+		assertThat(lookup(REGISTRATION_TEXT).tryQuery()).isEmpty();
+		assertThat(lookup(LISTS_TEXT).tryQuery()).isPresent();
+		assertThat(lookup(DETAILS_TEXT).tryQuery()).isPresent();
+		assertThat(lookup(ADDITION_MODIFICATION_TEXT).tryQuery()).isPresent();
+		assertThat(lookup(USER_TEXT).tryQuery()).isPresent();
 		assertThat(window(STAGE_TITLE).getScene().getRoot()).isEqualTo(toDoJavaFxView.getAppRoot());
 	}
 	
@@ -133,12 +133,12 @@ public class ToDoJavaFxViewTest extends ApplicationTest {
 	public void shouldUserLoggedOutChangeRootSoThatViewContainOnlyLoginAndRegistrationAreas() {
 		window(STAGE_TITLE).getScene().setRoot(toDoJavaFxView.getAppRoot());
 		toDoJavaFxView.userLoggedOut();
-		assertThat(lookup(LOGIN_TEXT).tryQuery().isPresent()).isTrue();
-		assertThat(lookup(REGISTRATION_TEXT).tryQuery().isPresent()).isTrue();
-		assertThat(lookup(LISTS_TEXT).tryQuery().isPresent()).isFalse();
-		assertThat(lookup(DETAILS_TEXT).tryQuery().isPresent()).isFalse();
-		assertThat(lookup(ADDITION_MODIFICATION_TEXT).tryQuery().isPresent()).isFalse();
-		assertThat(lookup(USER_TEXT).tryQuery().isPresent()).isFalse();
+		assertThat(lookup(LOGIN_TEXT).tryQuery()).isPresent();
+		assertThat(lookup(REGISTRATION_TEXT).tryQuery()).isPresent();
+		assertThat(lookup(LISTS_TEXT).tryQuery()).isEmpty();
+		assertThat(lookup(DETAILS_TEXT).tryQuery()).isEmpty();
+		assertThat(lookup(ADDITION_MODIFICATION_TEXT).tryQuery()).isEmpty();
+		assertThat(lookup(USER_TEXT).tryQuery()).isEmpty();
 		assertThat(window(STAGE_TITLE).getScene().getRoot()).isEqualTo(toDoJavaFxView.getUserRoot());
 	}
 	

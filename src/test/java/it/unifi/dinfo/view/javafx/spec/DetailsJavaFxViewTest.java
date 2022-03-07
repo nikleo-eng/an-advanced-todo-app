@@ -15,10 +15,12 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testfx.framework.junit.ApplicationTest;
+import org.testfx.framework.junit.TestFXRule;
 
 import it.unifi.dinfo.controller.ToDoController;
 import it.unifi.dinfo.model.Detail;
@@ -35,6 +37,10 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class DetailsJavaFxViewTest extends ApplicationTest {
+	
+	/* https://github.com/TestFX/TestFX/issues/367#issuecomment-347077166 */
+	@Rule
+    public TestFXRule testFXRule = new TestFXRule(3);
 
 	@Mock
 	private ToDoController toDoController;
@@ -66,14 +72,12 @@ public class DetailsJavaFxViewTest extends ApplicationTest {
 	@Test
 	public void shouldViewContainListViewAndAddButton() {
 		Node listViewNode = lookup("#" + LISTVIEW_ID).tryQuery().orElse(null);
-		assertThat(listViewNode).isNotNull();
-		assertThat(listViewNode).isOfAnyClassIn(ListView.class);
+		assertThat(listViewNode).isNotNull().isOfAnyClassIn(ListView.class);
 		ListView<Detail> listView = (ListView<Detail>) listViewNode;
 		assertThat(listView.isVisible()).isTrue();
 		
 		Node addButtonNode = lookup("#" + ADD_BUTTON_ID).tryQuery().orElse(null);
-		assertThat(addButtonNode).isNotNull();
-		assertThat(addButtonNode).isOfAnyClassIn(Button.class);
+		assertThat(addButtonNode).isNotNull().isOfAnyClassIn(Button.class);
 		Button addButton = (Button) addButtonNode;
 		assertThat(addButton.isVisible()).isTrue();
 		assertThat(addButton.getText()).isEqualTo(ADD_BUTTON_TEXT);
@@ -368,6 +372,9 @@ public class DetailsJavaFxViewTest extends ApplicationTest {
 		
 		Detail savedDetail = new Detail("TEST-D_NEW", list);
 		savedDetail.setId(1L);
+		
+		checkAllExceptions = false;
+		
 		detailsJavaFxView.save(savedDetail);
 		
 		verify(listsJavaFxView).enableArea();

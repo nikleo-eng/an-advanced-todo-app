@@ -61,21 +61,18 @@ public class AdditionModificationJavaFxViewTest extends ApplicationTest {
 	@Test
 	public void shouldViewContainTextAreaAndCancelAndSaveButtons() {
 		Node textAreaNode = lookup("#" + TEXTAREA_ID).tryQuery().orElse(null);
-		assertThat(textAreaNode).isNotNull();
-		assertThat(textAreaNode).isOfAnyClassIn(UpperTextArea.class);
+		assertThat(textAreaNode).isNotNull().isOfAnyClassIn(UpperTextArea.class);
 		UpperTextArea textArea = (UpperTextArea) textAreaNode;
 		assertThat(textArea.isVisible()).isTrue();
 		
 		Node cancelButtonNode = lookup("#" + CANCEL_BUTTON_ID).tryQuery().orElse(null);
-		assertThat(cancelButtonNode).isNotNull();
-		assertThat(cancelButtonNode).isOfAnyClassIn(Button.class);
+		assertThat(cancelButtonNode).isNotNull().isOfAnyClassIn(Button.class);
 		Button cancelButton = (Button) cancelButtonNode;
 		assertThat(cancelButton.isVisible()).isTrue();
 		assertThat(cancelButton.getText()).isEqualTo(CANCEL_BUTTON_TEXT);
 		
 		Node saveButtonNode = lookup("#" + SAVE_BUTTON_ID).tryQuery().orElse(null);
-		assertThat(saveButtonNode).isNotNull();
-		assertThat(saveButtonNode).isOfAnyClassIn(Button.class);
+		assertThat(saveButtonNode).isNotNull().isOfAnyClassIn(Button.class);
 		Button saveButton = (Button) saveButtonNode;
 		assertThat(saveButton.isVisible()).isTrue();
 		assertThat(saveButton.getText()).isEqualTo(SAVE_BUTTON_TEXT);
@@ -89,8 +86,7 @@ public class AdditionModificationJavaFxViewTest extends ApplicationTest {
 	@Test
 	public void shouldViewContainEmptyErrorText() {
 		Node errorTextNode = lookup("#" + ERROR_TEXT_ID).tryQuery().orElse(null);
-		assertThat(errorTextNode).isNotNull();
-		assertThat(errorTextNode).isOfAnyClassIn(Text.class);
+		assertThat(errorTextNode).isNotNull().isOfAnyClassIn(Text.class);
 		Text errorText = (Text) errorTextNode;
 		assertThat(errorText.isVisible()).isFalse();
 		assertThat(errorText.getText()).isEmpty();

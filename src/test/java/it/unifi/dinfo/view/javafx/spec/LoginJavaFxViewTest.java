@@ -48,34 +48,29 @@ public class LoginJavaFxViewTest extends ApplicationTest {
 	@Test
 	public void shouldViewContainEmailAndPasswordLabelsAndInputsAndLoginButton() {
 		Node emailLabelNode = lookup("#" + EMAIL_LABEL_ID).tryQuery().orElse(null);
-		assertThat(emailLabelNode).isNotNull();
-		assertThat(emailLabelNode).isOfAnyClassIn(Label.class);
+		assertThat(emailLabelNode).isNotNull().isOfAnyClassIn(Label.class);
 		Label emailLabel = (Label) emailLabelNode;
 		assertThat(emailLabel.isVisible()).isTrue();
 		assertThat(emailLabel.getText()).isEqualTo(EMAIL_LABEL_TEXT);
 		
 		Node emailTextFieldNode = lookup("#" + EMAIL_TEXTFIELD_ID).tryQuery().orElse(null);
-		assertThat(emailTextFieldNode).isNotNull();
-		assertThat(emailTextFieldNode).isOfAnyClassIn(TextField.class);
+		assertThat(emailTextFieldNode).isNotNull().isOfAnyClassIn(TextField.class);
 		TextField emailTextField = (TextField) emailTextFieldNode;
 		assertThat(emailTextField.isVisible()).isTrue();
 		
 		Node passwordLabelNode = lookup("#" + PASSWORD_LABEL_ID).tryQuery().orElse(null);
-		assertThat(passwordLabelNode).isNotNull();
-		assertThat(passwordLabelNode).isOfAnyClassIn(Label.class);
+		assertThat(passwordLabelNode).isNotNull().isOfAnyClassIn(Label.class);
 		Label passwordLabel = (Label) passwordLabelNode;
 		assertThat(passwordLabel.isVisible()).isTrue();
 		assertThat(passwordLabel.getText()).isEqualTo(PASSWORD_LABEL_TEXT);
 		
 		Node passwordFieldNode = lookup("#" + PASSWORD_FIELD_ID).tryQuery().orElse(null);
-		assertThat(passwordFieldNode).isNotNull();
-		assertThat(passwordFieldNode).isOfAnyClassIn(PasswordField.class);
+		assertThat(passwordFieldNode).isNotNull().isOfAnyClassIn(PasswordField.class);
 		PasswordField passwordField = (PasswordField) passwordFieldNode;
 		assertThat(passwordField.isVisible()).isTrue();
 		
 		Node loginButtonNode = lookup("#" + LOGIN_BUTTON_ID).tryQuery().orElse(null);
-		assertThat(loginButtonNode).isNotNull();
-		assertThat(loginButtonNode).isOfAnyClassIn(Button.class);
+		assertThat(loginButtonNode).isNotNull().isOfAnyClassIn(Button.class);
 		Button loginButton = (Button) loginButtonNode;
 		assertThat(loginButton.isVisible()).isTrue();
 		assertThat(loginButton.getText()).isEqualTo(LOGIN_BUTTON_TEXT);
@@ -90,8 +85,7 @@ public class LoginJavaFxViewTest extends ApplicationTest {
 	@Test
 	public void shouldViewContainEmptyErrorText() {
 		Node errorTextNode = lookup("#" + ERROR_TEXT_ID).tryQuery().orElse(null);
-		assertThat(errorTextNode).isNotNull();
-		assertThat(errorTextNode).isOfAnyClassIn(Text.class);
+		assertThat(errorTextNode).isNotNull().isOfAnyClassIn(Text.class);
 		Text errorText = (Text) errorTextNode;
 		assertThat(errorText.isVisible()).isFalse();
 		assertThat(errorText.getText()).isEmpty();
