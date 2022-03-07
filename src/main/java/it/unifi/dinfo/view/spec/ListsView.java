@@ -8,8 +8,6 @@ public interface ListsView {
 
 	void showAll(Set<List> lists);
 	
-	void updateAll(Set<List> lists);
-	
 	void delete(List list);
 	
 	void save(List list);

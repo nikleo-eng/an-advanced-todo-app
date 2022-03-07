@@ -34,7 +34,7 @@ public class RegistrationController extends BaseController {
 		
 		User newUser = new User(name.trim(), surname.trim(), email.trim(), password);
 		newUser = getToDoRepository().createUser(newUser);
-		getToDoView().setCurrentUser(newUser);
+		getToDoView().userLoggedIn(newUser);
 	}
 	
 }

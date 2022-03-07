@@ -7,9 +7,9 @@ import it.unifi.dinfo.view.ToDoView;
 
 import static it.unifi.dinfo.view.spec.LoginView.*;
 
-public class LoginController extends BaseController {
+public class LogController extends BaseController {
 
-	public LoginController(ToDoView toDoView, ToDoRepository toDoRepository) {
+	public LogController(ToDoView toDoView, ToDoRepository toDoRepository) {
 		super(toDoView, toDoRepository);
 	}
 
@@ -30,7 +30,11 @@ public class LoginController extends BaseController {
 			return;
 		}
 		
-		getToDoView().setCurrentUser(userSelected);
+		getToDoView().userLoggedIn(userSelected);
+	}
+	
+	public void logout() {
+		getToDoView().userLoggedOut();
 	}
 	
 }

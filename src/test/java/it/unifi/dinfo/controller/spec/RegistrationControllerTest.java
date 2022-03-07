@@ -40,7 +40,7 @@ public class RegistrationControllerTest {
 		registrationController.register(null, "Rossi", "email@email.com", "password", "password");
 		verify(toDoView).renderRegistrationError(ERRORS.FIELD_EMPTY.getValue());
 		verify(toDoRepository, never()).createUser(any(User.class));
-		verify(toDoView, never()).setCurrentUser(any(User.class));
+		verify(toDoView, never()).userLoggedIn(any(User.class));
 	}
 	
 	@Test
@@ -48,7 +48,7 @@ public class RegistrationControllerTest {
 		registrationController.register("Mario", null, "email@email.com", "password", "password");
 		verify(toDoView).renderRegistrationError(ERRORS.FIELD_EMPTY.getValue());
 		verify(toDoRepository, never()).createUser(any(User.class));
-		verify(toDoView, never()).setCurrentUser(any(User.class));
+		verify(toDoView, never()).userLoggedIn(any(User.class));
 	}
 	
 	@Test
@@ -56,7 +56,7 @@ public class RegistrationControllerTest {
 		registrationController.register("Mario", "Rossi", null, "password", "password");
 		verify(toDoView).renderRegistrationError(ERRORS.FIELD_EMPTY.getValue());
 		verify(toDoRepository, never()).createUser(any(User.class));
-		verify(toDoView, never()).setCurrentUser(any(User.class));
+		verify(toDoView, never()).userLoggedIn(any(User.class));
 	}
 	
 	@Test
@@ -64,7 +64,7 @@ public class RegistrationControllerTest {
 		registrationController.register("Mario", "Rossi", "email@email.com", null, "password");
 		verify(toDoView).renderRegistrationError(ERRORS.FIELD_EMPTY.getValue());
 		verify(toDoRepository, never()).createUser(any(User.class));
-		verify(toDoView, never()).setCurrentUser(any(User.class));
+		verify(toDoView, never()).userLoggedIn(any(User.class));
 	}
 	
 	@Test
@@ -72,7 +72,7 @@ public class RegistrationControllerTest {
 		registrationController.register("Mario", "Rossi", "email@email.com", "password", null);
 		verify(toDoView).renderRegistrationError(ERRORS.FIELD_EMPTY.getValue());
 		verify(toDoRepository, never()).createUser(any(User.class));
-		verify(toDoView, never()).setCurrentUser(any(User.class));
+		verify(toDoView, never()).userLoggedIn(any(User.class));
 	}
 	
 	@Test
@@ -80,7 +80,7 @@ public class RegistrationControllerTest {
 		registrationController.register(" ", "Rossi", "email@email.com", "password", "password");
 		verify(toDoView).renderRegistrationError(ERRORS.FIELD_EMPTY.getValue());
 		verify(toDoRepository, never()).createUser(any(User.class));
-		verify(toDoView, never()).setCurrentUser(any(User.class));
+		verify(toDoView, never()).userLoggedIn(any(User.class));
 	}
 	
 	@Test
@@ -88,7 +88,7 @@ public class RegistrationControllerTest {
 		registrationController.register("Mario", " ", "email@email.com", "password", "password");
 		verify(toDoView).renderRegistrationError(ERRORS.FIELD_EMPTY.getValue());
 		verify(toDoRepository, never()).createUser(any(User.class));
-		verify(toDoView, never()).setCurrentUser(any(User.class));
+		verify(toDoView, never()).userLoggedIn(any(User.class));
 	}
 	
 	@Test
@@ -96,7 +96,7 @@ public class RegistrationControllerTest {
 		registrationController.register("Mario", "Rossi", " ", "password", "password");
 		verify(toDoView).renderRegistrationError(ERRORS.FIELD_EMPTY.getValue());
 		verify(toDoRepository, never()).createUser(any(User.class));
-		verify(toDoView, never()).setCurrentUser(any(User.class));
+		verify(toDoView, never()).userLoggedIn(any(User.class));
 	}
 	
 	@Test
@@ -104,7 +104,7 @@ public class RegistrationControllerTest {
 		registrationController.register("Mario", "Rossi", "email@email.com", "", "password");
 		verify(toDoView).renderRegistrationError(ERRORS.FIELD_EMPTY.getValue());
 		verify(toDoRepository, never()).createUser(any(User.class));
-		verify(toDoView, never()).setCurrentUser(any(User.class));
+		verify(toDoView, never()).userLoggedIn(any(User.class));
 	}
 	
 	@Test
@@ -112,7 +112,7 @@ public class RegistrationControllerTest {
 		registrationController.register("Mario", "Rossi", "email@email.com", "password", "");
 		verify(toDoView).renderRegistrationError(ERRORS.FIELD_EMPTY.getValue());
 		verify(toDoRepository, never()).createUser(any(User.class));
-		verify(toDoView, never()).setCurrentUser(any(User.class));
+		verify(toDoView, never()).userLoggedIn(any(User.class));
 	}
 	
 	@Test
@@ -120,7 +120,7 @@ public class RegistrationControllerTest {
 		registrationController.register("Mario", "Rossi", "email@email.com", "password", "password2");
 		verify(toDoView).renderRegistrationError(ERRORS.PASSWORDS_NOT_MACHING.getValue());
 		verify(toDoRepository, never()).createUser(any(User.class));
-		verify(toDoView, never()).setCurrentUser(any(User.class));
+		verify(toDoView, never()).userLoggedIn(any(User.class));
 	}
 	
 	@Test
@@ -130,18 +130,18 @@ public class RegistrationControllerTest {
 		registrationController.register("Mario", "Rossi", "email@email.com", "password", "password");
 		verify(toDoView).renderRegistrationError(ERRORS.USER_ALREADY_FOUND.getValue());
 		verify(toDoRepository, never()).createUser(any(User.class));
-		verify(toDoView, never()).setCurrentUser(any(User.class));
+		verify(toDoView, never()).userLoggedIn(any(User.class));
 	}
 	
 	@Test
-	public void shouldCorrectRegistrationCallCreateUserOnRepositoryAndSetCurrentUserOnView() {
+	public void shouldCorrectRegistrationCallCreateUserOnRepositoryAndUserLoggedInOnView() {
 		User user = new User("Mario", "Rossi", "email@email.com", "password");
 		when(toDoRepository.findUserByEmail("email@email.com")).thenReturn(null);
 		when(toDoRepository.createUser(any(User.class))).thenReturn(user);
 		registrationController.register("Mario", "Rossi", "email@email.com", "password", "password");
 		InOrder inOrder = inOrder(toDoRepository, toDoView);
 		inOrder.verify(toDoRepository).createUser(any(User.class));
-		inOrder.verify(toDoView).setCurrentUser(user);
+		inOrder.verify(toDoView).userLoggedIn(user);
 		verifyNoMoreInteractions(ignoreStubs(toDoRepository));
 		verifyNoMoreInteractions(ignoreStubs(toDoView));
 	}

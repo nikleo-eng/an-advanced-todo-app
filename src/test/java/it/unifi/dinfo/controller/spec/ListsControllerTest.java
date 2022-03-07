@@ -59,16 +59,4 @@ public class ListsControllerTest {
 		verifyNoMoreInteractions(ignoreStubs(toDoView));
 	}
 	
-	@Test
-	public void shouldRefreshAllCallFindAllOnRepositoryAndUpdateAllOnView() {
-		Set<List> lists = Collections.emptySet();
-		when(toDoRepository.findAllListsByUserId(1L)).thenReturn(lists);
-		listsController.refreshAll(1L);
-		InOrder inOrder = inOrder(toDoRepository, toDoView);
-		inOrder.verify(toDoRepository).findAllListsByUserId(1L);
-		inOrder.verify(toDoView).updateAllLists(lists);
-		verifyNoMoreInteractions(ignoreStubs(toDoRepository));
-		verifyNoMoreInteractions(ignoreStubs(toDoView));
-	}
-	
 }

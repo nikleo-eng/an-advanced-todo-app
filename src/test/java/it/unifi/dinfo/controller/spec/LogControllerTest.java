@@ -17,7 +17,7 @@ import it.unifi.dinfo.repository.ToDoRepository;
 import it.unifi.dinfo.view.ToDoView;
 import it.unifi.dinfo.view.spec.LoginView.ERRORS;
 
-public class LoginControllerTest {
+public class LogControllerTest {
 
 	@Mock
 	private ToDoView toDoView;
@@ -25,66 +25,73 @@ public class LoginControllerTest {
 	@Mock
 	private ToDoRepository toDoRepository;
 	
-	private LoginController loginController;
+	private LogController logController;
 
 	@Before
 	public void setUp() {
 		MockitoAnnotations.openMocks(this);
-		loginController = new LoginController(toDoView, toDoRepository);
+		logController = new LogController(toDoView, toDoRepository);
 	}
 	
 	@Test
 	public void shouldLoginWithEmailNullRenderErrorEmptyField() {
-		loginController.login(null, "password");
+		logController.login(null, "password");
 		verify(toDoView).renderLoginError(ERRORS.EMAIL_PASSWORD_EMPTY.getValue());
-		verify(toDoView, never()).setCurrentUser(any(User.class));
+		verify(toDoView, never()).userLoggedIn(any(User.class));
 	}
 	
 	@Test
 	public void shouldLoginWithEmailBlankRenderErrorEmptyField() {
-		loginController.login(" ", "password");
+		logController.login(" ", "password");
 		verify(toDoView).renderLoginError(ERRORS.EMAIL_PASSWORD_EMPTY.getValue());
-		verify(toDoView, never()).setCurrentUser(any(User.class));
+		verify(toDoView, never()).userLoggedIn(any(User.class));
 	}
 	
 	@Test
 	public void shouldLoginWithPasswordNullRenderErrorEmptyField() {
-		loginController.login("email@email.com", null);
+		logController.login("email@email.com", null);
 		verify(toDoView).renderLoginError(ERRORS.EMAIL_PASSWORD_EMPTY.getValue());
-		verify(toDoView, never()).setCurrentUser(any(User.class));
+		verify(toDoView, never()).userLoggedIn(any(User.class));
 	}
 	
 	@Test
 	public void shouldLoginWithPasswordEmptyRenderErrorEmptyField() {
-		loginController.login("email@email.com", "");
+		logController.login("email@email.com", "");
 		verify(toDoView).renderLoginError(ERRORS.EMAIL_PASSWORD_EMPTY.getValue());
-		verify(toDoView, never()).setCurrentUser(any(User.class));
+		verify(toDoView, never()).userLoggedIn(any(User.class));
 	}
 	
 	@Test
 	public void shouldLoginWithEmailOfNoUserRenderErrorUserNotFound() {
 		when(toDoRepository.findUserByEmail("email@email.com")).thenReturn(null);
-		loginController.login("email@email.com", "password");
+		logController.login("email@email.com", "password");
 		verify(toDoView).renderLoginError(ERRORS.USER_NOT_FOUND.getValue());
-		verify(toDoView, never()).setCurrentUser(any(User.class));
+		verify(toDoView, never()).userLoggedIn(any(User.class));
 	}
 	
 	@Test
 	public void shouldLoginWithWrongPasswordPerUserRenderErrorIncorrectPassword() {
 		User user = new User("Mario", "Rossi", "email@email.com", "password");
 		when(toDoRepository.findUserByEmail("email@email.com")).thenReturn(user);
-		loginController.login("email@email.com", "passwordWrong");
+		logController.login("email@email.com", "passwordWrong");
 		verify(toDoView).renderLoginError(ERRORS.INCORRECT_PASSWORD.getValue());
-		verify(toDoView, never()).setCurrentUser(any(User.class));
+		verify(toDoView, never()).userLoggedIn(any(User.class));
 	}
 	
 	@Test
-	public void shouldCorrectLoginCallSetCurrentUserOnView() {
+	public void shouldCorrectLoginCallUserLoggedInOnView() {
 		User user = new User("Mario", "Rossi", "email@email.com", "password");
 		when(toDoRepository.findUserByEmail("email@email.com")).thenReturn(user);
-		loginController.login("email@email.com", "password");
-		verify(toDoView).setCurrentUser(user);
+		logController.login("email@email.com", "password");
+		verify(toDoView).userLoggedIn(user);
 		verifyNoMoreInteractions(ignoreStubs(toDoView));
+	}
+	
+	@Test
+	public void shouldLogoutCallOnlyUserLoggedOutOnView() {
+		logController.logout();
+		verify(toDoView).userLoggedOut();
+		verifyNoMoreInteractions(ignoreStubs(toDoRepository, toDoView));
 	}
 	
 }
