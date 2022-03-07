@@ -24,11 +24,11 @@ public interface ToDoView {
 	
 	void showAllLists(Set<List> lists);
 	
-	void updateAllLists(Set<List> lists);
-	
 	void deleteList(List list);
 	
-	void setCurrentUser(User user);
+	void userLoggedIn(User user);
+	
+	void userLoggedOut();
 	
 	void renderLoginError(String error);
 	

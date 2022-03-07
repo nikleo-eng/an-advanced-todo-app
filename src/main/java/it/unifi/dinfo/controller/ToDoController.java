@@ -3,7 +3,7 @@ package it.unifi.dinfo.controller;
 import it.unifi.dinfo.controller.spec.AdditionModificationController;
 import it.unifi.dinfo.controller.spec.DetailsController;
 import it.unifi.dinfo.controller.spec.ListsController;
-import it.unifi.dinfo.controller.spec.LoginController;
+import it.unifi.dinfo.controller.spec.LogController;
 import it.unifi.dinfo.controller.spec.RegistrationController;
 import it.unifi.dinfo.model.Detail;
 import it.unifi.dinfo.model.List;
@@ -13,14 +13,14 @@ import it.unifi.dinfo.view.ToDoView;
 
 public class ToDoController {
 
-	private LoginController loginController;
+	private LogController logController;
 	private RegistrationController registrationController;
 	private ListsController listsController;
 	private DetailsController detailsController;
 	private AdditionModificationController additionModificationController;
 	
 	public ToDoController(ToDoView toDoView, ToDoRepository toDoRepository) {
-		loginController = new LoginController(toDoView, toDoRepository);
+		logController = new LogController(toDoView, toDoRepository);
 		registrationController = new RegistrationController(toDoView, toDoRepository);
 		listsController = new ListsController(toDoView, toDoRepository);
 		detailsController = new DetailsController(toDoView, toDoRepository);
@@ -28,11 +28,11 @@ public class ToDoController {
 	}
 	
 	/* Only for tests */
-	protected ToDoController(LoginController loginController, 
+	protected ToDoController(LogController logController, 
 			RegistrationController registrationController, ListsController listsController, 
 			DetailsController detailsController, 
 			AdditionModificationController additionModificationController) {
-		this.loginController = loginController;
+		this.logController = logController;
 		this.registrationController = registrationController;
 		this.listsController = listsController;
 		this.detailsController = detailsController;
@@ -40,7 +40,11 @@ public class ToDoController {
 	}
 
 	public void login(String email, String password) {
-		loginController.login(email, password);
+		logController.login(email, password);
+	}
+	
+	public void logout() {
+		logController.logout();
 	}
 	
 	public void register(String name, String surname, String email, String password, 
@@ -78,10 +82,6 @@ public class ToDoController {
 	
 	public void getAllLists(Long userId) {
 		listsController.getAll(userId);
-	}
-	
-	public void refreshAllLists(Long userId) {
-		listsController.refreshAll(userId);
 	}
 	
 	public void getAllDetails(Long listId) {

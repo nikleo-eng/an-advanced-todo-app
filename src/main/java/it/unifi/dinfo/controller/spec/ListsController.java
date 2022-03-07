@@ -23,9 +23,4 @@ public class ListsController extends BaseController {
 		getToDoView().deleteList(list);
 	}
 	
-	public void refreshAll(Long userId) {
-		Set<List> lists = getToDoRepository().findAllListsByUserId(userId);
-		getToDoView().updateAllLists(lists);
-	}
-	
 }
