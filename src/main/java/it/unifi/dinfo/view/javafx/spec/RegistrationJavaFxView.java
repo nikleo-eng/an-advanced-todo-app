@@ -1,18 +1,13 @@
 package it.unifi.dinfo.view.javafx.spec;
 
+import static it.unifi.dinfo.view.javafx.spec.util.LoginRegistrationGUI.*;
+
 import it.unifi.dinfo.controller.ToDoController;
-import it.unifi.dinfo.view.javafx.ToDoJavaFxView;
 import it.unifi.dinfo.view.javafx.spec.base.BaseJavaFxView;
 import it.unifi.dinfo.view.spec.RegistrationView;
-import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
 public class RegistrationJavaFxView extends BaseJavaFxView implements RegistrationView {
@@ -73,84 +68,40 @@ public class RegistrationJavaFxView extends BaseJavaFxView implements Registrati
 
 	@Override
 	public VBox createGUI(double width, double height) {
-		var vBox = new VBox();
-		vBox.setPrefSize(width, height);
-		vBox.setAlignment(Pos.CENTER);
-		vBox.setStyle(ToDoJavaFxView.BORDER_STYLE);
+		var vBox = createVBox(width, height);
+		var gridPane = createGridPane(vBox.getPrefWidth());
 		
-		var gridPane = new GridPane();
-		gridPane.setPrefWidth(vBox.getPrefWidth());
-		gridPane.setAlignment(Pos.CENTER);
-		gridPane.setVgap(20);
-		gridPane.setHgap(10);
+		nameTextField = createTextField(NAME_TEXTFIELD_ID);
+		var nameLabel = createLabel(nameTextField, NAME_LABEL_ID, NAME_LABEL_TEXT);
+		gridPane = create2ColumnsRowGridPane(nameLabel, nameTextField, gridPane);
 		
-		var nameLabel = new Label(NAME_LABEL_TEXT);
-		nameLabel.setId(NAME_LABEL_ID);
-		nameTextField = new TextField();
-		nameTextField.setId(NAME_TEXTFIELD_ID);
-		nameTextField.setPrefWidth(ToDoJavaFxView.TEXT_FIELD_WIDTH);
-		nameLabel.setLabelFor(nameTextField);
-		gridPane.addColumn(0, nameLabel);
-		gridPane.addColumn(1, nameTextField);
+		surnameTextField = createTextField(SURNAME_TEXTFIELD_ID);
+		var surnameLabel = createLabel(surnameTextField, SURNAME_LABEL_ID, SURNAME_LABEL_TEXT);
+		gridPane = create2ColumnsRowGridPane(surnameLabel, surnameTextField, gridPane);
 		
-		var surnameLabel = new Label(SURNAME_LABEL_TEXT);
-		surnameLabel.setId(SURNAME_LABEL_ID);
-		surnameTextField =  new TextField();
-		surnameTextField.setId(SURNAME_TEXTFIELD_ID);
-		surnameTextField.setPrefWidth(ToDoJavaFxView.TEXT_FIELD_WIDTH);
-		surnameLabel.setLabelFor(surnameTextField);
-		gridPane.addColumn(0, surnameLabel);
-		gridPane.addColumn(1, surnameTextField);
+		emailTextField = createTextField(EMAIL_TEXTFIELD_ID);
+		var emailLabel = createLabel(emailTextField, EMAIL_LABEL_ID, EMAIL_LABEL_TEXT);
+		gridPane = create2ColumnsRowGridPane(emailLabel, emailTextField, gridPane);
 		
-		var emailLabel = new Label(EMAIL_LABEL_TEXT);
-		emailLabel.setId(EMAIL_LABEL_ID);
-		emailTextField =  new TextField();
-		emailTextField.setId(EMAIL_TEXTFIELD_ID);
-		emailTextField.setPrefWidth(ToDoJavaFxView.TEXT_FIELD_WIDTH);
-		emailLabel.setLabelFor(emailTextField);
-		gridPane.addColumn(0, emailLabel);
-		gridPane.addColumn(1, emailTextField);
+		passwordField = createPasswordField(PASSWORD_FIELD_ID);
+		var passwordLabel = createLabel(passwordField, PASSWORD_LABEL_ID, PASSWORD_LABEL_TEXT);
+		gridPane = create2ColumnsRowGridPane(passwordLabel, passwordField, gridPane);
 		
-		var passwordLabel = new Label(PASSWORD_LABEL_TEXT);
-		passwordLabel.setId(PASSWORD_LABEL_ID);
-		passwordField = new PasswordField();
-		passwordField.setId(PASSWORD_FIELD_ID);
-		passwordField.setPrefWidth(ToDoJavaFxView.TEXT_FIELD_WIDTH);
-		passwordLabel.setLabelFor(passwordField);
-		gridPane.addColumn(0, passwordLabel);
-		gridPane.addColumn(1, passwordField);
+		confirmPasswordField = createPasswordField(CONFIRM_PASSWORD_FIELD_ID);
+		var confirmPasswordLabel = createLabel(confirmPasswordField, CONFIRM_PASSWORD_LABEL_ID, 
+				CONFIRM_PASSWORD_LABEL_TEXT);
+		gridPane = create2ColumnsRowGridPane(confirmPasswordLabel, confirmPasswordField, gridPane);
 		
-		var confirmPasswordLabel = new Label(CONFIRM_PASSWORD_LABEL_TEXT);
-		confirmPasswordLabel.setId(CONFIRM_PASSWORD_LABEL_ID);
-		confirmPasswordField = new PasswordField();
-		confirmPasswordField.setId(CONFIRM_PASSWORD_FIELD_ID);
-		confirmPasswordField.setPrefWidth(ToDoJavaFxView.TEXT_FIELD_WIDTH);
-		confirmPasswordLabel.setLabelFor(confirmPasswordField);
-		gridPane.addColumn(0, confirmPasswordLabel);
-		gridPane.addColumn(1, confirmPasswordField);
+		var registerButton = createButton(REGISTER_BUTTON_ID, REGISTER_BUTTON_TEXT, 
+				ev -> getToDoController().register(nameTextField.getText(), surnameTextField.getText(), 
+						emailTextField.getText(), passwordField.getText(), 
+						confirmPasswordField.getText()));
+		var registerButtonHBox = createHBox(registerButton);
+		gridPane = create2ColumnsRowGridPane(registerButtonHBox, null, gridPane);
 		
-		var registerHBox = new HBox();
-		registerHBox.setAlignment(Pos.CENTER);
-		var registerButton = new Button(REGISTER_BUTTON_TEXT);
-		registerButton.setId(REGISTER_BUTTON_ID);
-		registerButton.setPrefWidth(ToDoJavaFxView.BUTTON_WIDTH);
-		registerButton.setOnAction(ev -> getToDoController().register(nameTextField.getText(), 
-				surnameTextField.getText(), emailTextField.getText(), passwordField.getText(), 
-				confirmPasswordField.getText()));
-		registerHBox.getChildren().add(registerButton);
-		gridPane.addColumn(0, registerHBox);
-		GridPane.setColumnSpan(registerHBox, 2);
-		
-		var registerErrorHBox = new HBox();
-		registerErrorHBox.setAlignment(Pos.CENTER);
-		errorText = new Text("");
-		errorText.setId(ERROR_TEXT_ID);
-		errorText.setVisible(false);
-		errorText.setStyle(ToDoJavaFxView.BOLD_STYLE);
-		errorText.setFill(Color.RED);
-		registerErrorHBox.getChildren().add(errorText);
-		gridPane.addColumn(0, registerErrorHBox);
-		GridPane.setColumnSpan(registerErrorHBox, 2);
+		errorText = createErrorText(ERROR_TEXT_ID);
+		var loginErrorHBox = createHBox(errorText);
+		gridPane = create2ColumnsRowGridPane(loginErrorHBox, null, gridPane);
 		
 		vBox.getChildren().addAll(gridPane);
 		return vBox;

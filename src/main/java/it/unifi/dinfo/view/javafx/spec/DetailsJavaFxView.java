@@ -1,5 +1,7 @@
 package it.unifi.dinfo.view.javafx.spec;
 
+import static it.unifi.dinfo.view.javafx.spec.util.ListsDetailsGUI.*;
+
 import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.IntStream;
@@ -9,17 +11,11 @@ import it.unifi.dinfo.model.Detail;
 import it.unifi.dinfo.view.javafx.ToDoJavaFxView;
 import it.unifi.dinfo.view.javafx.spec.base.BaseJavaFxView;
 import it.unifi.dinfo.view.spec.DetailsView;
-import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.shape.SVGPath;
-import javafx.scene.text.Text;
 
 public class DetailsJavaFxView extends BaseJavaFxView implements DetailsView {
 
@@ -153,33 +149,16 @@ public class DetailsJavaFxView extends BaseJavaFxView implements DetailsView {
 
 	@Override
 	public VBox createGUI(double width, double height) {
-		var vBox = new VBox();
-		vBox.setPrefSize(width, height);
-		vBox.setStyle(ToDoJavaFxView.BORDER_STYLE);
+		var vBox = createVBox(width, height);
 		
-		var titleHBox = new HBox();
-		titleHBox.setPrefSize(vBox.getPrefWidth(), ToDoJavaFxView.HEADER_FOOTER_HEIGHT);
-		titleHBox.setAlignment(Pos.CENTER);
-		var titleText = new Text("Details Area");
-		titleText.setStyle(ToDoJavaFxView.BOLD_STYLE);
-		titleHBox.getChildren().add(titleText);
+		var titleText = createText("Details Area");
+		var titleHBox = createHBox(titleText, vBox.getPrefWidth());
 		
-		listView = new ListView<>();
-		listView.setDisable(true);
-		listView.setId(LISTVIEW_ID);
-		listView.setPrefSize(vBox.getPrefWidth(), vBox.getPrefHeight() 
-				- (2 * ToDoJavaFxView.HEADER_FOOTER_HEIGHT));
-		listView.setCellFactory(call -> new DetailFormatCell());
+		listView = createListView(LISTVIEW_ID, vBox.getPrefWidth(), vBox.getPrefHeight(), 
+				call -> new DetailFormatCell());
 
-		var buttonHBox = new HBox();
-		buttonHBox.setPrefSize(vBox.getPrefWidth(), ToDoJavaFxView.HEADER_FOOTER_HEIGHT);
-		buttonHBox.setAlignment(Pos.CENTER);
-		addButton = new Button(ADD_BUTTON_TEXT);
-		addButton.setId(ADD_BUTTON_ID);
-		addButton.setDisable(true);
-		addButton.setPrefWidth(ToDoJavaFxView.BUTTON_WIDTH);
-		addButton.setOnAction(ev -> clickAddButton());
-		buttonHBox.getChildren().add(addButton);
+		addButton = createButton(ADD_BUTTON_ID, ADD_BUTTON_TEXT, ev -> clickAddButton());
+		var buttonHBox = createHBox(addButton, vBox.getPrefWidth());
 		
 		vBox.getChildren().addAll(titleHBox, listView, buttonHBox);
 		return vBox;
@@ -207,63 +186,22 @@ public class DetailsJavaFxView extends BaseJavaFxView implements DetailsView {
 				setText(null);
 				setGraphic(null);
 			} else {
-				var checkBox = new CheckBox();
-				checkBox.setId(getRowCheckBoxId(item.getTodo()));
-				checkBox.setSelected(item.getDone());
-				checkBox.setOnAction(ev -> getToDoController().modifyDoneDetail(
-						((CheckBox) ev.getSource()).isSelected(), item));
-				
-				var text = new Label(item.getTodo());
-				text.setId(getRowLabelId(item.getTodo()));
-				text.setDisable(item.getDone());
-				text.setWrapText(true);
-				var textHBox = new HBox();
-				textHBox.setMinHeight(50);
-				textHBox.getChildren().addAll(checkBox, text);
-				textHBox.setAlignment(Pos.CENTER_LEFT);
-				textHBox.setSpacing(10);
+				var checkBoxLabelHBox = createCellCheckBoxLabelHBox(getRowCheckBoxId(item.getTodo()), 
+						item.getDone(), ev -> getToDoController().modifyDoneDetail(
+								((CheckBox) ev.getSource()).isSelected(), item), 
+						getRowLabelId(item.getTodo()), item.getTodo(), item.getDone());
 
-				var modifyButton = new Button();
-				modifyButton.setId(getRowModifyButtonId(item.getTodo()));
-				var modifySvgPath = new SVGPath();
-				modifySvgPath.setContent(ToDoJavaFxView.SVG_CONTENT_MODIFY_ICON);
-				modifyButton.setGraphic(modifySvgPath);
-				modifyButton.setAlignment(Pos.CENTER);
-				modifyButton.setPrefWidth(ToDoJavaFxView.BUTTON_ICON_WIDTH);
-				modifyButton.setOnAction(ev -> clickModifyButton());
+				var modifyButton = createCellSvgButton(getRowModifyButtonId(item.getTodo()), 
+						ev -> clickModifyButton(), ToDoJavaFxView.SVG_CONTENT_MODIFY_ICON);
 				
-				var deleteButton = new Button();
-				deleteButton.setId(getRowDeleteButtonId(item.getTodo()));
-				var deleteSvgPath = new SVGPath();
-				deleteSvgPath.setContent(ToDoJavaFxView.SVG_CONTENT_DELETE_ICON);
-				deleteButton.setGraphic(deleteSvgPath);
-				deleteButton.setAlignment(Pos.CENTER);
-				deleteButton.setPrefWidth(ToDoJavaFxView.BUTTON_ICON_WIDTH);
-				deleteButton.setOnAction(ev -> getToDoController().deleteDetail(item));
+				var deleteButton = createCellSvgButton(getRowDeleteButtonId(item.getTodo()), 
+						ev -> getToDoController().deleteDetail(item), 
+						ToDoJavaFxView.SVG_CONTENT_DELETE_ICON);
 				
-				var buttonsHBox = new HBox();
-				buttonsHBox.setMinHeight(50);
-				buttonsHBox.getChildren().addAll(modifyButton, deleteButton);
-				buttonsHBox.setSpacing(10);
-				buttonsHBox.setPrefWidth(modifyButton.getPrefWidth() 
-						+ deleteButton.getPrefWidth() + buttonsHBox.getSpacing());
-				buttonsHBox.setAlignment(Pos.CENTER_LEFT);
+				var buttonsHBox = createCellButtonsHBox(modifyButton, deleteButton);
 
-				var gridPane = new GridPane();
-				gridPane.setPrefWidth(getPrefWidth());
-				gridPane.setMinHeight(50);
-				gridPane.setHgap(20);
-				
-				if (!isSelected()) {
-					textHBox.setPrefWidth(gridPane.getPrefWidth());
-					gridPane.addColumn(0, textHBox);
-					GridPane.setColumnSpan(textHBox, 2);
-				} else {	
-					textHBox.setPrefWidth(gridPane.getPrefWidth() 
-							- buttonsHBox.getPrefWidth() - gridPane.getHgap());
-					gridPane.addColumn(0, textHBox);
-					gridPane.addColumn(1, buttonsHBox);
-				}
+				var gridPane = createCellGridPane(isSelected(), checkBoxLabelHBox, buttonsHBox, 
+						getPrefWidth());
 
 				setText(null);
 				setGraphic(gridPane);
