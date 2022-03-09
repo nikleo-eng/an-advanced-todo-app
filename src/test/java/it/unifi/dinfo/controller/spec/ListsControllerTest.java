@@ -6,6 +6,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.junit.Before;
@@ -14,6 +15,7 @@ import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import it.unifi.dinfo.model.Detail;
 import it.unifi.dinfo.model.List;
 import it.unifi.dinfo.model.User;
 import it.unifi.dinfo.repository.ToDoRepository;
@@ -48,11 +50,17 @@ public class ListsControllerTest {
 	}
 	
 	@Test
-	public void shouldDeleteCallDeleteOnRepositoryAndOnView() {
+	public void shouldDeleteFirstDeleteRelatedDetailsAndThenGivenListCallingDeleteMethodsOnRepositoryAndOnView() {
 		User user = new User("Mario", "Rossi", "email@email.com", "password");
 		List list = new List("TEST", user);
+		Detail detail = new Detail("TEST-D", list);
+		Set<Detail> details = new HashSet<>();
+		details.add(detail);
+		when(toDoRepository.findAllDetailsByListId(list.getId())).thenReturn(details);
 		listsController.delete(list);
 		InOrder inOrder = inOrder(toDoRepository, toDoView);
+		inOrder.verify(toDoRepository).findAllDetailsByListId(list.getId());
+		inOrder.verify(toDoRepository).deleteDetail(detail);
 		inOrder.verify(toDoRepository).deleteList(list);
 		inOrder.verify(toDoView).deleteList(list);
 		verifyNoMoreInteractions(ignoreStubs(toDoRepository));
