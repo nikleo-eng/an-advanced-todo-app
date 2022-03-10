@@ -7,6 +7,7 @@ import it.unifi.dinfo.controller.spec.LogController;
 import it.unifi.dinfo.controller.spec.RegistrationController;
 import it.unifi.dinfo.model.Detail;
 import it.unifi.dinfo.model.List;
+import it.unifi.dinfo.model.Log;
 import it.unifi.dinfo.model.User;
 import it.unifi.dinfo.repository.ToDoRepository;
 import it.unifi.dinfo.view.ToDoView;
@@ -43,8 +44,8 @@ public class ToDoController {
 		logController.login(email, password);
 	}
 	
-	public void logout() {
-		logController.logout();
+	public void logout(Log log, boolean stop) {
+		logController.logout(log, stop);
 	}
 	
 	public void register(String name, String surname, String email, String password, 

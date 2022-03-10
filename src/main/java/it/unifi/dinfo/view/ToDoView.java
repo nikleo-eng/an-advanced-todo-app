@@ -4,6 +4,7 @@ import java.util.Set;
 
 import it.unifi.dinfo.model.Detail;
 import it.unifi.dinfo.model.List;
+import it.unifi.dinfo.model.Log;
 import it.unifi.dinfo.model.User;
 
 public interface ToDoView {
@@ -26,7 +27,7 @@ public interface ToDoView {
 	
 	void deleteList(List list);
 	
-	void userLoggedIn(User user);
+	void userLoggedIn(User user, Log log, Log lastLog);
 	
 	void userLoggedOut();
 	

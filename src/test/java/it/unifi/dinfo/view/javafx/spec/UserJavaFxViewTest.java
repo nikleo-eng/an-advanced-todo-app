@@ -7,12 +7,18 @@ import static org.mockito.Mockito.ignoreStubs;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testfx.framework.junit.ApplicationTest;
 
 import it.unifi.dinfo.controller.ToDoController;
+import it.unifi.dinfo.model.Log;
 import it.unifi.dinfo.model.User;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -63,11 +69,12 @@ public class UserJavaFxViewTest extends ApplicationTest {
 	}
 	
 	@Test
-	public void shouldViewContainUserTextAndRefreshAndLogoutButtons() {
+	public void shouldViewContainUserAndLogTextsAndRefreshAndLogoutButtons() {
 		Node userTextNode = lookup("#" + USER_TEXT_ID).tryQuery().orElse(null);
 		assertThat(userTextNode).isNotNull().isOfAnyClassIn(Text.class);
-		Text userText = (Text) userTextNode;
-		assertThat(userText.isVisible()).isTrue();
+		
+		Node logTextNode = lookup("#" + LOG_TEXT_ID).tryQuery().orElse(null);
+		assertThat(logTextNode).isNotNull().isOfAnyClassIn(Text.class);
 		
 		Node refreshButtonNode = lookup("#" + REFRESH_BUTTON_ID).tryQuery().orElse(null);
 		assertThat(refreshButtonNode).isNotNull().isOfAnyClassIn(Button.class);
@@ -78,7 +85,6 @@ public class UserJavaFxViewTest extends ApplicationTest {
 		Node logoutButtonNode = lookup("#" + LOGOUT_BUTTON_ID).tryQuery().orElse(null);
 		assertThat(logoutButtonNode).isNotNull().isOfAnyClassIn(Button.class);
 		Button logoutButton = (Button) logoutButtonNode;
-		assertThat(logoutButton.isVisible()).isTrue();
 		assertThat(logoutButton.getText()).isEqualTo(LOGOUT_BUTTON_TEXT);
 	}
 	
@@ -88,22 +94,28 @@ public class UserJavaFxViewTest extends ApplicationTest {
 	}
 	
 	@Test
-	public void shouldUserLoggedInChangeTextOfCurrentUserTextAndSetCurrentUserOnAdditionModificationView() {
-		User user = new User("Mario", "Rossi", "email@email.com", "password");
-		user.setId(1L);
-		userJavaFxView.userLoggedIn(user);
-		
-		assertThat(lookup("#" + USER_TEXT_ID).queryText().getText()).isEqualTo(user.getName() 
-				+ " " + user.getSurname());
-		verify(additionModificationJavaFxView).setCurrentUser(user);
+	public void shouldLogTextNotReportInitiallyADate() {
+		assertThat(lookup("#" + LOG_TEXT_ID).queryText().getText()
+				.replaceFirst(LOG_STARTING_TEXT, "")).isEmpty();
+	}
+	
+	@Test
+	public void shouldUserAndLogTextsAndLogoutButtonBeInitiallyInvisible() {
+		assertThat(lookup("#" + USER_TEXT_ID).queryText().isVisible()).isFalse();
+		assertThat(lookup("#" + LOG_TEXT_ID).queryText().isVisible()).isFalse();
+		assertThat(lookup("#" + LOGOUT_BUTTON_ID).queryButton().isVisible()).isFalse();
+	}
+	
+	@Test
+	public void shouldRefreshButtonBeInitiallyDisabled() {
+		assertThat(lookup("#" + REFRESH_BUTTON_ID).queryButton().isDisable()).isTrue();
 	}
 	
 	@Test
 	public void shouldUserLoggedInCallResetGUIOnLoginAndRegistrationViewsEnableListsViewAndDisableDetailsView() {
 		User user = new User("Mario", "Rossi", "email@email.com", "password");
-		user.setId(1L);
-		userJavaFxView.userLoggedIn(user);
-		
+		Log log = new Log(new Date(), user);
+		userJavaFxView.userLoggedIn(user, log, null);
 		verify(loginJavaFxView).resetGUI();
 		verify(registrationJavaFxView).resetGUI();
 		verify(listsJavaFxView).enableArea();
@@ -111,45 +123,117 @@ public class UserJavaFxViewTest extends ApplicationTest {
 	}
 	
 	@Test
+	public void shouldUserLoggedInEnableAllOnThisView() {
+		User user = new User("Mario", "Rossi", "email@email.com", "password");
+		Log log = new Log(new Date(), user);
+		userJavaFxView.userLoggedIn(user, log, null);
+		assertThat(lookup("#" + USER_TEXT_ID).queryText().isVisible()).isTrue();
+		assertThat(lookup("#" + LOG_TEXT_ID).queryText().isVisible()).isTrue();
+		assertThat(lookup("#" + LOGOUT_BUTTON_ID).queryButton().isVisible()).isTrue();
+		assertThat(lookup("#" + REFRESH_BUTTON_ID).queryButton().isDisable()).isFalse();
+	}
+	
+	@Test
+	public void shouldUserLoggedInSetCurrentUserAndCurrentLog() {
+		User user = new User("Mario", "Rossi", "email@email.com", "password");
+		Log log = new Log(new Date(), user);
+		userJavaFxView.userLoggedIn(user, log, null);
+		assertThat(userJavaFxView.getCurrentUser()).isEqualTo(user);
+		assertThat(userJavaFxView.getCurrentLog()).isEqualTo(log);
+	}
+	
+	@Test
+	public void shouldUserLoggedInModifyTextInUserAndLogTexts() {
+		User user = new User("Mario", "Rossi", "email@email.com", "password");
+		Log log = new Log(new Date(), user);
+		Calendar calMin2H = Calendar.getInstance();
+		calMin2H.add(Calendar.HOUR, -2);
+		Log lastLog = new Log(calMin2H.getTime(), user);
+		calMin2H.add(Calendar.MINUTE, +1);
+		lastLog.setOut(calMin2H.getTime());
+		SimpleDateFormat sdf = new SimpleDateFormat(SDF_PATTERN, Locale.ITALIAN);
+		userJavaFxView.userLoggedIn(user, log, lastLog);
+		assertThat(lookup("#" + USER_TEXT_ID).queryText().getText()).isEqualTo(
+				user.getName() + " " + user.getSurname());
+		assertThat(lookup("#" + LOG_TEXT_ID).queryText().getText()).isEqualTo(
+				LOG_STARTING_TEXT + sdf.format(lastLog.getIn()));
+	}
+	
+	@Test
 	public void shouldUserLoggedInCallGetAllListsOnController() {
 		User user = new User("Mario", "Rossi", "email@email.com", "password");
 		user.setId(1L);
-		userJavaFxView.userLoggedIn(user);
+		userJavaFxView.setCurrentUser(user);
+		Log log = new Log(new Date(), user);
+		userJavaFxView.userLoggedIn(user, log, null);
 		verify(toDoController).getAllLists(user.getId());
 	}
 	
 	@Test
-	public void shouldResetGUIClearUserText() {
-		userJavaFxView.resetGUI();
-		assertThat(lookup("#" + USER_TEXT_ID).queryText().getText()).isEmpty();
+	public void shouldUserLoggedInNotReportADateButNAInLogTextWhenIsNotGivenALastLog() {
+		User user = new User("Mario", "Rossi", "email@email.com", "password");
+		Log log = new Log(new Date(), user);
+		userJavaFxView.userLoggedIn(user, log, null);
+		assertThat(lookup("#" + LOG_TEXT_ID).queryText().getText()).isEqualTo(
+				LOG_STARTING_TEXT + "N.A.");
 	}
 	
 	@Test
-	public void shouldClickOnLogoutButtonResetGUIOnThisAndAllOthersViewsAndResetUserOnAdditionModificationView() {
-		clickOn("#" + LOGOUT_BUTTON_ID);
-		
-		assertThat(lookup("#" + USER_TEXT_ID).queryText().getText()).isEmpty();
+	public void shouldResetGUIClearUserAndLogTextAndDisableAllOnThisView() {
+		Text userText = lookup("#" + USER_TEXT_ID).queryText();
+		userText.setText("Mario Rossi");
+		userText.setVisible(true);
+		Text logText = lookup("#" + LOG_TEXT_ID).queryText();
+		logText.setText(logText.getText() + "10/03/2022 21:05:20 UTC");
+		logText.setVisible(true);
+		Button logoutButton = lookup("#" + LOGOUT_BUTTON_ID).queryButton();
+		logoutButton.setVisible(true);
+		Button refreshButton = lookup("#" + REFRESH_BUTTON_ID).queryButton();
+		refreshButton.setDisable(false);
+		userJavaFxView.resetGUI();
+		assertThat(userText.getText()).isEmpty();
+		assertThat(logText.getText().replaceFirst(LOG_STARTING_TEXT, "")).isEmpty();
+		assertThat(userText.isVisible()).isFalse();
+		assertThat(logText.isVisible()).isFalse();
+		assertThat(logoutButton.isVisible()).isFalse();
+		assertThat(refreshButton.isDisable()).isTrue();
+	}
+	
+	@Test
+	public void shouldClickOnLogoutButtonResetGUIOnThisAndAllOthersViewsAndCallLogoutOnController() {
+		Text userText = lookup("#" + USER_TEXT_ID).queryText();
+		userText.setText("Mario Rossi");
+		userText.setVisible(true);
+		Text logText = lookup("#" + LOG_TEXT_ID).queryText();
+		logText.setText(logText.getText() + "10/03/2022 21:05:20 UTC");
+		logText.setVisible(true);
+		Button logoutButton = lookup("#" + LOGOUT_BUTTON_ID).queryButton();
+		logoutButton.setVisible(true);
+		Button refreshButton = lookup("#" + REFRESH_BUTTON_ID).queryButton();
+		refreshButton.setDisable(false);
+		clickOn(logoutButton);
 		verify(listsJavaFxView).resetGUI();
 		verify(detailsJavaFxView).resetGUI();
 		verify(additionModificationJavaFxView).resetGUI();
-		verify(additionModificationJavaFxView).setCurrentUser(null);
-	}
-	
-	@Test
-	public void shouldClickOnLogoutButtonCallLogoutOnController() {
-		clickOn("#" + LOGOUT_BUTTON_ID);
-		verify(toDoController).logout();
+		verify(toDoController).logout(null, false);
+		assertThat(userText.getText()).isEmpty();
+		assertThat(logText.getText().replaceFirst(LOG_STARTING_TEXT, "")).isEmpty();
+		assertThat(userText.isVisible()).isFalse();
+		assertThat(logText.isVisible()).isFalse();
+		assertThat(logoutButton.isVisible()).isFalse();
+		assertThat(refreshButton.isDisable()).isTrue();
+		verifyNoMoreInteractions(ignoreStubs(toDoController, listsJavaFxView, detailsJavaFxView, 
+				additionModificationJavaFxView));
 	}
 	
 	@Test
 	public void shouldClickOnRefreshCallClearAllOnListsAndDetailsViewEnableListsViewDisableDetailsViewAndCallGetAllListsOnController() {
 		User user = new User("Mario", "Rossi", "email@email.com", "password");
 		user.setId(1L);
-		
 		userJavaFxView.setCurrentUser(user);
-		
-		clickOn("#" + REFRESH_BUTTON_ID);
-		
+		Button refreshButton = lookup("#" + REFRESH_BUTTON_ID).queryButton();
+		refreshButton.setDisable(false);
+		clickOn(refreshButton);
 		verify(listsJavaFxView).clearAll();
 		verify(detailsJavaFxView).clearAll();
 		verify(listsJavaFxView).enableArea();
@@ -157,6 +241,21 @@ public class UserJavaFxViewTest extends ApplicationTest {
 		verify(toDoController).getAllLists(user.getId());
 		verifyNoMoreInteractions(ignoreStubs(toDoController, listsJavaFxView, detailsJavaFxView, 
 				additionModificationJavaFxView));
+	}
+	
+	@Test
+	public void shouldGetCurrentUserReturnCurrentUser() {
+		User user = new User("Mario", "Rossi", "email@email.com", "password");
+		userJavaFxView.setCurrentUser(user);
+		assertThat(userJavaFxView.getCurrentUser()).isEqualTo(user);
+	}
+	
+	@Test
+	public void shouldSetCurrentLogSetEffectivelyTheCurrentLog() {
+		User user = new User("Mario", "Rossi", "email@email.com", "password");
+		Log log = new Log(new Date(), user);
+		userJavaFxView.setCurrentLog(log);
+		assertThat(userJavaFxView.getCurrentLog()).isEqualTo(log);
 	}
 	
 }

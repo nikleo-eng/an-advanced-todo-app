@@ -4,6 +4,8 @@ import static org.mockito.Mockito.ignoreStubs;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
+import java.util.Date;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -16,6 +18,7 @@ import it.unifi.dinfo.controller.spec.LogController;
 import it.unifi.dinfo.controller.spec.RegistrationController;
 import it.unifi.dinfo.model.Detail;
 import it.unifi.dinfo.model.List;
+import it.unifi.dinfo.model.Log;
 import it.unifi.dinfo.model.User;
 
 public class ToDoControllerTest {
@@ -54,8 +57,10 @@ public class ToDoControllerTest {
 	
 	@Test
 	public void shouldLogoutCallLogoutOnLogController() {
-		toDoController.logout();
-		verify(logController).logout();
+		User user = new User("Mario", "Rossi", "email@email.com", "password");
+		Log log = new Log(new Date(), user);
+		toDoController.logout(log, false);
+		verify(logController).logout(log, false);
 		verifyNoMoreInteractions(ignoreStubs(logController, registrationController, listsController, 
 				detailsController, additionModificationController));
 	}

@@ -5,6 +5,9 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
+
+import java.util.Date;
+
 import static org.mockito.Mockito.ignoreStubs;
 import static org.mockito.Mockito.inOrder;
 
@@ -14,6 +17,7 @@ import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import it.unifi.dinfo.model.Log;
 import it.unifi.dinfo.model.User;
 import it.unifi.dinfo.repository.ToDoRepository;
 import it.unifi.dinfo.view.ToDoView;
@@ -40,7 +44,7 @@ public class RegistrationControllerTest {
 		registrationController.register(null, "Rossi", "email@email.com", "password", "password");
 		verify(toDoView).renderRegistrationError(ERRORS.FIELD_EMPTY.getValue());
 		verify(toDoRepository, never()).createUser(any(User.class));
-		verify(toDoView, never()).userLoggedIn(any(User.class));
+		verify(toDoView, never()).userLoggedIn(any(User.class), any(Log.class), any(Log.class));
 	}
 	
 	@Test
@@ -48,7 +52,7 @@ public class RegistrationControllerTest {
 		registrationController.register("Mario", null, "email@email.com", "password", "password");
 		verify(toDoView).renderRegistrationError(ERRORS.FIELD_EMPTY.getValue());
 		verify(toDoRepository, never()).createUser(any(User.class));
-		verify(toDoView, never()).userLoggedIn(any(User.class));
+		verify(toDoView, never()).userLoggedIn(any(User.class), any(Log.class), any(Log.class));
 	}
 	
 	@Test
@@ -56,7 +60,7 @@ public class RegistrationControllerTest {
 		registrationController.register("Mario", "Rossi", null, "password", "password");
 		verify(toDoView).renderRegistrationError(ERRORS.FIELD_EMPTY.getValue());
 		verify(toDoRepository, never()).createUser(any(User.class));
-		verify(toDoView, never()).userLoggedIn(any(User.class));
+		verify(toDoView, never()).userLoggedIn(any(User.class), any(Log.class), any(Log.class));
 	}
 	
 	@Test
@@ -64,7 +68,7 @@ public class RegistrationControllerTest {
 		registrationController.register("Mario", "Rossi", "email@email.com", null, "password");
 		verify(toDoView).renderRegistrationError(ERRORS.FIELD_EMPTY.getValue());
 		verify(toDoRepository, never()).createUser(any(User.class));
-		verify(toDoView, never()).userLoggedIn(any(User.class));
+		verify(toDoView, never()).userLoggedIn(any(User.class), any(Log.class), any(Log.class));
 	}
 	
 	@Test
@@ -72,7 +76,7 @@ public class RegistrationControllerTest {
 		registrationController.register("Mario", "Rossi", "email@email.com", "password", null);
 		verify(toDoView).renderRegistrationError(ERRORS.FIELD_EMPTY.getValue());
 		verify(toDoRepository, never()).createUser(any(User.class));
-		verify(toDoView, never()).userLoggedIn(any(User.class));
+		verify(toDoView, never()).userLoggedIn(any(User.class), any(Log.class), any(Log.class));
 	}
 	
 	@Test
@@ -80,7 +84,7 @@ public class RegistrationControllerTest {
 		registrationController.register(" ", "Rossi", "email@email.com", "password", "password");
 		verify(toDoView).renderRegistrationError(ERRORS.FIELD_EMPTY.getValue());
 		verify(toDoRepository, never()).createUser(any(User.class));
-		verify(toDoView, never()).userLoggedIn(any(User.class));
+		verify(toDoView, never()).userLoggedIn(any(User.class), any(Log.class), any(Log.class));
 	}
 	
 	@Test
@@ -88,7 +92,7 @@ public class RegistrationControllerTest {
 		registrationController.register("Mario", " ", "email@email.com", "password", "password");
 		verify(toDoView).renderRegistrationError(ERRORS.FIELD_EMPTY.getValue());
 		verify(toDoRepository, never()).createUser(any(User.class));
-		verify(toDoView, never()).userLoggedIn(any(User.class));
+		verify(toDoView, never()).userLoggedIn(any(User.class), any(Log.class), any(Log.class));
 	}
 	
 	@Test
@@ -96,7 +100,7 @@ public class RegistrationControllerTest {
 		registrationController.register("Mario", "Rossi", " ", "password", "password");
 		verify(toDoView).renderRegistrationError(ERRORS.FIELD_EMPTY.getValue());
 		verify(toDoRepository, never()).createUser(any(User.class));
-		verify(toDoView, never()).userLoggedIn(any(User.class));
+		verify(toDoView, never()).userLoggedIn(any(User.class), any(Log.class), any(Log.class));
 	}
 	
 	@Test
@@ -104,7 +108,7 @@ public class RegistrationControllerTest {
 		registrationController.register("Mario", "Rossi", "email@email.com", "", "password");
 		verify(toDoView).renderRegistrationError(ERRORS.FIELD_EMPTY.getValue());
 		verify(toDoRepository, never()).createUser(any(User.class));
-		verify(toDoView, never()).userLoggedIn(any(User.class));
+		verify(toDoView, never()).userLoggedIn(any(User.class), any(Log.class), any(Log.class));
 	}
 	
 	@Test
@@ -112,7 +116,7 @@ public class RegistrationControllerTest {
 		registrationController.register("Mario", "Rossi", "email@email.com", "password", "");
 		verify(toDoView).renderRegistrationError(ERRORS.FIELD_EMPTY.getValue());
 		verify(toDoRepository, never()).createUser(any(User.class));
-		verify(toDoView, never()).userLoggedIn(any(User.class));
+		verify(toDoView, never()).userLoggedIn(any(User.class), any(Log.class), any(Log.class));
 	}
 	
 	@Test
@@ -120,7 +124,7 @@ public class RegistrationControllerTest {
 		registrationController.register("Mario", "Rossi", "email@email.com", "password", "password2");
 		verify(toDoView).renderRegistrationError(ERRORS.PASSWORDS_NOT_MACHING.getValue());
 		verify(toDoRepository, never()).createUser(any(User.class));
-		verify(toDoView, never()).userLoggedIn(any(User.class));
+		verify(toDoView, never()).userLoggedIn(any(User.class), any(Log.class), any(Log.class));
 	}
 	
 	@Test
@@ -130,18 +134,24 @@ public class RegistrationControllerTest {
 		registrationController.register("Mario", "Rossi", "email@email.com", "password", "password");
 		verify(toDoView).renderRegistrationError(ERRORS.USER_ALREADY_FOUND.getValue());
 		verify(toDoRepository, never()).createUser(any(User.class));
-		verify(toDoView, never()).userLoggedIn(any(User.class));
+		verify(toDoView, never()).userLoggedIn(any(User.class), any(Log.class), any(Log.class));
 	}
 	
 	@Test
-	public void shouldCorrectRegistrationCallCreateUserOnRepositoryAndUserLoggedInOnView() {
+	public void shouldCorrectRegistrationCallCreateUserOnRepositoryAndUserLoggedInSetCurrentUserAndSetCurrentLogOnView() {
 		User user = new User("Mario", "Rossi", "email@email.com", "password");
+		user.setId(1L);
+		Log log = new Log(new Date(), user);
+		log.setId(1L);
 		when(toDoRepository.findUserByEmail("email@email.com")).thenReturn(null);
 		when(toDoRepository.createUser(any(User.class))).thenReturn(user);
+		when(toDoRepository.createLog(any(Log.class))).thenReturn(log);
+		when(toDoRepository.findLastLogBeforeIdAndByUserId(log.getId(), user.getId())).thenReturn(null);
 		registrationController.register("Mario", "Rossi", "email@email.com", "password", "password");
 		InOrder inOrder = inOrder(toDoRepository, toDoView);
 		inOrder.verify(toDoRepository).createUser(any(User.class));
-		inOrder.verify(toDoView).userLoggedIn(user);
+		inOrder.verify(toDoRepository).createLog(any(Log.class));
+		inOrder.verify(toDoView).userLoggedIn(user, log, null);
 		verifyNoMoreInteractions(ignoreStubs(toDoRepository));
 		verifyNoMoreInteractions(ignoreStubs(toDoView));
 	}

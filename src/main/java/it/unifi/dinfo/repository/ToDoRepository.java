@@ -4,6 +4,7 @@ import java.util.Set;
 
 import it.unifi.dinfo.model.Detail;
 import it.unifi.dinfo.model.List;
+import it.unifi.dinfo.model.Log;
 import it.unifi.dinfo.model.User;
 
 public interface ToDoRepository {
@@ -31,5 +32,11 @@ public interface ToDoRepository {
 	Detail saveDetail(Detail detail);
 	
 	void deleteDetail(Detail detail);
+	
+	Log createLog(Log log);
+	
+	Log saveLog(Log log);
+	
+	Log findLastLogBeforeIdAndByUserId(Long id, Long userId);
 	
 }

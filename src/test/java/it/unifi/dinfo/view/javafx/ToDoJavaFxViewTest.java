@@ -6,6 +6,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -20,6 +22,7 @@ import org.testfx.framework.junit.ApplicationTest;
 import it.unifi.dinfo.controller.ToDoController;
 import it.unifi.dinfo.model.Detail;
 import it.unifi.dinfo.model.List;
+import it.unifi.dinfo.model.Log;
 import it.unifi.dinfo.model.User;
 import it.unifi.dinfo.view.javafx.spec.AdditionModificationJavaFxView;
 import it.unifi.dinfo.view.javafx.spec.DetailsJavaFxView;
@@ -119,7 +122,14 @@ public class ToDoJavaFxViewTest extends ApplicationTest {
 	
 	@Test
 	public void shouldUserLoggedInChangeRootSoThatViewContainOnlyListsDetailsAdditionModificationAndUserViews() {
-		toDoJavaFxView.userLoggedIn(new User("Mario", "Rossi", "email@email.com", "password"));
+		User user = new User("Mario", "Rossi", "email@email.com", "password");
+		Calendar calMin1H = Calendar.getInstance();
+		calMin1H.add(Calendar.HOUR, -1);
+		Log lastLog = new Log(calMin1H.getTime(), user);
+		calMin1H.add(Calendar.MINUTE, +1);
+		lastLog.setOut(calMin1H.getTime());
+		Log log = new Log(new Date(), user);
+		toDoJavaFxView.userLoggedIn(user, log, lastLog);
 		assertThat(lookup(LOGIN_TEXT).tryQuery()).isEmpty();
 		assertThat(lookup(REGISTRATION_TEXT).tryQuery()).isEmpty();
 		assertThat(lookup(LISTS_TEXT).tryQuery()).isPresent();
@@ -127,6 +137,22 @@ public class ToDoJavaFxViewTest extends ApplicationTest {
 		assertThat(lookup(ADDITION_MODIFICATION_TEXT).tryQuery()).isPresent();
 		assertThat(lookup(USER_TEXT).tryQuery()).isPresent();
 		assertThat(window(STAGE_TITLE).getScene().getRoot()).isEqualTo(toDoJavaFxView.getAppRoot());
+	}
+	
+	@Test
+	public void shouldUserLoggedInCallUserLoggedInOnUserViewAndSetCurrentUserOnAdditionModificationView() {
+		User user = new User("Mario", "Rossi", "email@email.com", "password");
+		Calendar calMin1H = Calendar.getInstance();
+		calMin1H.add(Calendar.HOUR, -1);
+		Log lastLog = new Log(calMin1H.getTime(), user);
+		calMin1H.add(Calendar.MINUTE, +1);
+		lastLog.setOut(calMin1H.getTime());
+		Log log = new Log(new Date(), user);
+		toDoJavaFxView.userLoggedIn(user, log, lastLog);
+		verify(userJavaFxView).userLoggedIn(user, log, lastLog);
+		verify(additionModificationJavaFxView).setCurrentUser(user);
+		verifyNoMoreInteractions(ignoreStubs(loginJavaFxView, registrationJavaFxView, 
+				listsJavaFxView, detailsJavaFxView, additionModificationJavaFxView, userJavaFxView));
 	}
 	
 	@Test
@@ -140,6 +166,19 @@ public class ToDoJavaFxViewTest extends ApplicationTest {
 		assertThat(lookup(ADDITION_MODIFICATION_TEXT).tryQuery()).isEmpty();
 		assertThat(lookup(USER_TEXT).tryQuery()).isEmpty();
 		assertThat(window(STAGE_TITLE).getScene().getRoot()).isEqualTo(toDoJavaFxView.getUserRoot());
+	}
+	
+	@Test
+	public void shouldUserLoggedOutResetCurrentUserOnUserAndAdditionModificationViews() {
+		toDoJavaFxView.userLoggedOut();
+		verify(userJavaFxView).setCurrentUser(null);
+		verify(additionModificationJavaFxView).setCurrentUser(null);
+	}
+	
+	@Test
+	public void shouldUserLoggedOutResetCurrentLogOnUserView() {
+		toDoJavaFxView.userLoggedOut();
+		verify(userJavaFxView).setCurrentLog(null);
 	}
 	
 	@Test

@@ -2,7 +2,11 @@ package it.unifi.dinfo.view.javafx.spec;
 
 import static it.unifi.dinfo.view.javafx.ToDoJavaFxView.*;
 
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+
 import it.unifi.dinfo.controller.ToDoController;
+import it.unifi.dinfo.model.Log;
 import it.unifi.dinfo.model.User;
 import it.unifi.dinfo.view.javafx.spec.base.BaseJavaFxView;
 import it.unifi.dinfo.view.spec.UserView;
@@ -19,6 +23,12 @@ public class UserJavaFxView extends BaseJavaFxView implements UserView {
 	protected static final String REFRESH_BUTTON_TEXT = "Refresh";
 	protected static final String REFRESH_BUTTON_ID = "USER_REFRESH_BUTTON_ID";
 	protected static final String USER_TEXT_ID = "USER_TEXT_ID";
+	protected static final String LOG_TEXT_ID = "LOG_TEXT_ID";
+	
+	protected static final String LOG_STARTING_TEXT = "Last Login: ";
+	protected static final String SDF_PATTERN = "dd/MM/yyyy HH:mm:ss z";
+	
+	private static final String ITALIC_STYLE = "-fx-font-style: italic;";
 	
 	private ListsJavaFxView listsJavaFxView;
 	private DetailsJavaFxView detailsJavaFxView;
@@ -27,7 +37,12 @@ public class UserJavaFxView extends BaseJavaFxView implements UserView {
 	private RegistrationJavaFxView registrationJavaFxView;
 	
 	private User currentUser;
-	private Text currUserText;
+	private Log currentLog;
+	
+	private Text userText;
+	private Text logText;
+	private Button logoutButton;
+	private Button refreshButton;
 
 	public UserJavaFxView(ToDoController toDoController, ListsJavaFxView listsJavaFxView, 
 			DetailsJavaFxView detailsJavaFxView, 
@@ -41,39 +56,80 @@ public class UserJavaFxView extends BaseJavaFxView implements UserView {
 		this.registrationJavaFxView = registrationJavaFxView;
 		
 		currentUser = null;
-		currUserText = null;
+		currentLog = null;
+		
+		userText = null;
+		logText = null;
+		logoutButton = null;
+		refreshButton = null;
+	}
+	
+	public void setCurrentUser(User user) {
+		currentUser = user;
+	}
+	
+	private void setUserText(User user) {
+		userText.setText(user.getName() + " " + user.getSurname());
+	}
+	
+	public void setCurrentLog(Log log) {
+		currentLog = log;
+	}
+	
+	private void setLogText(Log log) {
+		SimpleDateFormat sdf = new SimpleDateFormat(SDF_PATTERN, Locale.ITALIAN);
+		String formattedDate = log != null ? sdf.format(log.getIn()) : "N.A.";
+		logText.setText(logText.getText() + formattedDate);
+	}
+
+	public User getCurrentUser() {
+		return currentUser;
 	}
 	
 	/* Only for tests */
-	protected void setCurrentUser(User currentUser) {
-		this.currentUser = currentUser;
+	protected Log getCurrentLog() {
+		return currentLog;
 	}
 
 	@Override
-	public void userLoggedIn(User currentUser) {
-		this.currentUser = currentUser;
-		currUserText.setText(currentUser.getName() + " " + currentUser.getSurname());
+	public void userLoggedIn(User user, Log log, Log lastLog) {
 		loginJavaFxView.resetGUI();
 		registrationJavaFxView.resetGUI();
-		additionModificationJavaFxView.setCurrentUser(currentUser);
 		listsJavaFxView.enableArea();
 		detailsJavaFxView.disableArea();
-		getToDoController().getAllLists(currentUser.getId());
+		enableArea();
+		
+		currentUser = user;
+		setUserText(user);
+		getToDoController().getAllLists(user.getId());
+		
+		currentLog = log;
+		setLogText(lastLog);
 	}
 	
-	private void logout() {
+	private void enableArea() {
+		userText.setVisible(true);
+		logText.setVisible(true);
+		logoutButton.setVisible(true);
+		refreshButton.setDisable(false);
+	}
+	
+	public void logout(boolean stop) {
 		resetGUI();
 		listsJavaFxView.resetGUI();
 		detailsJavaFxView.resetGUI();
 		additionModificationJavaFxView.resetGUI();
-		additionModificationJavaFxView.setCurrentUser(null);
-		getToDoController().logout();
+		getToDoController().logout(currentLog, stop);
 	}
 	
 	@Override
 	public void resetGUI() {
-		currUserText.setText("");
-		currentUser = null;	
+		userText.setText("");
+		logText.setText(LOG_STARTING_TEXT);
+		userText.setVisible(false);
+		logText.setVisible(false);
+		logoutButton.setVisible(false);
+		refreshButton.setDisable(true);
 	}
 	
 	private void refresh() {
@@ -93,21 +149,29 @@ public class UserJavaFxView extends BaseJavaFxView implements UserView {
 		hBox.setSpacing(10);
 		hBox.setStyle("-fx-border-color: transparent; -fx-border-insets: 4; -fx-border-width: 2;");
 		
-		currUserText = new Text("");
-		currUserText.setId(USER_TEXT_ID);
-		currUserText.setStyle(BOLD_STYLE);
+		userText = new Text("");
+		userText.setId(USER_TEXT_ID);
+		userText.setStyle(BOLD_STYLE);
+		userText.setVisible(false);
 		
-		var logoutButton = new Button(LOGOUT_BUTTON_TEXT);
+		logText = new Text(LOG_STARTING_TEXT);
+		logText.setId(LOG_TEXT_ID);
+		logText.setStyle(ITALIC_STYLE);
+		logText.setVisible(false);
+		
+		logoutButton = new Button(LOGOUT_BUTTON_TEXT);
 		logoutButton.setId(LOGOUT_BUTTON_ID);
 		logoutButton.setPrefWidth(BUTTON_WIDTH);
-		logoutButton.setOnAction(ev -> logout());
+		logoutButton.setOnAction(ev -> logout(false));
+		logoutButton.setVisible(false);
 		
-		var refreshButton = new Button(REFRESH_BUTTON_TEXT);
+		refreshButton = new Button(REFRESH_BUTTON_TEXT);
 		refreshButton.setId(REFRESH_BUTTON_ID);
 		refreshButton.setPrefWidth(BUTTON_WIDTH);
 		refreshButton.setOnAction(ev -> refresh());
+		refreshButton.setDisable(true);
 		
-		hBox.getChildren().addAll(currUserText, logoutButton, refreshButton);
+		hBox.getChildren().addAll(userText, logText, logoutButton, refreshButton);
 		vBox.getChildren().add(hBox);
 		return vBox;
 	}

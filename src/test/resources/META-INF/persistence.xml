@@ -10,6 +10,7 @@
 		<class>it.unifi.dinfo.model.User</class>
 		<class>it.unifi.dinfo.model.List</class>
 		<class>it.unifi.dinfo.model.Detail</class>
+		<class>it.unifi.dinfo.model.Log</class>
 		
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
 		

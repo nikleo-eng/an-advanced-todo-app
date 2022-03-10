@@ -10,6 +10,7 @@ import it.unifi.dinfo.app.main.ToDoAppMain;
 import it.unifi.dinfo.controller.ToDoController;
 import it.unifi.dinfo.model.Detail;
 import it.unifi.dinfo.model.List;
+import it.unifi.dinfo.model.Log;
 import it.unifi.dinfo.model.User;
 import it.unifi.dinfo.repository.mysql.ToDoMySqlRepository;
 import it.unifi.dinfo.view.ToDoView;
@@ -145,7 +146,9 @@ public class ToDoJavaFxView extends Application implements ToDoView {
 	
 	@Override
 	public void stop() throws Exception {
-		toDoController.logout();
+		if (userJavaFxView.getCurrentUser() != null) {
+			userJavaFxView.logout(true);
+		}
 		
 		LOGGER.info("Application Stopped");
     }
@@ -206,13 +209,17 @@ public class ToDoJavaFxView extends Application implements ToDoView {
 	}
 
 	@Override
-	public void userLoggedIn(User user) {
-		userJavaFxView.userLoggedIn(user);
+	public void userLoggedIn(User user, Log log, Log lastLog) {
+		userJavaFxView.userLoggedIn(user, log, lastLog);
+		additionModificationJavaFxView.setCurrentUser(user);
 		stage.getScene().setRoot(appRoot);
 	}
 	
 	@Override
 	public void userLoggedOut() {
+		userJavaFxView.setCurrentLog(null);
+		userJavaFxView.setCurrentUser(null);
+		additionModificationJavaFxView.setCurrentUser(null);
 		stage.getScene().setRoot(userRoot);
 	}
 

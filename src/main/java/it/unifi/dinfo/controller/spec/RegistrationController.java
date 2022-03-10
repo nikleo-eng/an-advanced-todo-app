@@ -1,11 +1,14 @@
 package it.unifi.dinfo.controller.spec;
 
 import it.unifi.dinfo.controller.spec.base.BaseController;
+import it.unifi.dinfo.model.Log;
 import it.unifi.dinfo.model.User;
 import it.unifi.dinfo.repository.ToDoRepository;
 import it.unifi.dinfo.view.ToDoView;
 
 import static it.unifi.dinfo.view.spec.RegistrationView.*;
+
+import java.util.Date;
 
 public class RegistrationController extends BaseController {
 
@@ -34,7 +37,14 @@ public class RegistrationController extends BaseController {
 		
 		User newUser = new User(name.trim(), surname.trim(), email.trim(), password);
 		newUser = getToDoRepository().createUser(newUser);
-		getToDoView().userLoggedIn(newUser);
+		
+		Log newLog = new Log(new Date(), newUser);
+		newLog = getToDoRepository().createLog(newLog);
+		
+		Log lastLog = getToDoRepository().findLastLogBeforeIdAndByUserId(
+				newLog.getId(), newUser.getId());
+		
+		getToDoView().userLoggedIn(newUser, newLog, lastLog);
 	}
 	
 }

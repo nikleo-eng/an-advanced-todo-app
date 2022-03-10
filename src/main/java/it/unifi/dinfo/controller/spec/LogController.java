@@ -1,11 +1,14 @@
 package it.unifi.dinfo.controller.spec;
 
 import it.unifi.dinfo.controller.spec.base.BaseController;
+import it.unifi.dinfo.model.Log;
 import it.unifi.dinfo.model.User;
 import it.unifi.dinfo.repository.ToDoRepository;
 import it.unifi.dinfo.view.ToDoView;
 
 import static it.unifi.dinfo.view.spec.LoginView.*;
+
+import java.util.Date;
 
 public class LogController extends BaseController {
 
@@ -30,11 +33,22 @@ public class LogController extends BaseController {
 			return;
 		}
 		
-		getToDoView().userLoggedIn(userSelected);
+		Log newLog = new Log(new Date(), userSelected);
+		newLog = getToDoRepository().createLog(newLog);
+		
+		Log lastLog = getToDoRepository().findLastLogBeforeIdAndByUserId(
+				newLog.getId(), userSelected.getId());
+		
+		getToDoView().userLoggedIn(userSelected, newLog, lastLog);
 	}
 	
-	public void logout() {
-		getToDoView().userLoggedOut();
+	public void logout(Log log, boolean stop) {
+		log.setOut(new Date());
+		getToDoRepository().saveLog(log);
+		
+		if (!stop) {
+			getToDoView().userLoggedOut();
+		}
 	}
 	
 }

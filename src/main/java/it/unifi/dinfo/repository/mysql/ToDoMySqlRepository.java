@@ -13,10 +13,12 @@ import org.hibernate.SessionFactory;
 
 import it.unifi.dinfo.model.Detail;
 import it.unifi.dinfo.model.List;
+import it.unifi.dinfo.model.Log;
 import it.unifi.dinfo.model.User;
 import it.unifi.dinfo.repository.ToDoRepository;
 import it.unifi.dinfo.repository.mysql.spec.DetailMySqlRepository;
 import it.unifi.dinfo.repository.mysql.spec.ListMySqlRepository;
+import it.unifi.dinfo.repository.mysql.spec.LogMySqlRepository;
 import it.unifi.dinfo.repository.mysql.spec.UserMySqlRepository;
 
 public class ToDoMySqlRepository implements ToDoRepository {
@@ -24,13 +26,16 @@ public class ToDoMySqlRepository implements ToDoRepository {
 	private UserMySqlRepository userMySqlRepository;
 	private ListMySqlRepository listMySqlRepository;
 	private DetailMySqlRepository detailMySqlRepository;
+	private LogMySqlRepository logMySqlRepository;
 	
 	/* Only for tests */
 	protected ToDoMySqlRepository(UserMySqlRepository userMySqlRepository, 
-			ListMySqlRepository listMySqlRepository, DetailMySqlRepository detailMySqlRepository) {
+			ListMySqlRepository listMySqlRepository, DetailMySqlRepository detailMySqlRepository, 
+			LogMySqlRepository logMySqlRepository) {
 		this.userMySqlRepository = userMySqlRepository;
 		this.listMySqlRepository = listMySqlRepository;
 		this.detailMySqlRepository = detailMySqlRepository;
+		this.logMySqlRepository = logMySqlRepository;
 	}
 
 	public ToDoMySqlRepository(String host, String port, String dbName, 
@@ -39,6 +44,7 @@ public class ToDoMySqlRepository implements ToDoRepository {
 		userMySqlRepository = new UserMySqlRepository(hibernateSession);
 		listMySqlRepository = new ListMySqlRepository(hibernateSession);
 		detailMySqlRepository = new DetailMySqlRepository(hibernateSession);
+		logMySqlRepository = new LogMySqlRepository(hibernateSession);
 	}
 	
 	private static Session createHibernateSession(String host, String port, String dbName, 
@@ -112,6 +118,21 @@ public class ToDoMySqlRepository implements ToDoRepository {
 	@Override
 	public void deleteDetail(Detail detail) {
 		detailMySqlRepository.delete(detail);
+	}
+
+	@Override
+	public Log createLog(Log log) {
+		return logMySqlRepository.create(log);
+	}
+
+	@Override
+	public Log saveLog(Log log) {
+		return logMySqlRepository.save(log);
+	}
+
+	@Override
+	public Log findLastLogBeforeIdAndByUserId(Long id, Long userId) {
+		return logMySqlRepository.findLastBeforeIdAndByUserId(id, userId);
 	}
 	
 }
