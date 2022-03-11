@@ -5,6 +5,8 @@ import java.util.Set;
 import it.unifi.dinfo.model.Detail;
 
 public interface DetailRepository {
+	
+	Detail findById(Long id);
 
 	Set<Detail> findAllByListId(Long listId);
 	

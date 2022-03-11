@@ -170,4 +170,31 @@ public class DetailMySqlRepositoryTest {
 		session.getTransaction().commit();
 	}
 	
+	@Test
+	public void shouldFindByIdReturnNullWhenNoDetailWithGivenIdIsFound() {
+		Detail retrievedDetail = detailMySqlRepository.findById(1L);
+		assertNull(retrievedDetail);
+	}
+	
+	@Test
+	public void shouldFindByIdReturnADetailWithGivenIdWhenThisIsFound() {
+		User user = new User("Mario", "Rossi", "email@email.com", "password");
+		List list = new List("TEST", user);
+		Detail detail = new Detail("TEST-D", list);
+		session.getTransaction().begin();
+		session.persist(user);
+		session.persist(list);
+		session.persist(detail);
+		session.getTransaction().commit();
+		
+		Detail retrievedDetail = detailMySqlRepository.findById(detail.getId());
+		assertEquals(detail, retrievedDetail);
+		
+		session.getTransaction().begin();
+		session.delete(detail);
+		session.delete(list);
+		session.delete(user);
+		session.getTransaction().commit();
+	}
+	
 }

@@ -16,6 +16,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 
 public class DetailsJavaFxView extends BaseJavaFxView implements DetailsView {
 
@@ -24,10 +25,12 @@ public class DetailsJavaFxView extends BaseJavaFxView implements DetailsView {
 	
 	private ListView<Detail> listView;
 	private Button addButton;
+	private Text errorText;
 	
 	protected static final String ADD_BUTTON_TEXT = "Add";
 	protected static final String ADD_BUTTON_ID = "DETAILS_ADD_BUTTON_ID";
 	protected static final String LISTVIEW_ID = "DETAILS_LISTVIEW_ID";
+	protected static final String ERROR_TEXT_ID = "DETAILS_ERROR_TEXT_ID";
 	
 	private static final String ROW_PATTERN_ID ="DETAILS_%s_ROW_ID";
 	private static final String CHECKBOX_PATTERN_ID ="DETAILS_%s_CHECKBOX_ID";
@@ -65,6 +68,7 @@ public class DetailsJavaFxView extends BaseJavaFxView implements DetailsView {
 		additionModificationJavaFxView = null;
 		listView = null;
 		addButton = null;
+		errorText = null;
 	}
 
 	public void setAdditionModificationJavaFxView(
@@ -75,12 +79,29 @@ public class DetailsJavaFxView extends BaseJavaFxView implements DetailsView {
 	public void disableArea() {
 		listView.setDisable(true);
 		addButton.setDisable(true);
+		resetListsAndDetailsErrors();
+	}
+	
+	private void resetListsAndDetailsErrors() {
+		resetError();
+		listsJavaFxView.resetError();
+	}
+	
+	public void resetError() {
+		errorText.setText("");
+		errorText.setVisible(false);
 	}
 	
 	@Override
 	public void resetGUI() {
 		listView.getItems().clear();
 		disableArea();
+	}
+	
+	@Override
+	public void renderError(String error) {
+		errorText.setText(error);
+		errorText.setVisible(true);
 	}
 	
 	public void enableArea() {
@@ -160,7 +181,10 @@ public class DetailsJavaFxView extends BaseJavaFxView implements DetailsView {
 		addButton = createButton(ADD_BUTTON_ID, ADD_BUTTON_TEXT, ev -> clickAddButton());
 		var buttonHBox = createHBox(addButton, vBox.getPrefWidth());
 		
-		vBox.getChildren().addAll(titleHBox, listView, buttonHBox);
+		errorText = createErrorText(ERROR_TEXT_ID);
+		var textHBox = createHBox(errorText, vBox.getPrefWidth());
+		
+		vBox.getChildren().addAll(titleHBox, listView, buttonHBox, textHBox);
 		return vBox;
 	}
 	
@@ -187,15 +211,16 @@ public class DetailsJavaFxView extends BaseJavaFxView implements DetailsView {
 				setGraphic(null);
 			} else {
 				var checkBoxLabelHBox = createCellCheckBoxLabelHBox(getRowCheckBoxId(item.getTodo()), 
-						item.getDone(), ev -> getToDoController().modifyDoneDetail(
-								((CheckBox) ev.getSource()).isSelected(), item), 
+						item.getDone(), ev -> { resetListsAndDetailsErrors(); 
+							getToDoController().modifyDoneDetail(
+								((CheckBox) ev.getSource()).isSelected(), item); }, 
 						getRowLabelId(item.getTodo()), item.getTodo(), item.getDone());
 
 				var modifyButton = createCellSvgButton(getRowModifyButtonId(item.getTodo()), 
 						ev -> clickModifyButton(), ToDoJavaFxView.SVG_CONTENT_MODIFY_ICON);
 				
 				var deleteButton = createCellSvgButton(getRowDeleteButtonId(item.getTodo()), 
-						ev -> getToDoController().deleteDetail(item), 
+						ev -> { resetListsAndDetailsErrors(); getToDoController().deleteDetail(item); }, 
 						ToDoJavaFxView.SVG_CONTENT_DELETE_ICON);
 				
 				var buttonsHBox = createCellButtonsHBox(modifyButton, deleteButton);

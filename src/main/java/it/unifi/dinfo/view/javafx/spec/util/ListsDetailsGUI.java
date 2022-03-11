@@ -13,6 +13,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Text;
 import javafx.util.Callback;
@@ -32,6 +33,15 @@ public class ListsDetailsGUI {
 		var textObj = new Text(text);
 		textObj.setStyle(ToDoJavaFxView.BOLD_STYLE);
 		return textObj;
+	}
+	
+	public static Text createErrorText(String id) {
+		Text text = new Text("");
+		text.setId(id);
+		text.setStyle(ToDoJavaFxView.BOLD_STYLE);
+		text.setFill(Color.RED);
+		text.setVisible(false);
+		return text;
 	}
 	
 	public static Button createButton(String id, String text, EventHandler<ActionEvent> onAction) {
@@ -56,7 +66,7 @@ public class ListsDetailsGUI {
 		ListView<T> listView = new ListView<>();
 		listView.setId(id);
 		listView.setDisable(true);
-		listView.setPrefSize(width, height - (2 * ToDoJavaFxView.HEADER_FOOTER_HEIGHT));
+		listView.setPrefSize(width, height - (3 * ToDoJavaFxView.HEADER_FOOTER_HEIGHT));
 		listView.setCellFactory(cellFactory);
 		return listView;
 	}

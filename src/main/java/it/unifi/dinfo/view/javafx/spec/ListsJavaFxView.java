@@ -15,6 +15,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 
 public class ListsJavaFxView extends BaseJavaFxView implements ListsView {
 	
@@ -23,10 +24,12 @@ public class ListsJavaFxView extends BaseJavaFxView implements ListsView {
 	
 	private ListView<List> listView;
 	private Button addButton;
+	private Text errorText;
 	
 	protected static final String ADD_BUTTON_TEXT = "Add";
 	protected static final String ADD_BUTTON_ID = "LISTS_ADD_BUTTON_ID";
 	protected static final String LISTVIEW_ID = "LISTS_LISTVIEW_ID";
+	protected static final String ERROR_TEXT_ID = "LISTS_ERROR_TEXT_ID";
 	
 	private static final String ROW_PATTERN_ID ="LISTS_%s_ROW_ID";
 	private static final String LABEL_PATTERN_ID ="LISTS_%s_LABEL_ID";
@@ -59,6 +62,7 @@ public class ListsJavaFxView extends BaseJavaFxView implements ListsView {
 		detailsJavaFxView = null;
 		listView = null;
 		addButton = null;
+		errorText = null;
 	}
 
 	public void setAdditionModificationJavaFxView(
@@ -74,6 +78,12 @@ public class ListsJavaFxView extends BaseJavaFxView implements ListsView {
 	public void resetGUI() {
 		listView.getItems().clear();
 		disableArea();
+	}
+	
+	@Override
+	public void renderError(String error) {
+		errorText.setText(error);
+		errorText.setVisible(true);
 	}
 	
 	public void clearAll() {
@@ -122,6 +132,17 @@ public class ListsJavaFxView extends BaseJavaFxView implements ListsView {
 	public void disableArea() {
 		listView.setDisable(true);
 		addButton.setDisable(true);
+		resetListsAndDetailsErrors();
+	}
+	
+	private void resetListsAndDetailsErrors() {
+		resetError();
+		detailsJavaFxView.resetError();
+	}
+	
+	public void resetError() {
+		errorText.setText("");
+		errorText.setVisible(false);
 	}
 	
 	public void enableArea() {
@@ -158,7 +179,10 @@ public class ListsJavaFxView extends BaseJavaFxView implements ListsView {
 		addButton = createButton(ADD_BUTTON_ID, ADD_BUTTON_TEXT, ev -> clickAddButton());
 		var buttonHBox = createHBox(addButton, vBox.getPrefWidth());
 		
-		vBox.getChildren().addAll(titleHBox, listView, buttonHBox);
+		errorText = createErrorText(ERROR_TEXT_ID);
+		var textHBox = createHBox(errorText, vBox.getPrefWidth());
+		
+		vBox.getChildren().addAll(titleHBox, listView, buttonHBox, textHBox);
 		return vBox;
 	}
 	
@@ -196,7 +220,7 @@ public class ListsJavaFxView extends BaseJavaFxView implements ListsView {
 						ev -> clickModifyButton(), ToDoJavaFxView.SVG_CONTENT_MODIFY_ICON);
 				
 				var deleteButton = createCellSvgButton(getRowDeleteButtonId(item.getName()), 
-						ev -> getToDoController().deleteList(item), 
+						ev -> { resetListsAndDetailsErrors(); getToDoController().deleteList(item); }, 
 						ToDoJavaFxView.SVG_CONTENT_DELETE_ICON);
 				
 				var buttonsHBox = createCellButtonsHBox(modifyButton, deleteButton);

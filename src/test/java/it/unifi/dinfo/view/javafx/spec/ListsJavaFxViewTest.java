@@ -25,6 +25,7 @@ import org.testfx.framework.junit.TestFXRule;
 import it.unifi.dinfo.controller.ToDoController;
 import it.unifi.dinfo.model.List;
 import it.unifi.dinfo.model.User;
+import it.unifi.dinfo.view.spec.ListsView.ERRORS;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -32,6 +33,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class ListsJavaFxViewTest extends ApplicationTest {
@@ -255,6 +257,29 @@ public class ListsJavaFxViewTest extends ApplicationTest {
 	}
 	
 	@Test
+	public void shouldDisableAreaResetErrorTextAndCallResetErrorOnDetailsView() {
+		Text errorText = lookup("#" + ERROR_TEXT_ID).queryText();
+		errorText.setVisible(true);
+		errorText.setText(ERRORS.LIST_NO_LONGER_EXISTS.getValue());
+		
+		listsJavaFxView.disableArea();
+		
+		verify(detailsJavaFxView).resetError();
+		assertThat(errorText.getText()).isEmpty();
+		assertThat(errorText.isVisible()).isFalse();
+	}
+	
+	@Test
+	public void shouldResetErrorReallyResetErrorText() {
+		Text errorText = lookup("#" + ERROR_TEXT_ID).queryText();
+		errorText.setVisible(true);
+		errorText.setText(ERRORS.LIST_NO_LONGER_EXISTS.getValue());
+		listsJavaFxView.resetError();
+		assertThat(errorText.getText()).isEmpty();
+		assertThat(errorText.isVisible()).isFalse();
+	}
+	
+	@Test
 	public void shouldGetSelectedItemReturnTheSelectedItemInList() throws TimeoutException {
 		ListView<List> listView = lookup("#" + LISTVIEW_ID).queryListView();
 		listView.setDisable(false);
@@ -325,6 +350,35 @@ public class ListsJavaFxViewTest extends ApplicationTest {
 		clickOn("#" + getRowDeleteButtonId(list.getName()));
 		
 		verify(toDoController).deleteList(list);
+	}
+	
+	@Test
+	public void shouldClickOnDeleteButtonResetErrorTextAndCallResetErrorOnDetailsView() 
+			throws TimeoutException {
+		ListView<List> listView = lookup("#" + LISTVIEW_ID).queryListView();
+		listView.setDisable(false);
+		
+		User user = new User("Mario", "Rossi", "email@email.com", "password");
+		List list = new List("TEST", user);
+		listView.getItems().add(list);
+		
+		Text errorText = lookup("#" + ERROR_TEXT_ID).queryText();
+		errorText.setVisible(true);
+		errorText.setText(ERRORS.LIST_NO_LONGER_EXISTS.getValue());
+		
+		waitFor(10, TimeUnit.SECONDS, new Callable<Boolean>() {
+			@Override
+			public Boolean call() throws Exception {
+				return lookup("#" + getRowId(list.getName())).tryQuery().isPresent();
+			}
+		});
+		
+		clickOn("#" + getRowId(list.getName()));
+		clickOn("#" + getRowDeleteButtonId(list.getName()));
+		
+		verify(detailsJavaFxView).resetError();
+		assertThat(errorText.getText()).isEmpty();
+		assertThat(errorText.isVisible()).isFalse();
 	}
 	
 	@Test
@@ -408,6 +462,23 @@ public class ListsJavaFxViewTest extends ApplicationTest {
 		
 		assertThat(listView.getItems()).isEmpty();
 		verifyNoInteractions(ignoreStubs(toDoController, detailsJavaFxView, additionModificationJavaFxView));
+	}
+	
+	@Test
+	public void shouldRenderErrorMakeVisibleErrorTextAndChangeItsText() {
+		listsJavaFxView.renderError(ERRORS.LIST_NO_LONGER_EXISTS.getValue());
+		Text errorText = lookup("#" + ERROR_TEXT_ID).queryText();
+		assertThat(errorText.isVisible()).isTrue();
+		assertThat(errorText.getText()).isEqualTo(ERRORS.LIST_NO_LONGER_EXISTS.getValue());
+	}
+	
+	@Test
+	public void shouldViewContainEmptyErrorText() {
+		Node errorTextNode = lookup("#" + ERROR_TEXT_ID).tryQuery().orElse(null);
+		assertThat(errorTextNode).isNotNull().isOfAnyClassIn(Text.class);
+		Text errorText = (Text) errorTextNode;
+		assertThat(errorText.isVisible()).isFalse();
+		assertThat(errorText.getText()).isEmpty();
 	}
 	
 }

@@ -35,4 +35,8 @@ public interface ToDoView {
 	
 	void renderRegistrationError(String error);
 	
+	void renderListsError(String error);
+	
+	void renderDetailsError(String error);
+	
 }

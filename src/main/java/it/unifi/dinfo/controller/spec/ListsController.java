@@ -7,6 +7,7 @@ import it.unifi.dinfo.model.Detail;
 import it.unifi.dinfo.model.List;
 import it.unifi.dinfo.repository.ToDoRepository;
 import it.unifi.dinfo.view.ToDoView;
+import it.unifi.dinfo.view.spec.ListsView.ERRORS;
 
 public class ListsController extends BaseController {
 
@@ -20,6 +21,11 @@ public class ListsController extends BaseController {
 	}
 	
 	public void delete(List list) {
+		if (getToDoRepository().findListById(list.getId()) == null) {
+			getToDoView().renderListsError(ERRORS.LIST_NO_LONGER_EXISTS.getValue());
+			return;
+		}
+		
 		Set<Detail> details = getToDoRepository().findAllDetailsByListId(list.getId());
 		details.stream().forEach(detail -> getToDoRepository().deleteDetail(detail));
 		getToDoRepository().deleteList(list);

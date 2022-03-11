@@ -26,6 +26,7 @@ import it.unifi.dinfo.controller.ToDoController;
 import it.unifi.dinfo.model.Detail;
 import it.unifi.dinfo.model.List;
 import it.unifi.dinfo.model.User;
+import it.unifi.dinfo.view.spec.DetailsView.ERRORS;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -34,6 +35,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class DetailsJavaFxViewTest extends ApplicationTest {
@@ -239,6 +241,29 @@ public class DetailsJavaFxViewTest extends ApplicationTest {
 	}
 	
 	@Test
+	public void shouldDisableAreaResetErrorTextAndCallResetErrorOnListsView() {
+		Text errorText = lookup("#" + ERROR_TEXT_ID).queryText();
+		errorText.setVisible(true);
+		errorText.setText(ERRORS.DETAIL_NO_LONGER_EXISTS.getValue());
+		
+		detailsJavaFxView.disableArea();
+		
+		verify(listsJavaFxView).resetError();
+		assertThat(errorText.getText()).isEmpty();
+		assertThat(errorText.isVisible()).isFalse();
+	}
+	
+	@Test
+	public void shouldResetErrorReallyResetErrorText() {
+		Text errorText = lookup("#" + ERROR_TEXT_ID).queryText();
+		errorText.setVisible(true);
+		errorText.setText(ERRORS.DETAIL_NO_LONGER_EXISTS.getValue());
+		detailsJavaFxView.resetError();
+		assertThat(errorText.getText()).isEmpty();
+		assertThat(errorText.isVisible()).isFalse();
+	}
+	
+	@Test
 	public void shouldGetSelectedItemReturnTheSelectedItemInList() throws TimeoutException {
 		ListView<Detail> listView = lookup("#" + LISTVIEW_ID).queryListView();
 		listView.setDisable(false);
@@ -312,6 +337,36 @@ public class DetailsJavaFxViewTest extends ApplicationTest {
 		clickOn("#" + getRowDeleteButtonId(detail.getTodo()));
 		
 		verify(toDoController).deleteDetail(detail);
+	}
+	
+	@Test
+	public void shouldClickOnDeleteButtonResetErrorTextAndCallResetErrorOnListsView() 
+			throws TimeoutException {
+		ListView<Detail> listView = lookup("#" + LISTVIEW_ID).queryListView();
+		listView.setDisable(false);
+		
+		User user = new User("Mario", "Rossi", "email@email.com", "password");
+		List list = new List("TEST", user);
+		Detail detail = new Detail("TEST-D", list);
+		listView.getItems().add(detail);
+		
+		Text errorText = lookup("#" + ERROR_TEXT_ID).queryText();
+		errorText.setVisible(true);
+		errorText.setText(ERRORS.DETAIL_NO_LONGER_EXISTS.getValue());
+		
+		waitFor(10, TimeUnit.SECONDS, new Callable<Boolean>() {
+			@Override
+			public Boolean call() throws Exception {
+				return lookup("#" + getRowLabelId(detail.getTodo())).tryQuery().isPresent();
+			}
+		});
+		
+		clickOn("#" + getRowId(detail.getTodo()));
+		clickOn("#" + getRowDeleteButtonId(detail.getTodo()));
+		
+		verify(listsJavaFxView).resetError();
+		assertThat(errorText.getText()).isEmpty();
+		assertThat(errorText.isVisible()).isFalse();
 	}
 	
 	@Test
@@ -454,6 +509,36 @@ public class DetailsJavaFxViewTest extends ApplicationTest {
 	}
 	
 	@Test
+	public void shouldClickOnItemCheckBoxResetErrorTextAndCallResetErrorOnListsView() 
+			throws TimeoutException {
+		ListView<Detail> listView = lookup("#" + LISTVIEW_ID).queryListView();
+		listView.setDisable(false);
+		
+		User user = new User("Mario", "Rossi", "email@email.com", "password");
+		List list = new List("TEST", user);
+		Detail detail = new Detail("TEST-D", list);
+		listView.getItems().add(detail);
+		
+		Text errorText = lookup("#" + ERROR_TEXT_ID).queryText();
+		errorText.setVisible(true);
+		errorText.setText(ERRORS.DETAIL_NO_LONGER_EXISTS.getValue());
+		
+		waitFor(10, TimeUnit.SECONDS, new Callable<Boolean>() {
+			@Override
+			public Boolean call() throws Exception {
+				return lookup("#" + getRowLabelId(detail.getTodo())).tryQuery().isPresent();
+			}
+		});
+		
+		clickOn("#" + getRowId(detail.getTodo()));
+		clickOn("#" + getRowCheckBoxId(detail.getTodo()));
+		
+		verify(listsJavaFxView).resetError();
+		assertThat(errorText.getText()).isEmpty();
+		assertThat(errorText.isVisible()).isFalse();
+	}
+	
+	@Test
 	public void shouldItemLabelBeDisabledWhenTheLinkedItemIsDone() throws TimeoutException {
 		ListView<Detail> listView = lookup("#" + LISTVIEW_ID).queryListView();
 		listView.setDisable(false);
@@ -508,6 +593,23 @@ public class DetailsJavaFxViewTest extends ApplicationTest {
 		
 		assertThat(listView.getItems()).isEmpty();
 		verifyNoInteractions(ignoreStubs(toDoController, listsJavaFxView, additionModificationJavaFxView));
+	}
+	
+	@Test
+	public void shouldRenderErrorMakeVisibleErrorTextAndChangeItsText() {
+		detailsJavaFxView.renderError(ERRORS.DETAIL_NO_LONGER_EXISTS.getValue());
+		Text errorText = lookup("#" + ERROR_TEXT_ID).queryText();
+		assertThat(errorText.isVisible()).isTrue();
+		assertThat(errorText.getText()).isEqualTo(ERRORS.DETAIL_NO_LONGER_EXISTS.getValue());
+	}
+	
+	@Test
+	public void shouldViewContainEmptyErrorText() {
+		Node errorTextNode = lookup("#" + ERROR_TEXT_ID).tryQuery().orElse(null);
+		assertThat(errorTextNode).isNotNull().isOfAnyClassIn(Text.class);
+		Text errorText = (Text) errorTextNode;
+		assertThat(errorText.isVisible()).isFalse();
+		assertThat(errorText.getText()).isEmpty();
 	}
 	
 }

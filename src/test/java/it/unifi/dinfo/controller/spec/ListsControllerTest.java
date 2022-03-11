@@ -2,6 +2,8 @@ package it.unifi.dinfo.controller.spec;
 
 import static org.mockito.Mockito.ignoreStubs;
 import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
@@ -20,6 +22,7 @@ import it.unifi.dinfo.model.List;
 import it.unifi.dinfo.model.User;
 import it.unifi.dinfo.repository.ToDoRepository;
 import it.unifi.dinfo.view.ToDoView;
+import it.unifi.dinfo.view.spec.ListsView.ERRORS;
 
 public class ListsControllerTest {
 
@@ -53,9 +56,11 @@ public class ListsControllerTest {
 	public void shouldDeleteFirstDeleteRelatedDetailsAndThenGivenListCallingDeleteMethodsOnRepositoryAndOnView() {
 		User user = new User("Mario", "Rossi", "email@email.com", "password");
 		List list = new List("TEST", user);
+		list.setId(1L);
 		Detail detail = new Detail("TEST-D", list);
 		Set<Detail> details = new HashSet<>();
 		details.add(detail);
+		when(toDoRepository.findListById(list.getId())).thenReturn(list);
 		when(toDoRepository.findAllDetailsByListId(list.getId())).thenReturn(details);
 		listsController.delete(list);
 		InOrder inOrder = inOrder(toDoRepository, toDoView);
@@ -65,6 +70,18 @@ public class ListsControllerTest {
 		inOrder.verify(toDoView).deleteList(list);
 		verifyNoMoreInteractions(ignoreStubs(toDoRepository));
 		verifyNoMoreInteractions(ignoreStubs(toDoView));
+	}
+	
+	@Test
+	public void shouldDeleteCallRenderListsErrorOnViewWhenListIsNotFoundOnRepository() {
+		User user = new User("Mario", "Rossi", "email@email.com", "password");
+		List list = new List("TEST", user);
+		list.setId(1L);
+		when(toDoRepository.findListById(list.getId())).thenReturn(null);
+		listsController.delete(list);
+		verify(toDoView).renderListsError(ERRORS.LIST_NO_LONGER_EXISTS.getValue());
+		verify(toDoRepository, never()).deleteList(list);
+		verify(toDoView, never()).deleteList(list);
 	}
 	
 }

@@ -44,6 +44,11 @@ public class AdditionModificationController extends BaseController {
 			return;
 		}
 		
+		if (getToDoRepository().findListById(list.getId()) == null) {
+			getToDoView().renderAdditionModificationError(ERRORS.LIST_NO_LONGER_EXISTS.getValue());
+			return;
+		}
+		
 		list.setName(name.trim());
 		list = getToDoRepository().saveList(list);
 		getToDoView().saveList(list);
@@ -57,6 +62,11 @@ public class AdditionModificationController extends BaseController {
 		
 		if (getToDoRepository().findDetailByTodoAndListId(todo.trim(), list.getId()) != null) {
 			getToDoView().renderAdditionModificationError(ERRORS.DETAIL_ALREADY_FOUND.getValue());
+			return;
+		}
+		
+		if (getToDoRepository().findListById(list.getId()) == null) {
+			getToDoView().renderAdditionModificationError(ERRORS.LIST_NO_LONGER_EXISTS.getValue());
 			return;
 		}
 		
@@ -75,6 +85,11 @@ public class AdditionModificationController extends BaseController {
 				detail.getList().getId());
 		if (selectedDetail != null && !selectedDetail.getId().equals(detail.getId())) {
 			getToDoView().renderAdditionModificationError(ERRORS.DETAIL_ALREADY_FOUND.getValue());
+			return;
+		}
+		
+		if (getToDoRepository().findDetailById(detail.getId()) == null) {
+			getToDoView().renderAdditionModificationError(ERRORS.DETAIL_NO_LONGER_EXISTS.getValue());
 			return;
 		}
 		

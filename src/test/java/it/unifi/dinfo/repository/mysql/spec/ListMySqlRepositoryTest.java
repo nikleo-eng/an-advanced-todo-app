@@ -150,4 +150,28 @@ public class ListMySqlRepositoryTest {
 		session.getTransaction().commit();
 	}
 	
+	@Test
+	public void shouldFindByIdReturnNullWhenNoListWithGivenIdIsFound() {
+		List retrievedList = listMySqlRepository.findById(1L);
+		assertNull(retrievedList);
+	}
+	
+	@Test
+	public void shouldFindByIdReturnAListWithGivenIdWhenThisIsFound() {
+		User user = new User("Mario", "Rossi", "email@email.com", "password");
+		List list = new List("TEST", user);
+		session.getTransaction().begin();
+		session.persist(user);
+		session.persist(list);
+		session.getTransaction().commit();
+		
+		List retrievedList = listMySqlRepository.findById(list.getId());
+		assertEquals(list, retrievedList);
+		
+		session.getTransaction().begin();
+		session.delete(list);
+		session.delete(user);
+		session.getTransaction().commit();
+	}
+	
 }

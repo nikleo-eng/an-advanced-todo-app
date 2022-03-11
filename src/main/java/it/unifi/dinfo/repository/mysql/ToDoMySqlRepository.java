@@ -134,5 +134,15 @@ public class ToDoMySqlRepository implements ToDoRepository {
 	public Log findLastLogBeforeIdAndByUserId(Long id, Long userId) {
 		return logMySqlRepository.findLastBeforeIdAndByUserId(id, userId);
 	}
+
+	@Override
+	public List findListById(Long id) {
+		return listMySqlRepository.findById(id);
+	}
+
+	@Override
+	public Detail findDetailById(Long id) {
+		return detailMySqlRepository.findById(id);
+	}
 	
 }

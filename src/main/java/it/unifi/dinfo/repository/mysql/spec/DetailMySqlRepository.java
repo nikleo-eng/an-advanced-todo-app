@@ -16,6 +16,18 @@ public class DetailMySqlRepository extends BaseMySqlRepository implements Detail
 	public DetailMySqlRepository(Session hibernateSession) {
 		super(hibernateSession);
 	}
+	
+	@Override
+	public Detail findById(Long id) {
+		try {
+			return getHibernateSession()
+				.createQuery("select d from Detail d where d.id = ?0", Detail.class)
+				.setParameter(0, id)
+				.getSingleResult();
+		} catch (NoResultException nre) {
+			return null;
+		}
+	}
 
 	@Override
 	public Set<Detail> findAllByListId(Long listId) {

@@ -5,6 +5,8 @@ import java.util.Set;
 import it.unifi.dinfo.model.List;
 
 public interface ListRepository {
+	
+	List findById(Long id);
 
 	Set<List> findAllByUserId(Long userId);
 	

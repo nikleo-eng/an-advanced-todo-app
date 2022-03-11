@@ -16,6 +16,18 @@ public class ListMySqlRepository extends BaseMySqlRepository implements ListRepo
 	public ListMySqlRepository(Session hibernateSession) {
 		super(hibernateSession);
 	}
+	
+	@Override
+	public List findById(Long id) {
+		try {
+			return getHibernateSession()
+					.createQuery("select l from List l where l.id = ?0", List.class)
+					.setParameter(0, id)
+					.getSingleResult();
+		} catch (NoResultException nre) {
+			return null;
+		}
+	}
 
 	@Override
 	public Set<List> findAllByUserId(Long userId) {

@@ -222,6 +222,16 @@ public class ToDoJavaFxView extends Application implements ToDoView {
 		additionModificationJavaFxView.setCurrentUser(null);
 		stage.getScene().setRoot(userRoot);
 	}
+	
+	@Override
+	public void renderListsError(String error) {
+		listsJavaFxView.renderError(error);
+	}
+
+	@Override
+	public void renderDetailsError(String error) {
+		detailsJavaFxView.renderError(error);
+	}
 
 	/* Only for tests */
 	protected void setToDoController(ToDoController toDoController) {

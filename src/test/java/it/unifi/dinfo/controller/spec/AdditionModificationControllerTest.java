@@ -61,7 +61,7 @@ public class AdditionModificationControllerTest {
 		User user = new User("Mario", "Rossi", "email@email.com", "password");
 		user.setId(1L);
 		List list = new List("TEST", user);
-		when(toDoRepository.findListByNameAndUserId("TEST", 1L)).thenReturn(list);
+		when(toDoRepository.findListByNameAndUserId("TEST", user.getId())).thenReturn(list);
 		additionModificationController.addList("TEST", user);
 		verify(toDoView).renderAdditionModificationError(ERRORS.LIST_ALREADY_FOUND.getValue());
 		verify(toDoRepository, never()).createList(any(List.class));
@@ -73,7 +73,7 @@ public class AdditionModificationControllerTest {
 		User user = new User("Mario", "Rossi", "email@email.com", "password");
 		user.setId(1L);
 		List list = new List("TEST", user);
-		when(toDoRepository.findListByNameAndUserId("TEST", 1L)).thenReturn(null);
+		when(toDoRepository.findListByNameAndUserId("TEST", user.getId())).thenReturn(null);
 		when(toDoRepository.createList(any(List.class))).thenReturn(list);
 		additionModificationController.addList("TEST", user);
 		InOrder inOrder = inOrder(toDoRepository, toDoView);
@@ -109,9 +109,22 @@ public class AdditionModificationControllerTest {
 		List list = new List("TEST", user);
 		list.setId(1L);
 		Detail detail = new Detail("TEST-D", list);
-		when(toDoRepository.findDetailByTodoAndListId("TEST-D", 1L)).thenReturn(detail);
+		when(toDoRepository.findDetailByTodoAndListId("TEST-D", list.getId())).thenReturn(detail);
 		additionModificationController.addDetail("TEST-D", list);
 		verify(toDoView).renderAdditionModificationError(ERRORS.DETAIL_ALREADY_FOUND.getValue());
+		verify(toDoRepository, never()).createDetail(any(Detail.class));
+		verify(toDoView, never()).addDetail(any(Detail.class));
+	}
+	
+	@Test
+	public void shouldAddDetailWhenNoLinkedListIsFoundRenderErrorListNoLongerExists() {
+		User user = new User("Mario", "Rossi", "email@email.com", "password");
+		List list = new List("TEST", user);
+		list.setId(1L);
+		when(toDoRepository.findDetailByTodoAndListId("TEST-D", list.getId())).thenReturn(null);
+		when(toDoRepository.findListById(list.getId())).thenReturn(null);
+		additionModificationController.addDetail("TEST-D", list);
+		verify(toDoView).renderAdditionModificationError(ERRORS.LIST_NO_LONGER_EXISTS.getValue());
 		verify(toDoRepository, never()).createDetail(any(Detail.class));
 		verify(toDoView, never()).addDetail(any(Detail.class));
 	}
@@ -122,7 +135,8 @@ public class AdditionModificationControllerTest {
 		List list = new List("TEST", user);
 		list.setId(1L);
 		Detail detail = new Detail("TEST-D", list);
-		when(toDoRepository.findDetailByTodoAndListId("TEST-D", 1L)).thenReturn(null);
+		when(toDoRepository.findDetailByTodoAndListId("TEST-D", list.getId())).thenReturn(null);
+		when(toDoRepository.findListById(list.getId())).thenReturn(list);
 		when(toDoRepository.createDetail(any(Detail.class))).thenReturn(detail);
 		additionModificationController.addDetail("TEST-D", list);
 		InOrder inOrder = inOrder(toDoRepository, toDoView);
@@ -163,9 +177,27 @@ public class AdditionModificationControllerTest {
 		detail.setId(1L);
 		Detail retrievedDetail = new Detail("TEST-D_NEW", list);
 		retrievedDetail.setId(2L);
-		when(toDoRepository.findDetailByTodoAndListId("TEST-D_NEW", 1L)).thenReturn(retrievedDetail);
+		when(toDoRepository.findDetailByTodoAndListId("TEST-D_NEW", list.getId()))
+			.thenReturn(retrievedDetail);
 		additionModificationController.modifyTodoDetail("TEST-D_NEW", detail);
 		verify(toDoView).renderAdditionModificationError(ERRORS.DETAIL_ALREADY_FOUND.getValue());
+		verify(toDoRepository, never()).saveDetail(detail);
+		verify(toDoView, never()).saveDetail(detail);
+	}
+	
+	@Test
+	public void shouldModifyTodoDetailWhenNoDetailWithSameIdIsFoundRenderErrorDetailNoLongerExists() {
+		User user = new User("Mario", "Rossi", "email@email.com", "password");
+		List list = new List("TEST", user);
+		list.setId(1L);
+		Detail detail = new Detail("TEST-D", list);
+		detail.setId(1L);
+		Detail retrievedDetail = new Detail("TEST-D_NEW", list);
+		retrievedDetail.setId(2L);
+		when(toDoRepository.findDetailByTodoAndListId("TEST-D_NEW", list.getId())).thenReturn(null);
+		when(toDoRepository.findDetailById(detail.getId())).thenReturn(null);
+		additionModificationController.modifyTodoDetail("TEST-D_NEW", detail);
+		verify(toDoView).renderAdditionModificationError(ERRORS.DETAIL_NO_LONGER_EXISTS.getValue());
 		verify(toDoRepository, never()).saveDetail(detail);
 		verify(toDoView, never()).saveDetail(detail);
 	}
@@ -179,7 +211,9 @@ public class AdditionModificationControllerTest {
 		detail.setId(1L);
 		Detail retrievedDetail = new Detail("TEST-D_NEW", list);
 		retrievedDetail.setId(1L);
-		when(toDoRepository.findDetailByTodoAndListId("TEST-D_NEW", 1L)).thenReturn(retrievedDetail);
+		when(toDoRepository.findDetailByTodoAndListId("TEST-D_NEW", list.getId()))
+			.thenReturn(retrievedDetail);
+		when(toDoRepository.findDetailById(detail.getId())).thenReturn(retrievedDetail);
 		when(toDoRepository.saveDetail(detail)).thenReturn(detail);
 		additionModificationController.modifyTodoDetail("TEST-D_NEW", detail);
 		assertEquals("TEST-D_NEW", detail.getTodo());
@@ -196,7 +230,8 @@ public class AdditionModificationControllerTest {
 		List list = new List("TEST", user);
 		list.setId(1L);
 		Detail detail = new Detail("TEST-D", list);
-		when(toDoRepository.findDetailByTodoAndListId("TEST-D_NEW", 1L)).thenReturn(null);
+		when(toDoRepository.findDetailByTodoAndListId("TEST-D_NEW", list.getId())).thenReturn(null);
+		when(toDoRepository.findDetailById(detail.getId())).thenReturn(detail);
 		when(toDoRepository.saveDetail(detail)).thenReturn(detail);
 		additionModificationController.modifyTodoDetail("TEST-D_NEW", detail);
 		assertEquals("TEST-D_NEW", detail.getTodo());
@@ -235,9 +270,23 @@ public class AdditionModificationControllerTest {
 		list.setId(1L);
 		List retrievedList = new List("TEST_NEW", user);
 		retrievedList.setId(2L);
-		when(toDoRepository.findListByNameAndUserId("TEST_NEW", 1L)).thenReturn(retrievedList);
+		when(toDoRepository.findListByNameAndUserId("TEST_NEW", user.getId())).thenReturn(retrievedList);
 		additionModificationController.modifyNameList("TEST_NEW", list);
 		verify(toDoView).renderAdditionModificationError(ERRORS.LIST_ALREADY_FOUND.getValue());
+		verify(toDoRepository, never()).saveList(list);
+		verify(toDoView, never()).saveList(list);
+	}
+	
+	@Test
+	public void shouldModifyNameListWhenNoListWithSameIdIsFoundRenderErrorListNoLongerExists() {
+		User user = new User("Mario", "Rossi", "email@email.com", "password");
+		user.setId(1L);
+		List list = new List("TEST", user);
+		list.setId(1L);
+		when(toDoRepository.findListByNameAndUserId("TEST_NEW", user.getId())).thenReturn(null);
+		when(toDoRepository.findListById(list.getId())).thenReturn(null);
+		additionModificationController.modifyNameList("TEST_NEW", list);
+		verify(toDoView).renderAdditionModificationError(ERRORS.LIST_NO_LONGER_EXISTS.getValue());
 		verify(toDoRepository, never()).saveList(list);
 		verify(toDoView, never()).saveList(list);
 	}
@@ -250,7 +299,8 @@ public class AdditionModificationControllerTest {
 		list.setId(1L);
 		List retrievedList = new List("TEST_NEW", user);
 		retrievedList.setId(1L);
-		when(toDoRepository.findListByNameAndUserId("TEST_NEW", 1L)).thenReturn(retrievedList);
+		when(toDoRepository.findListByNameAndUserId("TEST_NEW", user.getId())).thenReturn(retrievedList);
+		when(toDoRepository.findListById(list.getId())).thenReturn(retrievedList);
 		when(toDoRepository.saveList(list)).thenReturn(list);
 		additionModificationController.modifyNameList("TEST_NEW", list);
 		assertEquals("TEST_NEW", list.getName());
@@ -262,11 +312,13 @@ public class AdditionModificationControllerTest {
 	}
 	
 	@Test
-	public void shouldCorrectModifyNameListWhenNoListWithSameNameIsFoundCallSaveOnRepositoryAndOnView() {
+	public void shouldCorrectModifyNameListWhenNoListWithSameNameIsFoundButAListWithSameIdIsFoundCallSaveOnRepositoryAndOnView() {
 		User user = new User("Mario", "Rossi", "email@email.com", "password");
 		user.setId(1L);
 		List list = new List("TEST", user);
-		when(toDoRepository.findListByNameAndUserId("TEST_NEW", 1L)).thenReturn(null);
+		list.setId(1L);
+		when(toDoRepository.findListByNameAndUserId("TEST_NEW", user.getId())).thenReturn(null);
+		when(toDoRepository.findListById(list.getId())).thenReturn(list);
 		when(toDoRepository.saveList(list)).thenReturn(list);
 		additionModificationController.modifyNameList("TEST_NEW", list);
 		assertEquals("TEST_NEW", list.getName());

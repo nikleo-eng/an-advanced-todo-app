@@ -13,6 +13,8 @@ public interface ToDoRepository {
 	
 	User createUser(User user);
 	
+	List findListById(Long id);
+	
 	Set<List> findAllListsByUserId(Long userId);
 	
 	List findListByNameAndUserId(String name, Long userId);
@@ -22,6 +24,8 @@ public interface ToDoRepository {
 	List saveList(List list);
 	
 	void deleteList(List list);
+	
+	Detail findDetailById(Long id);
 	
 	Set<Detail> findAllDetailsByListId(Long listId);
 	

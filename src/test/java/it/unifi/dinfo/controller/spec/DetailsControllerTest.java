@@ -1,8 +1,11 @@
 package it.unifi.dinfo.controller.spec;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.ignoreStubs;
 import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
@@ -20,6 +23,7 @@ import it.unifi.dinfo.model.List;
 import it.unifi.dinfo.model.User;
 import it.unifi.dinfo.repository.ToDoRepository;
 import it.unifi.dinfo.view.ToDoView;
+import it.unifi.dinfo.view.spec.DetailsView.ERRORS;
 
 public class DetailsControllerTest {
 
@@ -50,10 +54,12 @@ public class DetailsControllerTest {
 	}
 	
 	@Test
-	public void shouldDeleteCallDeleteOnRepositoryAndOnView() {
+	public void shouldDeleteCallDeleteOnRepositoryAndOnViewWhenDetailIsFoundOnRepository() {
 		User user = new User("Mario", "Rossi", "email@email.com", "password");
 		List list = new List("TEST", user);
 		Detail detail = new Detail("TEST-D", list);
+		detail.setId(1L);
+		when(toDoRepository.findDetailById(detail.getId())).thenReturn(detail);
 		detailsController.delete(detail);
 		InOrder inOrder = inOrder(toDoRepository, toDoView);
 		inOrder.verify(toDoRepository).deleteDetail(detail);
@@ -63,10 +69,25 @@ public class DetailsControllerTest {
 	}
 	
 	@Test
-	public void shouldModifyDoneSetDoneOnDetailAndCallSaveOnRepositoryAndOnView() {
+	public void shouldDeleteCallRenderDetailsErrorOnViewWhenDetailIsNotFoundOnRepository() {
 		User user = new User("Mario", "Rossi", "email@email.com", "password");
 		List list = new List("TEST", user);
 		Detail detail = new Detail("TEST-D", list);
+		detail.setId(1L);
+		when(toDoRepository.findDetailById(detail.getId())).thenReturn(null);
+		detailsController.delete(detail);
+		verify(toDoView).renderDetailsError(ERRORS.DETAIL_NO_LONGER_EXISTS.getValue());
+		verify(toDoRepository, never()).deleteDetail(detail);
+		verify(toDoView, never()).deleteDetail(detail);
+	}
+	
+	@Test
+	public void shouldModifyDoneSetDoneOnDetailAndCallSaveOnRepositoryAndOnViewWhenDetailIsFoundOnRepository() {
+		User user = new User("Mario", "Rossi", "email@email.com", "password");
+		List list = new List("TEST", user);
+		Detail detail = new Detail("TEST-D", list);
+		detail.setId(1L);
+		when(toDoRepository.findDetailById(detail.getId())).thenReturn(detail);
 		when(toDoRepository.saveDetail(detail)).thenReturn(detail);
 		detailsController.modifyDone(Boolean.TRUE, detail);
 		assertTrue(detail.getDone());
@@ -75,6 +96,20 @@ public class DetailsControllerTest {
 		inOrder.verify(toDoView).saveDetail(detail);
 		verifyNoMoreInteractions(ignoreStubs(toDoRepository));
 		verifyNoMoreInteractions(ignoreStubs(toDoView));
+	}
+	
+	@Test
+	public void shouldModifyDoneCallRenderDetailsErrorOnViewAndSaveOnRepositoryWhenDetailIsNotFoundOnRepository() {
+		User user = new User("Mario", "Rossi", "email@email.com", "password");
+		List list = new List("TEST", user);
+		Detail detail = new Detail("TEST-D", list);
+		detail.setId(1L);
+		when(toDoRepository.findDetailById(detail.getId())).thenReturn(null);
+		detailsController.modifyDone(Boolean.TRUE, detail);
+		assertFalse(detail.getDone());
+		verify(toDoView).renderDetailsError(ERRORS.DETAIL_NO_LONGER_EXISTS.getValue());
+		verify(toDoView).saveDetail(detail);
+		verify(toDoRepository, never()).saveDetail(detail);
 	}
 	
 }

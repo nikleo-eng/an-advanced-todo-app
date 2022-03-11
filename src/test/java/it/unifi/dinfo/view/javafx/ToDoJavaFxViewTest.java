@@ -31,6 +31,8 @@ import it.unifi.dinfo.view.javafx.spec.LoginJavaFxView;
 import it.unifi.dinfo.view.javafx.spec.RegistrationJavaFxView;
 import it.unifi.dinfo.view.javafx.spec.UserJavaFxView;
 import it.unifi.dinfo.view.spec.AdditionModificationView;
+import it.unifi.dinfo.view.spec.DetailsView;
+import it.unifi.dinfo.view.spec.ListsView;
 import it.unifi.dinfo.view.spec.LoginView;
 import it.unifi.dinfo.view.spec.RegistrationView;
 import javafx.geometry.Pos;
@@ -291,6 +293,22 @@ public class ToDoJavaFxViewTest extends ApplicationTest {
 	public void shouldRenderRegistrationErrorCallRenderErrorOnRegistrationView() {
 		toDoJavaFxView.renderRegistrationError(RegistrationView.ERRORS.USER_ALREADY_FOUND.getValue());
 		verify(registrationJavaFxView).renderError(RegistrationView.ERRORS.USER_ALREADY_FOUND.getValue());
+		verifyNoMoreInteractions(ignoreStubs(toDoController, loginJavaFxView, registrationJavaFxView, 
+				listsJavaFxView, detailsJavaFxView, additionModificationJavaFxView, userJavaFxView));
+	}
+	
+	@Test
+	public void shouldRenderListsErrorCallRenderErrorOnListsView() {
+		toDoJavaFxView.renderListsError(ListsView.ERRORS.LIST_NO_LONGER_EXISTS.getValue());
+		verify(listsJavaFxView).renderError(ListsView.ERRORS.LIST_NO_LONGER_EXISTS.getValue());
+		verifyNoMoreInteractions(ignoreStubs(toDoController, loginJavaFxView, registrationJavaFxView, 
+				listsJavaFxView, detailsJavaFxView, additionModificationJavaFxView, userJavaFxView));
+	}
+	
+	@Test
+	public void shouldRenderDetailsErrorCallRenderErrorOnDetailsView() {
+		toDoJavaFxView.renderDetailsError(DetailsView.ERRORS.DETAIL_NO_LONGER_EXISTS.getValue());
+		verify(detailsJavaFxView).renderError(DetailsView.ERRORS.DETAIL_NO_LONGER_EXISTS.getValue());
 		verifyNoMoreInteractions(ignoreStubs(toDoController, loginJavaFxView, registrationJavaFxView, 
 				listsJavaFxView, detailsJavaFxView, additionModificationJavaFxView, userJavaFxView));
 	}

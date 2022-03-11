@@ -183,4 +183,20 @@ public class ToDoMySqlRepositoryTest {
 				detailMySqlRepository, logMySqlRepository));
 	}
 	
+	@Test
+	public void shouldFindListByIdCallFindByIdOnListMySqlRepository() {
+		toDoMySqlRepository.findListById(1L);
+		verify(listMySqlRepository).findById(1L);
+		verifyNoMoreInteractions(ignoreStubs(userMySqlRepository, listMySqlRepository, 
+				detailMySqlRepository, logMySqlRepository));
+	}
+	
+	@Test
+	public void shouldFindDetailByIdCallFindByIdOnDetailMySqlRepository() {
+		toDoMySqlRepository.findDetailById(1L);
+		verify(detailMySqlRepository).findById(1L);
+		verifyNoMoreInteractions(ignoreStubs(userMySqlRepository, listMySqlRepository, 
+				detailMySqlRepository, logMySqlRepository));
+	}
+	
 }
