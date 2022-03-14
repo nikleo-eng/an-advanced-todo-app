@@ -31,7 +31,7 @@ jobs:
         restore-keys: ${{ runner.os }}-m2-
     - name: Build with Maven and SonarCloud
       run: >
-        xvfb-run mvn verify -P jacoco,mutation-testing sonar:sonar
+        xvfb-run mvn verify -P jacoco,mutation-testing,docker sonar:sonar
         -Dsonar.organization=nikleo-eng-github
         -Dsonar.host.url=https://sonarcloud.io
         -Dsonar.projectKey=nikleo-eng_an-advanced-todo-app

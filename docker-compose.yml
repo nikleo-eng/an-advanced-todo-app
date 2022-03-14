@@ -1,0 +1,45 @@
+version: '2'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    # You can now specify both a build and an image key if you're using the new file format.
+    # docker-compose build will build the image and tag it with the name you've specified,
+    # while docker-compose pull will attempt to pull it.
+    # https://github.com/docker/compose/releases/tag/1.6.0
+    # Workaround for issues:
+    # https://github.com/fabric8io/docker-maven-plugin/issues/614
+    # https://github.com/fabric8io/docker-maven-plugin/issues/909
+    image: app:latest
+    container_name: app_container
+    environment:
+      - MY_SQL_HOST=mysql
+      - MY_SQL_PORT=3306
+      - MY_SQL_DB_NAME=an-advanced-todo-app-db
+      - MY_SQL_USER=user
+      - MY_SQL_PASS=password
+    networks:
+      - custom-network
+    depends_on:
+      - mysql
+  mysql:
+    image: mysql:8.0.28
+    container_name: mysql_container
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=passwordR
+      - MYSQL_DATABASE=an-advanced-todo-app-db
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=password
+    ports:
+      - '3306:3306'
+    expose:
+      - '3306'
+    networks:
+      - custom-network
+
+networks:
+  custom-network:
+    driver: bridge
