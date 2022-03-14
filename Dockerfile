@@ -7,8 +7,14 @@ ENV MY_SQL_USER user
 ENV MY_SQL_PASS password
 
 COPY wait-for-it.sh /app/wait-for-it.sh
+# https://github.com/moby/moby/issues/37965#issuecomment-426853382
+RUN true
 COPY docker-cmd.sh /app/docker-cmd.sh
+# https://github.com/moby/moby/issues/37965#issuecomment-426853382
+RUN true
 COPY /target/maven-javafx-dependencies /lib
+# https://github.com/moby/moby/issues/37965#issuecomment-426853382
+RUN true
 COPY /target/*jar-with-dependencies.jar /app/app.jar
 
 RUN chmod +x /app/wait-for-it.sh /app/docker-cmd.sh
