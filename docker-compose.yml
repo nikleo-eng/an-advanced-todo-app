@@ -23,7 +23,7 @@ services:
     networks:
       - custom-network
     depends_on:
-      - mysql
+      - mysql_container
   mysql:
     image: mysql:8.0.28
     container_name: mysql_container
