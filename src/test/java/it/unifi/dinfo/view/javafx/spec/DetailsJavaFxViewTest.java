@@ -329,11 +329,19 @@ public class DetailsJavaFxViewTest extends ApplicationTest {
 		waitFor(10, TimeUnit.SECONDS, new Callable<Boolean>() {
 			@Override
 			public Boolean call() throws Exception {
-				return lookup("#" + getRowLabelId(detail.getTodo())).tryQuery().isPresent();
+				return lookup("#" + getRowId(detail.getTodo())).tryQuery().isPresent();
 			}
 		});
 		
 		clickOn("#" + getRowId(detail.getTodo()));
+		
+		waitFor(10, TimeUnit.SECONDS, new Callable<Boolean>() {
+			@Override
+			public Boolean call() throws Exception {
+				return lookup("#" + getRowDeleteButtonId(detail.getTodo())).tryQuery().isPresent();
+			}
+		});
+		
 		clickOn("#" + getRowDeleteButtonId(detail.getTodo()));
 		
 		verify(toDoController).deleteDetail(detail);
