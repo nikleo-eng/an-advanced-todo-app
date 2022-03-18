@@ -38,10 +38,10 @@ jobs:
       run: restart-service *docker*
     - name: Build with Maven, SonarCloud and Docker
       run: >
-        mvn verify -P jacoco,mutation-testing,docker sonar:sonar ^
-        -Dsonar.organization=nikleo-eng-github ^
-        -Dsonar.host.url=https://sonarcloud.io ^
-        -Dsonar.projectKey=nikleo-eng_an-advanced-todo-app
+        mvn verify -P jacoco,mutation-testing,docker sonar:sonar
+        "-Dsonar.organization=nikleo-eng-github"
+        "-Dsonar.host.url=https://sonarcloud.io"
+        "-Dsonar.projectKey=nikleo-eng_an-advanced-todo-app"
       working-directory: ${{ env.workdir }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -49,7 +49,7 @@ jobs:
     - name: Generate JUnit-Jacoco Reports
       run: >
         mvn surefire-report:report-only site:site
-        -DgenerateReports=false
+        "-DgenerateReports=false"
       working-directory: ${{ env.workdir }}
       if: ${{ always() }}
     - name: Archive Pitest Report
