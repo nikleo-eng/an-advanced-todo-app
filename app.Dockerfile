@@ -12,7 +12,7 @@ RUN true
 COPY docker-cmd.sh /app/docker-cmd.sh
 # https://github.com/moby/moby/issues/37965#issuecomment-426853382
 RUN true
-COPY /target/maven-javafx-dependencies /lib
+COPY /target/maven-javafx-dependencies/linux /lib
 # https://github.com/moby/moby/issues/37965#issuecomment-426853382
 RUN true
 COPY /target/*jar-with-dependencies.jar /app/app.jar

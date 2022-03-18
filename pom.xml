@@ -54,6 +54,12 @@
 		</dependency>
 		<dependency>
 			<groupId>org.openjfx</groupId>
+			<artifactId>javafx-controls</artifactId>
+			<version>${javafx.version}</version>
+			<classifier>mac</classifier>
+		</dependency>
+		<dependency>
+			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-base</artifactId>
 			<version>${javafx.version}</version>
 			<classifier>win</classifier>
@@ -63,6 +69,12 @@
 			<artifactId>javafx-base</artifactId>
 			<version>${javafx.version}</version>
 			<classifier>linux</classifier>
+		</dependency>
+		<dependency>
+			<groupId>org.openjfx</groupId>
+			<artifactId>javafx-base</artifactId>
+			<version>${javafx.version}</version>
+			<classifier>mac</classifier>
 		</dependency>
 		<dependency>
 			<groupId>org.openjfx</groupId>
@@ -78,6 +90,12 @@
 		</dependency>
 		<dependency>
 			<groupId>org.openjfx</groupId>
+			<artifactId>javafx-graphics</artifactId>
+			<version>${javafx.version}</version>
+			<classifier>mac</classifier>
+		</dependency>
+		<dependency>
+			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-fxml</artifactId>
 			<version>${javafx.version}</version>
 			<classifier>win</classifier>
@@ -87,6 +105,12 @@
 			<artifactId>javafx-fxml</artifactId>
 			<version>${javafx.version}</version>
 			<classifier>linux</classifier>
+		</dependency>
+		<dependency>
+			<groupId>org.openjfx</groupId>
+			<artifactId>javafx-fxml</artifactId>
+			<version>${javafx.version}</version>
+			<classifier>mac</classifier>
 		</dependency>
 		<dependency>
 			<groupId>org.openjfx</groupId>
@@ -102,6 +126,12 @@
 		</dependency>
 		<dependency>
 			<groupId>org.openjfx</groupId>
+			<artifactId>javafx-web</artifactId>
+			<version>${javafx.version}</version>
+			<classifier>mac</classifier>
+		</dependency>
+		<dependency>
+			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-swing</artifactId>
 			<version>${javafx.version}</version>
 			<classifier>win</classifier>
@@ -114,6 +144,12 @@
 		</dependency>
 		<dependency>
 			<groupId>org.openjfx</groupId>
+			<artifactId>javafx-swing</artifactId>
+			<version>${javafx.version}</version>
+			<classifier>mac</classifier>
+		</dependency>
+		<dependency>
+			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-media</artifactId>
 			<version>${javafx.version}</version>
 			<classifier>win</classifier>
@@ -123,6 +159,12 @@
 			<artifactId>javafx-media</artifactId>
 			<version>${javafx.version}</version>
 			<classifier>linux</classifier>
+		</dependency>
+		<dependency>
+			<groupId>org.openjfx</groupId>
+			<artifactId>javafx-media</artifactId>
+			<version>${javafx.version}</version>
+			<classifier>mac</classifier>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
@@ -396,17 +438,47 @@
 					<version>3.3.0</version>
 					<executions>
 						<execution>
-							<id>copy-dependencies-javafx</id>
+							<id>copy-dependencies-javafx-windows</id>
 							<phase>package</phase>
 							<goals>
 								<goal>copy-dependencies</goal>
 							</goals>
 							<configuration>
 								<outputDirectory>
-									${project.build.directory}/maven-javafx-dependencies
+									${project.build.directory}/maven-javafx-dependencies/windows
+								</outputDirectory>
+								<includeScope>runtime</includeScope>
+								<includeClassifiers>win</includeClassifiers>
+								<includeGroupIds>org.openjfx</includeGroupIds>
+							</configuration>
+						</execution>
+						<execution>
+							<id>copy-dependencies-javafx-linux</id>
+							<phase>package</phase>
+							<goals>
+								<goal>copy-dependencies</goal>
+							</goals>
+							<configuration>
+								<outputDirectory>
+									${project.build.directory}/maven-javafx-dependencies/linux
 								</outputDirectory>
 								<includeScope>runtime</includeScope>
 								<includeClassifiers>linux</includeClassifiers>
+								<includeGroupIds>org.openjfx</includeGroupIds>
+							</configuration>
+						</execution>
+						<execution>
+							<id>copy-dependencies-javafx-macintosh</id>
+							<phase>package</phase>
+							<goals>
+								<goal>copy-dependencies</goal>
+							</goals>
+							<configuration>
+								<outputDirectory>
+									${project.build.directory}/maven-javafx-dependencies/macintosh
+								</outputDirectory>
+								<includeScope>runtime</includeScope>
+								<includeClassifiers>mac</includeClassifiers>
 								<includeGroupIds>org.openjfx</includeGroupIds>
 							</configuration>
 						</execution>

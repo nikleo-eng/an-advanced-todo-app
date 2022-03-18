@@ -4,7 +4,7 @@ services:
   app:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: app.Dockerfile
     # You can now specify both a build and an image key if you're using the new file format.
     # docker-compose build will build the image and tag it with the name you've specified,
     # while docker-compose pull will attempt to pull it.
@@ -12,7 +12,7 @@ services:
     # Workaround for issues:
     # https://github.com/fabric8io/docker-maven-plugin/issues/614
     # https://github.com/fabric8io/docker-maven-plugin/issues/909
-    image: app:latest
+    image: custom_app:latest
     container_name: app_container
     environment:
       - MY_SQL_HOST=mysql
@@ -21,11 +21,21 @@ services:
       - MY_SQL_USER=user
       - MY_SQL_PASS=password
     networks:
-      - custom-network
+      - network
     depends_on:
       - mysql_container
   mysql:
-    image: mysql:8.0.28
+    build:
+      context: .
+      dockerfile: mysql.Dockerfile
+    # You can now specify both a build and an image key if you're using the new file format.
+    # docker-compose build will build the image and tag it with the name you've specified,
+    # while docker-compose pull will attempt to pull it.
+    # https://github.com/docker/compose/releases/tag/1.6.0
+    # Workaround for issues:
+    # https://github.com/fabric8io/docker-maven-plugin/issues/614
+    # https://github.com/fabric8io/docker-maven-plugin/issues/909
+    image: custom_mysql:latest
     container_name: mysql_container
     restart: always
     environment:
@@ -38,8 +48,9 @@ services:
     expose:
       - '3306'
     networks:
-      - custom-network
+      - network
 
 networks:
-  custom-network:
+  network:
+    name: custom_network
     driver: bridge

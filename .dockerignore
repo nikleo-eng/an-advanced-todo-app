@@ -1,5 +1,5 @@
 **
 !docker-cmd.sh
 !wait-for-it.sh
-!/target/maven-javafx-dependencies
+!/target/maven-javafx-dependencies/linux
 !/target/*jar-with-dependencies.jar

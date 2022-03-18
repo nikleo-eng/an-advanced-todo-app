@@ -1,4 +1,4 @@
-name: Java CI with Maven in Linux
+name: An-Advanced-ToDo-App CI/CD in Windows
 
 on:
   push:
@@ -8,11 +8,12 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     env:
+      DOCKER_HOST: tcp://localhost:2375
       workdir: .
 
-    name: Build on Linux
+    name: Build on Windows
     steps:
     - uses: actions/checkout@v2
       with:
@@ -27,11 +28,17 @@ jobs:
         path: |
           ~/.m2
           ~/.sonar/cache
-        key: ${{ runner.os }}-m2-${{ hashFiles('pom.xml', '**/maven.yml') }}
+        key: ${{ runner.os }}-m2-${{ hashFiles('pom.xml', '**/windows.yml') }}
         restore-keys: ${{ runner.os }}-m2-
-    - name: Build with Maven and SonarCloud
+    - name: Docker config
       run: >
-        xvfb-run mvn verify -P jacoco,mutation-testing,docker sonar:sonar
+        sc config docker
+        binpath="dockerd.exe --run-service -H tcp://localhost:2375"
+    - name: Docker restart
+      run: restart-service *docker*
+    - name: Build with Maven, SonarCloud and Docker
+      run: >
+        mvn verify -P jacoco,mutation-testing,docker sonar:sonar
         -Dsonar.organization=nikleo-eng-github
         -Dsonar.host.url=https://sonarcloud.io
         -Dsonar.projectKey=nikleo-eng_an-advanced-todo-app
@@ -41,7 +48,7 @@ jobs:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
     - name: Generate JUnit-Jacoco Reports
       run: >
-        xvfb-run mvn surefire-report:report-only site:site
+        mvn surefire-report:report-only site:site
         -DgenerateReports=false
       working-directory: ${{ env.workdir }}
       if: ${{ always() }}
@@ -58,3 +65,17 @@ jobs:
       with:
         name: surefire-report
         path: '**/target/site'
+    - name: Archive Final JARs
+      uses: actions/upload-artifact@v2
+      if: ${{ always() }}
+      with:
+        name: final-jars
+        path: '**/target/an-advanced-todo-app-*.jar'
+        if-no-files-found: ignore
+    - name: Archive JavaFX Dependencies
+      uses: actions/upload-artifact@v2
+      if: ${{ always() }}
+      with:
+        name: javafx-dependencies
+        path: '**/target/maven-javafx-dependencies/windows'
+        if-no-files-found: ignore
