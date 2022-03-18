@@ -108,7 +108,7 @@ public class ListsJavaFxViewTest extends ApplicationTest {
 		waitFor(10, TimeUnit.SECONDS, new Callable<Boolean>() {
 			@Override
 			public Boolean call() throws Exception {
-				return lookup("#" + getRowId(list.getName())).tryQuery().isPresent();
+				return lookup("#" + getRowLabelId(list.getName())).tryQuery().isPresent();
 			}
 		});
 		
@@ -134,6 +134,27 @@ public class ListsJavaFxViewTest extends ApplicationTest {
 		});
 		
 		clickOn("#" + getRowId(list.getName()));
+		
+		waitFor(10, TimeUnit.SECONDS, new Callable<Boolean>() {
+			@Override
+			public Boolean call() throws Exception {
+				return lookup("#" + getRowLabelId(list.getName())).tryQuery().isPresent();
+			}
+		});
+		
+		waitFor(10, TimeUnit.SECONDS, new Callable<Boolean>() {
+			@Override
+			public Boolean call() throws Exception {
+				return lookup("#" + getRowModifyButtonId(list.getName())).tryQuery().isPresent();
+			}
+		});
+		
+		waitFor(10, TimeUnit.SECONDS, new Callable<Boolean>() {
+			@Override
+			public Boolean call() throws Exception {
+				return lookup("#" + getRowDeleteButtonId(list.getName())).tryQuery().isPresent();
+			}
+		});
 		
 		assertThat(lookup("#" + getRowLabelId(list.getName())).tryQueryAs(Label.class)).isNotEmpty();
 		assertThat(lookup("#" + getRowModifyButtonId(list.getName())).tryQueryAs(Button.class)).isNotEmpty();
@@ -322,6 +343,14 @@ public class ListsJavaFxViewTest extends ApplicationTest {
 		});
 		
 		clickOn("#" + getRowId(list.getName()));
+		
+		waitFor(10, TimeUnit.SECONDS, new Callable<Boolean>() {
+			@Override
+			public Boolean call() throws Exception {
+				return lookup("#" + getRowModifyButtonId(list.getName())).tryQuery().isPresent();
+			}
+		});
+		
 		clickOn("#" + getRowModifyButtonId(list.getName()));
 		
 		verify(detailsJavaFxView).disableArea();
@@ -347,6 +376,14 @@ public class ListsJavaFxViewTest extends ApplicationTest {
 		});
 		
 		clickOn("#" + getRowId(list.getName()));
+		
+		waitFor(10, TimeUnit.SECONDS, new Callable<Boolean>() {
+			@Override
+			public Boolean call() throws Exception {
+				return lookup("#" + getRowDeleteButtonId(list.getName())).tryQuery().isPresent();
+			}
+		});
+		
 		clickOn("#" + getRowDeleteButtonId(list.getName()));
 		
 		verify(toDoController).deleteList(list);
@@ -374,6 +411,14 @@ public class ListsJavaFxViewTest extends ApplicationTest {
 		});
 		
 		clickOn("#" + getRowId(list.getName()));
+		
+		waitFor(10, TimeUnit.SECONDS, new Callable<Boolean>() {
+			@Override
+			public Boolean call() throws Exception {
+				return lookup("#" + getRowDeleteButtonId(list.getName())).tryQuery().isPresent();
+			}
+		});
+		
 		clickOn("#" + getRowDeleteButtonId(list.getName()));
 		
 		verify(detailsJavaFxView).resetError();

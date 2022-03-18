@@ -111,6 +111,13 @@ public class DetailsJavaFxViewTest extends ApplicationTest {
 		waitFor(10, TimeUnit.SECONDS, new Callable<Boolean>() {
 			@Override
 			public Boolean call() throws Exception {
+				return lookup("#" + getRowCheckBoxId(detail.getTodo())).tryQuery().isPresent();
+			}
+		});
+		
+		waitFor(10, TimeUnit.SECONDS, new Callable<Boolean>() {
+			@Override
+			public Boolean call() throws Exception {
 				return lookup("#" + getRowLabelId(detail.getTodo())).tryQuery().isPresent();
 			}
 		});
@@ -134,11 +141,39 @@ public class DetailsJavaFxViewTest extends ApplicationTest {
 		waitFor(10, TimeUnit.SECONDS, new Callable<Boolean>() {
 			@Override
 			public Boolean call() throws Exception {
-				return lookup("#" + getRowLabelId(detail.getTodo())).tryQuery().isPresent();
+				return lookup("#" + getRowId(detail.getTodo())).tryQuery().isPresent();
 			}
 		});
 		
 		clickOn("#" + getRowId(detail.getTodo()));
+		
+		waitFor(10, TimeUnit.SECONDS, new Callable<Boolean>() {
+			@Override
+			public Boolean call() throws Exception {
+				return lookup("#" + getRowCheckBoxId(detail.getTodo())).tryQuery().isPresent();
+			}
+		});
+		
+		waitFor(10, TimeUnit.SECONDS, new Callable<Boolean>() {
+			@Override
+			public Boolean call() throws Exception {
+				return lookup("#" + getRowLabelId(detail.getTodo())).tryQuery().isPresent();
+			}
+		});
+		
+		waitFor(10, TimeUnit.SECONDS, new Callable<Boolean>() {
+			@Override
+			public Boolean call() throws Exception {
+				return lookup("#" + getRowModifyButtonId(detail.getTodo())).tryQuery().isPresent();
+			}
+		});
+		
+		waitFor(10, TimeUnit.SECONDS, new Callable<Boolean>() {
+			@Override
+			public Boolean call() throws Exception {
+				return lookup("#" + getRowDeleteButtonId(detail.getTodo())).tryQuery().isPresent();
+			}
+		});
 		
 		assertThat(lookup("#" + getRowCheckBoxId(detail.getTodo())).tryQueryAs(CheckBox.class)).isNotEmpty();
 		assertThat(lookup("#" + getRowLabelId(detail.getTodo())).tryQueryAs(Label.class)).isNotEmpty();
@@ -162,7 +197,7 @@ public class DetailsJavaFxViewTest extends ApplicationTest {
 		waitFor(10, TimeUnit.SECONDS, new Callable<Boolean>() {
 			@Override
 			public Boolean call() throws Exception {
-				return lookup("#" + getRowLabelId(detail.getTodo())).tryQuery().isPresent();
+				return lookup("#" + getRowId(detail.getTodo())).tryQuery().isPresent();
 			}
 		});
 		
@@ -277,7 +312,7 @@ public class DetailsJavaFxViewTest extends ApplicationTest {
 		waitFor(10, TimeUnit.SECONDS, new Callable<Boolean>() {
 			@Override
 			public Boolean call() throws Exception {
-				return lookup("#" + getRowLabelId(detail2.getTodo())).tryQuery().isPresent();
+				return lookup("#" + getRowId(detail2.getTodo())).tryQuery().isPresent();
 			}
 		});
 		
@@ -303,11 +338,19 @@ public class DetailsJavaFxViewTest extends ApplicationTest {
 		waitFor(10, TimeUnit.SECONDS, new Callable<Boolean>() {
 			@Override
 			public Boolean call() throws Exception {
-				return lookup("#" + getRowLabelId(detail.getTodo())).tryQuery().isPresent();
+				return lookup("#" + getRowId(detail.getTodo())).tryQuery().isPresent();
 			}
 		});
 		
 		clickOn("#" + getRowId(detail.getTodo()));
+		
+		waitFor(10, TimeUnit.SECONDS, new Callable<Boolean>() {
+			@Override
+			public Boolean call() throws Exception {
+				return lookup("#" + getRowModifyButtonId(detail.getTodo())).tryQuery().isPresent();
+			}
+		});
+		
 		clickOn("#" + getRowModifyButtonId(detail.getTodo()));
 		
 		verify(listsJavaFxView).disableArea();
@@ -365,11 +408,19 @@ public class DetailsJavaFxViewTest extends ApplicationTest {
 		waitFor(10, TimeUnit.SECONDS, new Callable<Boolean>() {
 			@Override
 			public Boolean call() throws Exception {
-				return lookup("#" + getRowLabelId(detail.getTodo())).tryQuery().isPresent();
+				return lookup("#" + getRowId(detail.getTodo())).tryQuery().isPresent();
 			}
 		});
 		
 		clickOn("#" + getRowId(detail.getTodo()));
+		
+		waitFor(10, TimeUnit.SECONDS, new Callable<Boolean>() {
+			@Override
+			public Boolean call() throws Exception {
+				return lookup("#" + getRowDeleteButtonId(detail.getTodo())).tryQuery().isPresent();
+			}
+		});
+		
 		clickOn("#" + getRowDeleteButtonId(detail.getTodo()));
 		
 		verify(listsJavaFxView).resetError();
@@ -406,7 +457,7 @@ public class DetailsJavaFxViewTest extends ApplicationTest {
 		waitFor(10, TimeUnit.SECONDS, new Callable<Boolean>() {
 			@Override
 			public Boolean call() throws Exception {
-				return lookup("#" + getRowLabelId(detail.getTodo())).tryQuery().isPresent();
+				return lookup("#" + getRowId(detail.getTodo())).tryQuery().isPresent();
 			}
 		});
 		
@@ -462,7 +513,7 @@ public class DetailsJavaFxViewTest extends ApplicationTest {
 		waitFor(10, TimeUnit.SECONDS, new Callable<Boolean>() {
 			@Override
 			public Boolean call() throws Exception {
-				return lookup("#" + getRowLabelId(detail.getTodo())).tryQuery().isPresent();
+				return lookup("#" + getRowCheckBoxId(detail.getTodo())).tryQuery().isPresent();
 			}
 		});
 		
@@ -483,7 +534,7 @@ public class DetailsJavaFxViewTest extends ApplicationTest {
 		waitFor(10, TimeUnit.SECONDS, new Callable<Boolean>() {
 			@Override
 			public Boolean call() throws Exception {
-				return lookup("#" + getRowLabelId(detail.getTodo())).tryQuery().isPresent();
+				return lookup("#" + getRowCheckBoxId(detail.getTodo())).tryQuery().isPresent();
 			}
 		});
 		
@@ -505,11 +556,19 @@ public class DetailsJavaFxViewTest extends ApplicationTest {
 		waitFor(10, TimeUnit.SECONDS, new Callable<Boolean>() {
 			@Override
 			public Boolean call() throws Exception {
-				return lookup("#" + getRowLabelId(detail.getTodo())).tryQuery().isPresent();
+				return lookup("#" + getRowId(detail.getTodo())).tryQuery().isPresent();
 			}
 		});
 		
 		clickOn("#" + getRowId(detail.getTodo()));
+		
+		waitFor(10, TimeUnit.SECONDS, new Callable<Boolean>() {
+			@Override
+			public Boolean call() throws Exception {
+				return lookup("#" + getRowCheckBoxId(detail.getTodo())).tryQuery().isPresent();
+			}
+		});
+		
 		clickOn("#" + getRowCheckBoxId(detail.getTodo()));
 		
 		CheckBox checkBox = lookup("#" + getRowCheckBoxId(detail.getTodo())).queryAs(CheckBox.class);
@@ -534,11 +593,19 @@ public class DetailsJavaFxViewTest extends ApplicationTest {
 		waitFor(10, TimeUnit.SECONDS, new Callable<Boolean>() {
 			@Override
 			public Boolean call() throws Exception {
-				return lookup("#" + getRowLabelId(detail.getTodo())).tryQuery().isPresent();
+				return lookup("#" + getRowId(detail.getTodo())).tryQuery().isPresent();
 			}
 		});
 		
 		clickOn("#" + getRowId(detail.getTodo()));
+		
+		waitFor(10, TimeUnit.SECONDS, new Callable<Boolean>() {
+			@Override
+			public Boolean call() throws Exception {
+				return lookup("#" + getRowCheckBoxId(detail.getTodo())).tryQuery().isPresent();
+			}
+		});
+		
 		clickOn("#" + getRowCheckBoxId(detail.getTodo()));
 		
 		verify(listsJavaFxView).resetError();
