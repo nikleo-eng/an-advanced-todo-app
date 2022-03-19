@@ -384,6 +384,8 @@ public class ListsJavaFxViewTest extends ApplicationTest {
 			}
 		});
 		
+		waitForFxEvents();
+		
 		clickOn("#" + getRowDeleteButtonId(list.getName()));
 		
 		verify(toDoController).deleteList(list);
