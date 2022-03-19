@@ -24,7 +24,6 @@
 		</sonar.junit.reportPaths>
 		
 		<javafx.version>11.0.2</javafx.version>
-		<testfx.version>4.0.15-alpha</testfx.version>
 	</properties>
 
 	<dependencyManagement>
@@ -205,13 +204,13 @@
 		<dependency>
 			<groupId>org.testfx</groupId>
 			<artifactId>testfx-core</artifactId>
-			<version>${testfx.version}</version>
+			<version>4.0.16-alpha</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.testfx</groupId>
 			<artifactId>testfx-junit</artifactId>
-			<version>${testfx.version}</version>
+			<version>4.0.15-alpha</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
