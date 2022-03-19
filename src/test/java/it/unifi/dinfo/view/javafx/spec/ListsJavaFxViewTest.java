@@ -392,7 +392,7 @@ public class ListsJavaFxViewTest extends ApplicationTest {
 		waitFor(10, TimeUnit.SECONDS, new Callable<Boolean>() {
 			@Override
 			public Boolean call() throws Exception {
-				return lookup("#" + getRowDeleteButtonId(list.getName())).tryQuery().isEmpty();
+				return lookup("#" + getRowId(list.getName())).tryQuery().isEmpty();
 			}
 		});
 		

@@ -210,9 +210,10 @@ public class ListsJavaFxView extends BaseJavaFxView implements ListsView {
 			super.updateItem(item, empty);
 			setPrefWidth(getListView().getWidth() - 20);
 
-			if (empty) {
+			if (item == null) {
 				setText(null);
 				setGraphic(null);
+				setId(null);
 			} else {
 				var labelHBox = createCellLabelHBox(item.getName(), getRowLabelId(item.getName()));
 
@@ -229,7 +230,6 @@ public class ListsJavaFxView extends BaseJavaFxView implements ListsView {
 
 				setText(null);
 				setGraphic(gridPane);
-				
 				setId(getRowId(item.getName()));
 			}
 		}

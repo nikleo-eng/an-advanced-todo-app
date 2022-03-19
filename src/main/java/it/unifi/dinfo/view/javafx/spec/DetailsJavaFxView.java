@@ -206,9 +206,10 @@ public class DetailsJavaFxView extends BaseJavaFxView implements DetailsView {
 			super.updateItem(item, empty);
 			setPrefWidth(getListView().getWidth() - 20);
 
-			if (empty) {
+			if (item == null) {
 				setText(null);
 				setGraphic(null);
+				setId(null);
 			} else {
 				var checkBoxLabelHBox = createCellCheckBoxLabelHBox(getRowCheckBoxId(item.getTodo()), 
 						item.getDone(), ev -> { resetListsAndDetailsErrors(); 
@@ -230,7 +231,6 @@ public class DetailsJavaFxView extends BaseJavaFxView implements DetailsView {
 
 				setText(null);
 				setGraphic(gridPane);
-				
 				setId(getRowId(item.getTodo()));
 			}
 		}
