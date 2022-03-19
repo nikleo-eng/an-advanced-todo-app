@@ -3,6 +3,7 @@ package it.unifi.dinfo.view.javafx.spec;
 import static it.unifi.dinfo.view.javafx.ToDoJavaFxView.*;
 import static it.unifi.dinfo.view.javafx.spec.ListsJavaFxView.*;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.ignoreStubs;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -384,9 +385,16 @@ public class ListsJavaFxViewTest extends ApplicationTest {
 			}
 		});
 		
-		waitForFxEvents();
+		doAnswer(answer -> listView.getItems().remove(list)).when(toDoController).deleteList(list);
 		
 		clickOn("#" + getRowDeleteButtonId(list.getName()));
+		
+		waitFor(10, TimeUnit.SECONDS, new Callable<Boolean>() {
+			@Override
+			public Boolean call() throws Exception {
+				return lookup("#" + getRowDeleteButtonId(list.getName())).tryQuery().isEmpty();
+			}
+		});
 		
 		verify(toDoController).deleteList(list);
 	}
