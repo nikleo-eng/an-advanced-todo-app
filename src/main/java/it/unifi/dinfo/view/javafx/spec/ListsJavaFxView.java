@@ -2,7 +2,6 @@ package it.unifi.dinfo.view.javafx.spec;
 
 import static it.unifi.dinfo.view.javafx.spec.util.ListsDetailsGUI.*;
 
-import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.IntStream;
 
@@ -111,7 +110,6 @@ public class ListsJavaFxView extends BaseJavaFxView implements ListsView {
 		listView.getSelectionModel().select(list);
 		additionModificationJavaFxView.resetGUI();
 		enableArea();
-		updateGUIItemsList();
 		detailsJavaFxView.enableArea();
 	}
 
@@ -152,18 +150,10 @@ public class ListsJavaFxView extends BaseJavaFxView implements ListsView {
 	
 	private void clearSelection() {
 		listView.getSelectionModel().clearSelection();
-		updateGUIItemsList();
 	}
 	
 	public List getSelectedItem() {
 		return listView.getSelectionModel().getSelectedItem();
-	}
-	
-	private void updateGUIItemsList() {
-		Arrays.asList(listView.lookupAll(".cell").toArray()).forEach(c -> {
-			ListFormatCell lfc = (ListFormatCell) c;
-			lfc.updateItem(lfc.getItem(), lfc.isEmpty());
-		});
 	}
 
 	@Override
@@ -194,7 +184,6 @@ public class ListsJavaFxView extends BaseJavaFxView implements ListsView {
 		}
 		
 		private void clickOnItem(ListFormatCell lfc) {
-			updateGUIItemsList();
 			detailsJavaFxView.enableArea();
 			getToDoController().getAllDetails(lfc.getItem().getId());
 		}
