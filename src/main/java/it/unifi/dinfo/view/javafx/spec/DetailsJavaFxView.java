@@ -201,16 +201,18 @@ public class DetailsJavaFxView extends BaseJavaFxView implements DetailsView {
 				setId(null);
 			} else {
 				var checkBoxLabelHBox = createCellCheckBoxLabelHBox(getRowCheckBoxId(item.getTodo()), 
-						item.getDone(), ev -> { resetListsAndDetailsErrors(); 
+						item.getDone(), ev -> { ev.consume(); resetListsAndDetailsErrors(); 
 							getToDoController().modifyDoneDetail(
 								((CheckBox) ev.getSource()).isSelected(), item); }, 
 						getRowLabelId(item.getTodo()), item.getTodo(), item.getDone());
 
 				var modifyButton = createCellSvgButton(getRowModifyButtonId(item.getTodo()), 
-						ev -> clickModifyButton(), ToDoJavaFxView.SVG_CONTENT_MODIFY_ICON);
+						ev ->  { ev.consume(); clickModifyButton(); }, 
+						ToDoJavaFxView.SVG_CONTENT_MODIFY_ICON);
 				
 				var deleteButton = createCellSvgButton(getRowDeleteButtonId(item.getTodo()), 
-						ev -> { resetListsAndDetailsErrors(); getToDoController().deleteDetail(item); }, 
+						ev -> { ev.consume(); resetListsAndDetailsErrors(); 
+						getToDoController().deleteDetail(item); }, 
 						ToDoJavaFxView.SVG_CONTENT_DELETE_ICON);
 				
 				var buttonsHBox = createCellButtonsHBox(modifyButton, deleteButton);

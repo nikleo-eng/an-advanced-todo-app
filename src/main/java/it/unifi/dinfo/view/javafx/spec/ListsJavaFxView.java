@@ -207,11 +207,12 @@ public class ListsJavaFxView extends BaseJavaFxView implements ListsView {
 				var labelHBox = createCellLabelHBox(item.getName(), getRowLabelId(item.getName()));
 
 				var modifyButton = createCellSvgButton(getRowModifyButtonId(item.getName()), 
-						ev -> clickModifyButton(), ToDoJavaFxView.SVG_CONTENT_MODIFY_ICON);
+						ev -> { ev.consume(); clickModifyButton(); }, 
+						ToDoJavaFxView.SVG_CONTENT_MODIFY_ICON);
 				
 				var deleteButton = createCellSvgButton(getRowDeleteButtonId(item.getName()), 
-						ev -> { resetListsAndDetailsErrors(); getToDoController().deleteList(item); }, 
-						ToDoJavaFxView.SVG_CONTENT_DELETE_ICON);
+						ev -> {  ev.consume(); resetListsAndDetailsErrors(); 
+						getToDoController().deleteList(item); }, ToDoJavaFxView.SVG_CONTENT_DELETE_ICON);
 				
 				var buttonsHBox = createCellButtonsHBox(modifyButton, deleteButton);
 
