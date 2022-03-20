@@ -44,7 +44,7 @@ jobs:
         "-Dsonar.projectKey=nikleo-eng_an-advanced-todo-app"
         "-Dtestfx.robot=awt"
         "-Dtestfx.awt.scale=true"
-        "-Dglass.win.uiScale=100%"
+        "-Dglass.win.uiScale=50%"
       working-directory: ${{ env.workdir }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
