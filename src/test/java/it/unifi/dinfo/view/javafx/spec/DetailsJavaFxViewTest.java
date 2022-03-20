@@ -387,6 +387,8 @@ public class DetailsJavaFxViewTest extends ApplicationTest {
 		
 		clickOn("#" + getRowDeleteButtonId(detail.getTodo()));
 		
+		sleep(20000);
+		
 		verify(toDoController).deleteDetail(detail);
 	}
 	
@@ -572,6 +574,9 @@ public class DetailsJavaFxViewTest extends ApplicationTest {
 		clickOn("#" + getRowCheckBoxId(detail.getTodo()));
 		
 		CheckBox checkBox = lookup("#" + getRowCheckBoxId(detail.getTodo())).queryAs(CheckBox.class);
+		
+		sleep(20000);
+		
 		verify(toDoController).modifyDoneDetail(checkBox.isSelected(), detail);
 	}
 	
@@ -607,6 +612,8 @@ public class DetailsJavaFxViewTest extends ApplicationTest {
 		});
 		
 		clickOn("#" + getRowCheckBoxId(detail.getTodo()));
+		
+		sleep(20000);
 		
 		verify(listsJavaFxView).resetError();
 		assertThat(errorText.getText()).isEmpty();
