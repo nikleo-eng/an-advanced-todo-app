@@ -1,4 +1,4 @@
-FROM openjdk:11-jre-slim
+FROM openjdk:11
 
 ENV MY_SQL_HOST localhost
 ENV MY_SQL_PORT 3306
