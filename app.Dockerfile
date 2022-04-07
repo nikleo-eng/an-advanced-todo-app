@@ -2,7 +2,7 @@ FROM openjdk:11-jre-slim
 
 ENV MY_SQL_HOST localhost
 ENV MY_SQL_PORT 3306
-ENV MY_SQL_DB_NAME an-advanced-todo-app-db
+ENV MY_SQL_DB_NAME an_advanced_todo_app_db
 ENV MY_SQL_USER user
 ENV MY_SQL_PASS password
 

@@ -145,4 +145,19 @@ public class ToDoMySqlRepository implements ToDoRepository {
 		return detailMySqlRepository.findById(id);
 	}
 	
+	/* Only for tests */
+	public void deleteUser(User user) {
+		userMySqlRepository.delete(user);
+	}
+	
+	/* Only for tests */
+	public void deleteLog(Log log) {
+		logMySqlRepository.delete(log);
+	}
+	
+	/* Only for tests */
+	public Set<Log> findAllLogsByUserId(Long userId) {
+		return logMySqlRepository.findAllByUserId(userId);
+	}
+	
 }

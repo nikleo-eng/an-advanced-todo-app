@@ -34,5 +34,15 @@ public class UserMySqlRepository extends BaseMySqlRepository implements UserRepo
 		
 		return user;
 	}
+	
+	/* Only for tests */
+	public void delete(User user) {
+		getHibernateSession().getTransaction().begin();
+		getHibernateSession()
+			.createQuery("delete from User u where u.id = ?0")
+			.setParameter(0, user.getId())
+			.executeUpdate();
+		getHibernateSession().getTransaction().commit();
+	}
 
 }

@@ -353,6 +353,8 @@
 							<mutator>NON_VOID_METHOD_CALLS</mutator>
 						</mutators>
 						<mutationThreshold>90</mutationThreshold>
+						<timestampedReports>false</timestampedReports>
+						<detectInlinedCode>true</detectInlinedCode>
 					</configuration>
 				</plugin>
 				<plugin>
@@ -405,9 +407,7 @@
 					<artifactId>build-helper-maven-plugin</artifactId>
 					<version>3.3.0</version>
 					<executions>
-						<!-- Uncomment when will be implemented at least 
-						one integration and one end-to-end test -->
-						<!-- <execution>
+						<execution>
 							<id>add-test-source</id>
 							<phase>generate-test-sources</phase>
 							<goals>
@@ -420,21 +420,6 @@
 								</sources>
 							</configuration>
 						</execution>
-						<execution>
-							<id>add-test-resource</id>
-							<phase>generate-test-resources</phase>
-							<goals>
-								<goal>add-test-resource</goal>
-							</goals>
-							<configuration>
-								<resources>
-									<resource>
-										<directory>src/it/resources</directory>
-										<directory>src/e2e/resources</directory>
-									</resource>
-								</resources>
-							</configuration>
-						</execution> -->
 					</executions>
 				</plugin>
 				<plugin>
@@ -527,31 +512,6 @@
 					<groupId>io.fabric8</groupId>
 					<artifactId>docker-maven-plugin</artifactId>
 					<version>0.39.1</version>
-					<configuration>
-						<autoCreateCustomNetworks>true</autoCreateCustomNetworks>
-						<images>
-							<image>
-								<alias>${project.artifactId}</alias>
-								<name>
-									${project.groupId}/${project.artifactId}:${project.version}
-								</name>
-								<external>
-									<type>compose</type>
-									<basedir>${project.basedir}</basedir>
-									<composeFile>docker-compose.yml</composeFile>
-								</external>
-								<run>
-									<ports>
-										<port>mysql.mapped.port:3306</port>
-									</ports>
-									<wait>
-										<log>Application Started</log>
-										<time>60</time>
-									</wait>
-								</run>
-							</image>
-						</images>
-					</configuration>
 					<executions>
 						<execution>
 							<id>docker-build</id>
@@ -597,6 +557,18 @@
 				<artifactId>maven-failsafe-plugin</artifactId>
 			</plugin>
 		</plugins>
+		
+		<testResources>
+			<testResource>
+				<directory>src/test/resources</directory>
+			</testResource>
+			<testResource>
+				<directory>src/it/resources</directory>
+			</testResource>
+			<testResource>
+				<directory>src/e2e/resources</directory>
+			</testResource>
+		</testResources>
 	</build>
 
 	<profiles>
@@ -629,6 +601,67 @@
 					<plugin>
 						<groupId>io.fabric8</groupId>
 						<artifactId>docker-maven-plugin</artifactId>
+						<configuration>
+							<autoCreateCustomNetworks>true</autoCreateCustomNetworks>
+							<images>
+								<image>
+									<alias>${project.artifactId}</alias>
+									<name>
+									${project.groupId}/${project.artifactId}:${project.version}
+								</name>
+									<external>
+										<type>compose</type>
+										<basedir>${project.basedir}</basedir>
+										<composeFile>docker-compose.yml</composeFile>
+									</external>
+									<run>
+										<ports>
+											<port>mysql.mapped.port:3306</port>
+										</ports>
+										<wait>
+											<log>Application Started</log>
+											<time>60</time>
+										</wait>
+									</run>
+								</image>
+							</images>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>docker-win</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>io.fabric8</groupId>
+						<artifactId>docker-maven-plugin</artifactId>
+						<configuration>
+							<autoCreateCustomNetworks>true</autoCreateCustomNetworks>
+							<images>
+								<image>
+									<alias>${project.artifactId}</alias>
+									<name>
+									${project.groupId}/${project.artifactId}:${project.version}
+								</name>
+									<external>
+										<type>compose</type>
+										<basedir>${project.basedir}</basedir>
+										<composeFile>docker-compose.win.yml</composeFile>
+									</external>
+									<run>
+										<ports>
+											<port>mysql.mapped.port:3306</port>
+										</ports>
+										<wait>
+											<log>Application Started</log>
+											<time>60</time>
+										</wait>
+									</run>
+								</image>
+							</images>
+						</configuration>
 					</plugin>
 				</plugins>
 			</build>

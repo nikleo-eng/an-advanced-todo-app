@@ -4,7 +4,7 @@ services:
   app:
     build:
       context: .
-      dockerfile: app.Dockerfile
+      dockerfile: app.win.Dockerfile
     # You can now specify both a build and an image key if you're using the new file format.
     # docker-compose build will build the image and tag it with the name you've specified,
     # while docker-compose pull will attempt to pull it.
@@ -27,7 +27,7 @@ services:
   mysql:
     build:
       context: .
-      dockerfile: mysql.Dockerfile
+      dockerfile: mysql.win.Dockerfile
     # You can now specify both a build and an image key if you're using the new file format.
     # docker-compose build will build the image and tag it with the name you've specified,
     # while docker-compose pull will attempt to pull it.
@@ -53,4 +53,6 @@ services:
 networks:
   network:
     name: custom_network
-    driver: bridge
+    # https://github.com/docker/for-win/issues/1960?msclkid=5e99a853b5f111ec8b91d8f1ee4d7d73
+    # Workaround for issue 'could not find plugin bridge in v1 plugin registry'
+    driver: nat
