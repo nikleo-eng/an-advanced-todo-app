@@ -15,6 +15,8 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import it.unifi.dinfo.model.Detail;
+import it.unifi.dinfo.model.List;
 import it.unifi.dinfo.model.Log;
 import it.unifi.dinfo.model.User;
 import it.unifi.dinfo.repository.mysql.ToDoMySqlRepository;
@@ -104,6 +106,165 @@ public class ToDoControllerIT {
 		verify(toDoView).userLoggedIn(user, log, null);
 		verifyNoMoreInteractions(ignoreStubs(toDoView));
 		toDoMySqlRepository.deleteLog(log);
+		toDoMySqlRepository.deleteUser(user);
+	}
+	
+	@Test
+	public void shouldCorrectAddListCallAddListOnViewWithCreatedListLinkedToGivenUser() {
+		User user = new User("Mario", "Rossi", "email@email.com", "password");
+		user = toDoMySqlRepository.createUser(user);
+		toDoController.addList("TEST", user);
+		Set<List> lists = toDoMySqlRepository.findAllListsByUserId(user.getId());
+		assertThat(lists).isNotNull().hasSize(1);
+		List list = lists.iterator().next();
+		assertThat(list).isNotNull();
+		verify(toDoView).addList(list);
+		verifyNoMoreInteractions(ignoreStubs(toDoView));
+		toDoMySqlRepository.deleteList(list);
+		toDoMySqlRepository.deleteUser(user);
+	}
+	
+	@Test
+	public void shouldCorrectAddDetailCallAddDetailOnViewWithCreatedDetailLinkedToGivenList() {
+		User user = new User("Mario", "Rossi", "email@email.com", "password");
+		user = toDoMySqlRepository.createUser(user);
+		List list = new List("TEST", user);
+		list = toDoMySqlRepository.createList(list);
+		toDoController.addDetail("TEST-D", list);
+		Set<Detail> details = toDoMySqlRepository.findAllDetailsByListId(list.getId());
+		assertThat(details).isNotNull().hasSize(1);
+		Detail detail = details.iterator().next();
+		assertThat(detail).isNotNull();
+		verify(toDoView).addDetail(detail);
+		verifyNoMoreInteractions(ignoreStubs(toDoView));
+		toDoMySqlRepository.deleteDetail(detail);
+		toDoMySqlRepository.deleteList(list);
+		toDoMySqlRepository.deleteUser(user);
+	}
+	
+	@Test
+	public void shouldCorrectModifyNameListCallSaveListOnViewWithModifiedList() {
+		User user = new User("Mario", "Rossi", "email@email.com", "password");
+		user = toDoMySqlRepository.createUser(user);
+		List list = new List("TEST", user);
+		list = toDoMySqlRepository.createList(list);
+		toDoController.modifyNameList("TEST_NEW", list);
+		list = toDoMySqlRepository.findListById(list.getId());
+		assertThat(list).isNotNull();
+		assertThat(list.getName()).isEqualTo("TEST_NEW");
+		verify(toDoView).saveList(list);
+		verifyNoMoreInteractions(ignoreStubs(toDoView));
+		toDoMySqlRepository.deleteList(list);
+		toDoMySqlRepository.deleteUser(user);
+	}
+	
+	@Test
+	public void shouldCorrectModifyTodoDetailCallSaveDetailOnViewWithModifiedDetail() {
+		User user = new User("Mario", "Rossi", "email@email.com", "password");
+		user = toDoMySqlRepository.createUser(user);
+		List list = new List("TEST", user);
+		list = toDoMySqlRepository.createList(list);
+		Detail detail = new Detail("TEST-D", list);
+		detail = toDoMySqlRepository.createDetail(detail);
+		toDoController.modifyTodoDetail("TEST-D_NEW", detail);
+		detail = toDoMySqlRepository.findDetailById(detail.getId());
+		assertThat(detail).isNotNull();
+		assertThat(detail.getTodo()).isEqualTo("TEST-D_NEW");
+		verify(toDoView).saveDetail(detail);
+		verifyNoMoreInteractions(ignoreStubs(toDoView));
+		toDoMySqlRepository.deleteDetail(detail);
+		toDoMySqlRepository.deleteList(list);
+		toDoMySqlRepository.deleteUser(user);
+	}
+	
+	@Test
+	public void shouldCorrectModifyDoneDetailCallSaveDetailOnViewWithModifiedDetail() {
+		User user = new User("Mario", "Rossi", "email@email.com", "password");
+		user = toDoMySqlRepository.createUser(user);
+		List list = new List("TEST", user);
+		list = toDoMySqlRepository.createList(list);
+		Detail detail = new Detail("TEST-D", list);
+		detail = toDoMySqlRepository.createDetail(detail);
+		toDoController.modifyDoneDetail(Boolean.TRUE, detail);
+		detail = toDoMySqlRepository.findDetailById(detail.getId());
+		assertThat(detail).isNotNull();
+		assertThat(detail.getDone()).isTrue();
+		verify(toDoView).saveDetail(detail);
+		verifyNoMoreInteractions(ignoreStubs(toDoView));
+		toDoMySqlRepository.deleteDetail(detail);
+		toDoMySqlRepository.deleteList(list);
+		toDoMySqlRepository.deleteUser(user);
+	}
+	
+	@Test
+	public void shouldCorrectDeleteListCallDeleteListOnViewWithDeletedList() {
+		User user = new User("Mario", "Rossi", "email@email.com", "password");
+		user = toDoMySqlRepository.createUser(user);
+		List list = new List("TEST", user);
+		list = toDoMySqlRepository.createList(list);
+		Detail detail = new Detail("TEST-D", list);
+		detail = toDoMySqlRepository.createDetail(detail);
+		toDoController.deleteList(list);
+		Set<List> lists = toDoMySqlRepository.findAllListsByUserId(user.getId());
+		assertThat(lists).isNotNull().isEmpty();
+		verify(toDoView).deleteList(list);
+		verifyNoMoreInteractions(ignoreStubs(toDoView));
+		toDoMySqlRepository.deleteUser(user);
+	}
+	
+	@Test
+	public void shouldCorrectDeleteDetailCallDeleteDetailOnViewWithDeletedDetail() {
+		User user = new User("Mario", "Rossi", "email@email.com", "password");
+		user = toDoMySqlRepository.createUser(user);
+		List list = new List("TEST", user);
+		list = toDoMySqlRepository.createList(list);
+		Detail detail = new Detail("TEST-D", list);
+		detail = toDoMySqlRepository.createDetail(detail);
+		toDoController.deleteDetail(detail);
+		Set<Detail> details = toDoMySqlRepository.findAllDetailsByListId(list.getId());
+		assertThat(details).isNotNull().isEmpty();
+		verify(toDoView).deleteDetail(detail);
+		verifyNoMoreInteractions(ignoreStubs(toDoView));
+		toDoMySqlRepository.deleteList(list);
+		toDoMySqlRepository.deleteUser(user);
+	}
+	
+	@Test
+	public void shouldGetAllListsCallShowAllListsOnViewWithRetrievedListsLinkedToGivenUserId() {
+		User user = new User("Mario", "Rossi", "email@email.com", "password");
+		user = toDoMySqlRepository.createUser(user);
+		List list1 = new List("TEST_1", user);
+		list1 = toDoMySqlRepository.createList(list1);
+		List list2 = new List("TEST_2", user);
+		list2 = toDoMySqlRepository.createList(list2);
+		toDoController.getAllLists(user.getId());
+		Set<List> lists = toDoMySqlRepository.findAllListsByUserId(user.getId());
+		assertThat(lists).isNotNull().containsExactlyInAnyOrder(list1, list2);
+		verify(toDoView).showAllLists(lists);
+		verifyNoMoreInteractions(ignoreStubs(toDoView));
+		toDoMySqlRepository.deleteList(list2);
+		toDoMySqlRepository.deleteList(list1);
+		toDoMySqlRepository.deleteUser(user);
+	}
+	
+	@Test
+	public void shouldGetAllDetailsCallShowAllDetailsOnViewWithRetrievedDetailsLinkedToGivenListId() {
+		User user = new User("Mario", "Rossi", "email@email.com", "password");
+		user = toDoMySqlRepository.createUser(user);
+		List list = new List("TEST", user);
+		list = toDoMySqlRepository.createList(list);
+		Detail detail1 = new Detail("TEST-D_1", list);
+		detail1 = toDoMySqlRepository.createDetail(detail1);
+		Detail detail2 = new Detail("TEST-D_2", list);
+		detail2 = toDoMySqlRepository.createDetail(detail2);
+		toDoController.getAllDetails(list.getId());
+		Set<Detail> details = toDoMySqlRepository.findAllDetailsByListId(list.getId());
+		assertThat(details).isNotNull().containsExactlyInAnyOrder(detail1, detail2);
+		verify(toDoView).showAllDetails(details);
+		verifyNoMoreInteractions(ignoreStubs(toDoView));
+		toDoMySqlRepository.deleteDetail(detail2);
+		toDoMySqlRepository.deleteDetail(detail1);
+		toDoMySqlRepository.deleteList(list);
 		toDoMySqlRepository.deleteUser(user);
 	}
 	

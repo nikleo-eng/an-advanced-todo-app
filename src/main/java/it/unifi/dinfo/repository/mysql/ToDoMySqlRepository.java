@@ -28,6 +28,8 @@ public class ToDoMySqlRepository implements ToDoRepository {
 	private DetailMySqlRepository detailMySqlRepository;
 	private LogMySqlRepository logMySqlRepository;
 	
+	private Session hibernateSession;
+	
 	/* Only for tests */
 	protected ToDoMySqlRepository(UserMySqlRepository userMySqlRepository, 
 			ListMySqlRepository listMySqlRepository, DetailMySqlRepository detailMySqlRepository, 
@@ -40,7 +42,7 @@ public class ToDoMySqlRepository implements ToDoRepository {
 
 	public ToDoMySqlRepository(String host, String port, String dbName, 
 			String user, String pass) {
-		var hibernateSession = createHibernateSession(host, port, dbName, user, pass);
+		hibernateSession = createHibernateSession(host, port, dbName, user, pass);
 		userMySqlRepository = new UserMySqlRepository(hibernateSession);
 		listMySqlRepository = new ListMySqlRepository(hibernateSession);
 		detailMySqlRepository = new DetailMySqlRepository(hibernateSession);
@@ -158,6 +160,11 @@ public class ToDoMySqlRepository implements ToDoRepository {
 	/* Only for tests */
 	public Set<Log> findAllLogsByUserId(Long userId) {
 		return logMySqlRepository.findAllByUserId(userId);
+	}
+	
+	/* Only for tests */
+	protected Session getHibernateSession() {
+		return hibernateSession;
 	}
 	
 }

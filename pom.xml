@@ -346,7 +346,7 @@
 							<param>it.unifi.dinfo.controller.*</param>
 						</targetClasses>
 						<targetTests>
-							<param>it.unifi.dinfo.controller.*</param>
+							<param>it.unifi.dinfo.controller.*Test</param>
 						</targetTests>
 						<mutators>
 							<mutator>DEFAULTS</mutator>
