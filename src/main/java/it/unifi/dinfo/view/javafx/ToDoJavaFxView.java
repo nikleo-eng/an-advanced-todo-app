@@ -237,6 +237,11 @@ public class ToDoJavaFxView extends Application implements ToDoView {
 	protected void setToDoController(ToDoController toDoController) {
 		this.toDoController = toDoController;
 	}
+	
+	/* Only for tests */
+	protected ToDoController getToDoController() {
+		return toDoController;
+	}
 
 	/* Only for tests */
 	protected void setLoginJavaFxView(LoginJavaFxView loginJavaFxView) {
@@ -276,6 +281,36 @@ public class ToDoJavaFxView extends Application implements ToDoView {
 	/* Only for tests */
 	protected FlowPane getUserRoot() {
 		return userRoot;
+	}
+	
+	/* Only for tests */
+	protected LoginJavaFxView getLoginJavaFxView() {
+		return loginJavaFxView;
+	}
+
+	/* Only for tests */
+	protected RegistrationJavaFxView getRegistrationJavaFxView() {
+		return registrationJavaFxView;
+	}
+
+	/* Only for tests */
+	protected ListsJavaFxView getListsJavaFxView() {
+		return listsJavaFxView;
+	}
+
+	/* Only for tests */
+	protected DetailsJavaFxView getDetailsJavaFxView() {
+		return detailsJavaFxView;
+	}
+
+	/* Only for tests */
+	protected AdditionModificationJavaFxView getAdditionModificationJavaFxView() {
+		return additionModificationJavaFxView;
+	}
+
+	/* Only for tests */
+	protected UserJavaFxView getUserJavaFxView() {
+		return userJavaFxView;
 	}
 	
 }

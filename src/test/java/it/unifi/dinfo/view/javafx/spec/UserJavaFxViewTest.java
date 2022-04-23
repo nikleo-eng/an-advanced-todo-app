@@ -175,7 +175,7 @@ public class UserJavaFxViewTest extends ApplicationTest {
 		Log log = new Log(new Date(), user);
 		userJavaFxView.userLoggedIn(user, log, null);
 		assertThat(lookup("#" + LOG_TEXT_ID).queryText().getText()).isEqualTo(
-				LOG_STARTING_TEXT + "N.A.");
+				LOG_STARTING_TEXT + LOG_NOT_AVAILABLE_TEXT);
 	}
 	
 	@Test

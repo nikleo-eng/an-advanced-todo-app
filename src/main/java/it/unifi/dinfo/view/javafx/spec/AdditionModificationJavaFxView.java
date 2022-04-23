@@ -28,10 +28,10 @@ public class AdditionModificationJavaFxView extends BaseJavaFxView
 	private Button saveButton;
 	private Text errorText;
 	
-	protected static final String TEXTAREA_ID = "ADDITION_MODIFICATION_TEXTAREA_ID";
-	protected static final String CANCEL_BUTTON_ID = "ADDITION_MODIFICATION_CANCEL_BUTTON_ID";
-	protected static final String SAVE_BUTTON_ID = "ADDITION_MODIFICATION_SAVE_BUTTON_ID";
-	protected static final String ERROR_TEXT_ID = "ADDITION_MODIFICATION_ERROR_TEXT_ID";
+	public static final String TEXTAREA_ID = "ADDITION_MODIFICATION_TEXTAREA_ID";
+	public static final String CANCEL_BUTTON_ID = "ADDITION_MODIFICATION_CANCEL_BUTTON_ID";
+	public static final String SAVE_BUTTON_ID = "ADDITION_MODIFICATION_SAVE_BUTTON_ID";
+	public static final String ERROR_TEXT_ID = "ADDITION_MODIFICATION_ERROR_TEXT_ID";
 	
 	protected static final String CANCEL_BUTTON_TEXT = "Cancel";
 	protected static final String SAVE_BUTTON_TEXT = "Save";
@@ -56,6 +56,11 @@ public class AdditionModificationJavaFxView extends BaseJavaFxView
 
 	public void setCurrentUser(User currentUser) {
 		this.currentUser = currentUser;
+	}
+	
+	/* Only for tests */
+	public User getCurrentUser() {
+		return currentUser;
 	}
 
 	private void cancel() {

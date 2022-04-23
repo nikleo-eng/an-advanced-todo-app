@@ -16,12 +16,12 @@ public class LoginJavaFxView extends BaseJavaFxView implements LoginView {
 	private TextField emailTextField;
 	private PasswordField passwordField;
 	
-	protected static final String EMAIL_LABEL_ID = "LOGIN_EMAIL_LABEL_ID";
-	protected static final String EMAIL_TEXTFIELD_ID = "LOGIN_EMAIL_TEXTFIELD_ID";
-	protected static final String PASSWORD_LABEL_ID = "LOGIN_PASSWORD_LABEL_ID";
-	protected static final String PASSWORD_FIELD_ID = "LOGIN_PASSWORD_FIELD_ID";
-	protected static final String LOGIN_BUTTON_ID = "LOGIN_BUTTON_ID";
-	protected static final String ERROR_TEXT_ID = "LOGIN_ERROR_TEXT_ID";
+	public static final String EMAIL_LABEL_ID = "LOGIN_EMAIL_LABEL_ID";
+	public static final String EMAIL_TEXTFIELD_ID = "LOGIN_EMAIL_TEXTFIELD_ID";
+	public static final String PASSWORD_LABEL_ID = "LOGIN_PASSWORD_LABEL_ID";
+	public static final String PASSWORD_FIELD_ID = "LOGIN_PASSWORD_FIELD_ID";
+	public static final String LOGIN_BUTTON_ID = "LOGIN_BUTTON_ID";
+	public static final String ERROR_TEXT_ID = "LOGIN_ERROR_TEXT_ID";
 	
 	protected static final String EMAIL_LABEL_TEXT = "Email";
 	protected static final String PASSWORD_LABEL_TEXT = "Password";

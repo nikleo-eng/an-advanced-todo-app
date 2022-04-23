@@ -70,11 +70,12 @@ public class ToDoJavaFxViewTest extends ApplicationTest {
 	private static final String ADDITION_MODIFICATION_TEXT = "ADDITION_MODIFICATION";
 	private static final String USER_TEXT = "USER";
 	
-	private ToDoJavaFxView toDoJavaFxView = new ToDoJavaFxView();
+	private ToDoJavaFxView toDoJavaFxView;
 	
 	@Override
 	public void init() throws Exception {
 		MockitoAnnotations.openMocks(this);
+		toDoJavaFxView = new ToDoJavaFxView();
 		toDoJavaFxView.setToDoController(toDoController);
 		toDoJavaFxView.setLoginJavaFxView(loginJavaFxView);
 		toDoJavaFxView.setRegistrationJavaFxView(registrationJavaFxView);
@@ -98,8 +99,13 @@ public class ToDoJavaFxViewTest extends ApplicationTest {
 			createVBox(ans.getArgument(0), ans.getArgument(1), ADDITION_MODIFICATION_TEXT));
 		when(userJavaFxView.createGUI(anyDouble(), anyDouble())).then(ans -> 
 			createVBox(ans.getArgument(0), ans.getArgument(1), USER_TEXT));
-		
 		toDoJavaFxView.start(stage);
+	}
+	
+	@Override
+	public void stop() throws Exception {
+		when(userJavaFxView.getCurrentUser()).thenReturn(null);
+		toDoJavaFxView.stop();
 	}
 	
 	private static VBox createVBox(double width, double height, String text) {

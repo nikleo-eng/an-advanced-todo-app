@@ -45,7 +45,6 @@ public class ToDoMySqlRepositoryIT {
 	public void setUp() throws Exception {
 		Properties properties = new Properties();
 		properties.load(getClass().getClassLoader().getResourceAsStream("mysql.properties"));
-		
 		toDoMySqlRepository = new ToDoMySqlRepository(properties.getProperty("MY_SQL_HOST"), 
 				System.getProperty("mysql.port", properties.getProperty("MY_SQL_PORT")), 
 				properties.getProperty("MY_SQL_DB_NAME"), properties.getProperty("MY_SQL_USER"), 

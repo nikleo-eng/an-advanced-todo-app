@@ -27,9 +27,9 @@ public class DetailsJavaFxView extends BaseJavaFxView implements DetailsView {
 	private Text errorText;
 	
 	protected static final String ADD_BUTTON_TEXT = "Add";
-	protected static final String ADD_BUTTON_ID = "DETAILS_ADD_BUTTON_ID";
-	protected static final String LISTVIEW_ID = "DETAILS_LISTVIEW_ID";
-	protected static final String ERROR_TEXT_ID = "DETAILS_ERROR_TEXT_ID";
+	public static final String ADD_BUTTON_ID = "DETAILS_ADD_BUTTON_ID";
+	public static final String LISTVIEW_ID = "DETAILS_LISTVIEW_ID";
+	public static final String ERROR_TEXT_ID = "DETAILS_ERROR_TEXT_ID";
 	
 	private static final String ROW_PATTERN_ID ="DETAILS_%s_ROW_ID";
 	private static final String CHECKBOX_PATTERN_ID ="DETAILS_%s_CHECKBOX_ID";

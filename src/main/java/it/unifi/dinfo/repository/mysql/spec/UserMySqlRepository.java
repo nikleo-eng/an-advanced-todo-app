@@ -1,5 +1,8 @@
 package it.unifi.dinfo.repository.mysql.spec;
 
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import javax.persistence.NoResultException;
 
 import org.hibernate.Session;
@@ -35,7 +38,7 @@ public class UserMySqlRepository extends BaseMySqlRepository implements UserRepo
 		return user;
 	}
 	
-	/* Only for tests */
+	@Override
 	public void delete(User user) {
 		getHibernateSession().getTransaction().begin();
 		getHibernateSession()
@@ -43,6 +46,13 @@ public class UserMySqlRepository extends BaseMySqlRepository implements UserRepo
 			.setParameter(0, user.getId())
 			.executeUpdate();
 		getHibernateSession().getTransaction().commit();
+	}
+	
+	@Override
+	public Set<User> findAll() {
+		return getHibernateSession()
+				.createQuery("select u from User u order by u.id desc", User.class)
+				.getResultStream().collect(Collectors.toSet());
 	}
 
 }

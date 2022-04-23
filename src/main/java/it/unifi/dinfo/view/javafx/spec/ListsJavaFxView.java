@@ -26,9 +26,9 @@ public class ListsJavaFxView extends BaseJavaFxView implements ListsView {
 	private Text errorText;
 	
 	protected static final String ADD_BUTTON_TEXT = "Add";
-	protected static final String ADD_BUTTON_ID = "LISTS_ADD_BUTTON_ID";
-	protected static final String LISTVIEW_ID = "LISTS_LISTVIEW_ID";
-	protected static final String ERROR_TEXT_ID = "LISTS_ERROR_TEXT_ID";
+	public static final String ADD_BUTTON_ID = "LISTS_ADD_BUTTON_ID";
+	public static final String LISTVIEW_ID = "LISTS_LISTVIEW_ID";
+	public static final String ERROR_TEXT_ID = "LISTS_ERROR_TEXT_ID";
 	
 	private static final String ROW_PATTERN_ID ="LISTS_%s_ROW_ID";
 	private static final String LABEL_PATTERN_ID ="LISTS_%s_LABEL_ID";

@@ -49,6 +49,15 @@ public class ToDoMySqlRepository implements ToDoRepository {
 		logMySqlRepository = new LogMySqlRepository(hibernateSession);
 	}
 	
+	/* Only for tests */
+	public ToDoMySqlRepository(Session hibernateSession) {
+		this.hibernateSession = hibernateSession;
+		userMySqlRepository = new UserMySqlRepository(hibernateSession);
+		listMySqlRepository = new ListMySqlRepository(hibernateSession);
+		detailMySqlRepository = new DetailMySqlRepository(hibernateSession);
+		logMySqlRepository = new LogMySqlRepository(hibernateSession);
+	}
+	
 	private static Session createHibernateSession(String host, String port, String dbName, 
 			String user, String pass) {
 		Map<String, String> properties = new HashMap<>();
@@ -147,19 +156,24 @@ public class ToDoMySqlRepository implements ToDoRepository {
 		return detailMySqlRepository.findById(id);
 	}
 	
-	/* Only for tests */
+	@Override
 	public void deleteUser(User user) {
 		userMySqlRepository.delete(user);
 	}
 	
-	/* Only for tests */
+	@Override
 	public void deleteLog(Log log) {
 		logMySqlRepository.delete(log);
 	}
 	
-	/* Only for tests */
+	@Override
 	public Set<Log> findAllLogsByUserId(Long userId) {
 		return logMySqlRepository.findAllByUserId(userId);
+	}
+	
+	@Override
+	public Set<User> findAllUsers() {
+		return userMySqlRepository.findAll();
 	}
 	
 	/* Only for tests */

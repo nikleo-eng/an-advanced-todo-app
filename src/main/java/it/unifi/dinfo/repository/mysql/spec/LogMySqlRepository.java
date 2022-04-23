@@ -42,7 +42,7 @@ public class LogMySqlRepository extends BaseMySqlRepository implements LogReposi
 		return log;
 	}
 	
-	/* Only for tests */
+	@Override
 	public void delete(Log log) {
 		getHibernateSession().getTransaction().begin();
 		getHibernateSession()
@@ -52,10 +52,10 @@ public class LogMySqlRepository extends BaseMySqlRepository implements LogReposi
 		getHibernateSession().getTransaction().commit();
 	}
 	
-	/* Only for tests */
+	@Override
 	public Set<Log> findAllByUserId(Long userId) {
 		return getHibernateSession()
-				.createQuery("select l from Log l where l.user.id = ?0 order by l.id", Log.class)
+				.createQuery("select l from Log l where l.user.id = ?0 order by l.id desc", Log.class)
 				.setParameter(0, userId)
 				.getResultStream().collect(Collectors.toSet());
 	}
