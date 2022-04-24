@@ -1,5 +1,6 @@
 package it.unifi.dinfo.repository.mysql.spec;
 
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -57,7 +58,7 @@ public class LogMySqlRepository extends BaseMySqlRepository implements LogReposi
 		return getHibernateSession()
 				.createQuery("select l from Log l where l.user.id = ?0 order by l.id desc", Log.class)
 				.setParameter(0, userId)
-				.getResultStream().collect(Collectors.toSet());
+				.getResultStream().collect(Collectors.toCollection(LinkedHashSet::new));
 	}
 
 }

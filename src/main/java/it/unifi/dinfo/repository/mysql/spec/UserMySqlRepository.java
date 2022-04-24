@@ -1,5 +1,6 @@
 package it.unifi.dinfo.repository.mysql.spec;
 
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -52,7 +53,7 @@ public class UserMySqlRepository extends BaseMySqlRepository implements UserRepo
 	public Set<User> findAll() {
 		return getHibernateSession()
 				.createQuery("select u from User u order by u.id desc", User.class)
-				.getResultStream().collect(Collectors.toSet());
+				.getResultStream().collect(Collectors.toCollection(LinkedHashSet::new));
 	}
 
 }

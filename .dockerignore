@@ -3,6 +3,6 @@
 !docker-cmd.win.ps1
 !wait-for-it.sh
 !initialize-mysql.ps1
-!/target/maven-javafx-dependencies/linux
-!/target/maven-javafx-dependencies/windows
+!/target/maven-javafx-dependencies/linux/*.jar
+!/target/maven-javafx-dependencies/windows/*.jar
 !/target/*jar-with-dependencies.jar

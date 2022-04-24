@@ -27,7 +27,7 @@ public class UserJavaFxView extends BaseJavaFxView implements UserView {
 	
 	public static final String LOG_STARTING_TEXT = "Last Login: ";
 	public static final String LOG_NOT_AVAILABLE_TEXT = "N.A.";
-	protected static final String SDF_PATTERN = "dd/MM/yyyy HH:mm:ss z";
+	public static final String SDF_PATTERN = "dd/MM/yyyy HH:mm:ss z";
 	
 	private static final String ITALIC_STYLE = "-fx-font-style: italic;";
 	

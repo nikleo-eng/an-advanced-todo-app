@@ -3,9 +3,12 @@ package it.unifi.dinfo.view.javafx;
 import static it.unifi.dinfo.view.javafx.ToDoJavaFxView.STAGE_TITLE;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Properties;
 import java.util.Set;
 
@@ -20,6 +23,7 @@ import it.unifi.dinfo.model.Detail;
 import it.unifi.dinfo.model.Log;
 import it.unifi.dinfo.model.User;
 import it.unifi.dinfo.repository.ToDoRepository;
+import it.unifi.dinfo.view.javafx.spec.LoginJavaFxView;
 import it.unifi.dinfo.view.javafx.spec.RegistrationJavaFxView;
 import it.unifi.dinfo.view.javafx.spec.UserJavaFxView;
 import javafx.stage.Stage;
@@ -105,6 +109,32 @@ public class ToDoModelViewControllerIT extends ApplicationTest {
 		assertThat(toDoJavaFxView.getUserJavaFxView().getCurrentLog()).isEqualTo(log);
 		String lastLogText = lookup("#" + UserJavaFxView.LOG_TEXT_ID).queryText().getText();
 		assertThat(lastLogText).isEqualTo(UserJavaFxView.LOG_STARTING_TEXT + UserJavaFxView.LOG_NOT_AVAILABLE_TEXT);
+	}
+	
+	@Test
+	public void shouldCorrectClickOnLoginButtonBringViewToAppRootWithLoggedUserInfo() {
+		User user = new User("Mario", "Rossi", "email@email.com", "password");
+		Calendar calendar = Calendar.getInstance();
+		calendar.add(Calendar.HOUR, -1);
+		Log log = new Log(calendar.getTime(), user);
+		user = toDoRepository.createUser(user);
+		log = toDoRepository.createLog(log);
+		clickOn("#" + LoginJavaFxView.EMAIL_TEXTFIELD_ID);
+		write(user.getEmail());
+		clickOn("#" + LoginJavaFxView.PASSWORD_FIELD_ID);
+		write(user.getPassword());
+		clickOn("#" + LoginJavaFxView.LOGIN_BUTTON_ID);
+		Set<Log> logs = toDoRepository.findAllLogsByUserId(user.getId());
+		assertThat(logs).isNotNull().hasSize(2);
+		Log lastLog = logs.iterator().next();
+		assertThat(lastLog).isNotNull().isNotEqualTo(log);
+		assertThat(window(STAGE_TITLE).getScene().getRoot()).isEqualTo(toDoJavaFxView.getAppRoot());
+		assertThat(toDoJavaFxView.getUserJavaFxView().getCurrentUser()).isEqualTo(user);
+		assertThat(toDoJavaFxView.getAdditionModificationJavaFxView().getCurrentUser()).isEqualTo(user);
+		assertThat(toDoJavaFxView.getUserJavaFxView().getCurrentLog()).isEqualTo(lastLog);
+		String lastLogText = lookup("#" + UserJavaFxView.LOG_TEXT_ID).queryText().getText();
+		assertThat(lastLogText).isEqualTo(UserJavaFxView.LOG_STARTING_TEXT + 
+				(new SimpleDateFormat(UserJavaFxView.SDF_PATTERN, Locale.ITALIAN)).format(log.getIn()));
 	}
 	
 	private void cleanUpDataBase() {

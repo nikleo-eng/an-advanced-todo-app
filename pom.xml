@@ -512,6 +512,7 @@
 					<groupId>io.fabric8</groupId>
 					<artifactId>docker-maven-plugin</artifactId>
 					<version>0.39.1</version>
+					<extensions>true</extensions>
 					<executions>
 						<execution>
 							<id>docker-build</id>
@@ -603,25 +604,26 @@
 						<artifactId>docker-maven-plugin</artifactId>
 						<configuration>
 							<autoCreateCustomNetworks>true</autoCreateCustomNetworks>
+							<showLogs>true</showLogs>
+							<logAll>true</logAll>
 							<images>
 								<image>
-									<alias>${project.artifactId}</alias>
+									<alias>${project.artifactId}/custom-mysql</alias>
 									<name>
-									${project.groupId}/${project.artifactId}:${project.version}
-								</name>
-									<external>
-										<type>compose</type>
-										<basedir>${project.basedir}</basedir>
-										<composeFile>docker-compose.yml</composeFile>
-									</external>
+										${project.groupId}/${project.artifactId}/custom-mysql:${project.version}
+									</name>
+									<build>
+										<contextDir>${project.basedir}</contextDir>
+										<dockerFile>mysql.Dockerfile</dockerFile>
+									</build>
 									<run>
 										<ports>
 											<port>mysql.mapped.port:3306</port>
 										</ports>
 										<wait>
-											<log>Application Started</log>
-											<time>60</time>
-										</wait>
+		                                    <log>MySQL init process done. Ready for start up</log>
+											<time>60000</time>
+		                                </wait>
 									</run>
 								</image>
 							</images>
@@ -639,25 +641,22 @@
 						<artifactId>docker-maven-plugin</artifactId>
 						<configuration>
 							<autoCreateCustomNetworks>true</autoCreateCustomNetworks>
+							<showLogs>true</showLogs>
+							<logAll>true</logAll>
 							<images>
 								<image>
-									<alias>${project.artifactId}</alias>
+									<alias>${project.artifactId}/custom-mysql</alias>
 									<name>
-									${project.groupId}/${project.artifactId}:${project.version}
-								</name>
-									<external>
-										<type>compose</type>
-										<basedir>${project.basedir}</basedir>
-										<composeFile>docker-compose.win.yml</composeFile>
-									</external>
+										${project.groupId}/${project.artifactId}/custom-mysql:${project.version}
+									</name>
+									<build>
+										<contextDir>${project.basedir}</contextDir>
+										<dockerFile>mysql.win.Dockerfile</dockerFile>
+									</build>
 									<run>
 										<ports>
 											<port>mysql.mapped.port:3306</port>
 										</ports>
-										<wait>
-											<log>Application Started</log>
-											<time>60</time>
-										</wait>
 									</run>
 								</image>
 							</images>
