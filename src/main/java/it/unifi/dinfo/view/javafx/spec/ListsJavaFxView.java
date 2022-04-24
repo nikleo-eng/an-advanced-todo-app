@@ -35,19 +35,19 @@ public class ListsJavaFxView extends BaseJavaFxView implements ListsView {
 	private static final String MODIFY_BUTTON_PATTERN_ID ="LISTS_%s_MODIFY_BUTTON_ID";
 	private static final String DELETE_BUTTON_PATTERN_ID ="LISTS_%s_DELETE_BUTTON_ID";
 	
-	protected static String getRowId(String name) {
+	public static String getRowId(String name) {
 		return replaceString(ROW_PATTERN_ID, name);
 	}
 	
-	protected static String getRowLabelId(String name) {
+	public static String getRowLabelId(String name) {
 		return replaceString(LABEL_PATTERN_ID, name);
 	}
 	
-	protected static String getRowModifyButtonId(String name) {
+	public static String getRowModifyButtonId(String name) {
 		return replaceString(MODIFY_BUTTON_PATTERN_ID, name);
 	}
 	
-	protected static String getRowDeleteButtonId(String name) {
+	public static String getRowDeleteButtonId(String name) {
 		return replaceString(DELETE_BUTTON_PATTERN_ID, name);
 	}
 	
