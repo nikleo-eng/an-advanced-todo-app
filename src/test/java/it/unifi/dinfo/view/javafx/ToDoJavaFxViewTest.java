@@ -1,6 +1,7 @@
 package it.unifi.dinfo.view.javafx;
 
 import static org.mockito.ArgumentMatchers.anyDouble;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.ignoreStubs;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -24,6 +25,7 @@ import it.unifi.dinfo.model.Detail;
 import it.unifi.dinfo.model.List;
 import it.unifi.dinfo.model.Log;
 import it.unifi.dinfo.model.User;
+import it.unifi.dinfo.repository.mysql.ToDoMySqlRepository;
 import it.unifi.dinfo.view.javafx.spec.AdditionModificationJavaFxView;
 import it.unifi.dinfo.view.javafx.spec.DetailsJavaFxView;
 import it.unifi.dinfo.view.javafx.spec.ListsJavaFxView;
@@ -44,6 +46,9 @@ public class ToDoJavaFxViewTest extends ApplicationTest {
 	
 	@Mock
 	private ToDoController toDoController;
+	
+	@Mock
+	private ToDoMySqlRepository toDoMySqlRepository;
 	
 	@Mock
 	private LoginJavaFxView loginJavaFxView;
@@ -76,6 +81,7 @@ public class ToDoJavaFxViewTest extends ApplicationTest {
 	public void init() throws Exception {
 		MockitoAnnotations.openMocks(this);
 		toDoJavaFxView = new ToDoJavaFxView();
+		toDoJavaFxView.setToDoMySqlRepository(toDoMySqlRepository);
 		toDoJavaFxView.setToDoController(toDoController);
 		toDoJavaFxView.setLoginJavaFxView(loginJavaFxView);
 		toDoJavaFxView.setRegistrationJavaFxView(registrationJavaFxView);
@@ -105,6 +111,7 @@ public class ToDoJavaFxViewTest extends ApplicationTest {
 	@Override
 	public void stop() throws Exception {
 		when(userJavaFxView.getCurrentUser()).thenReturn(null);
+		doNothing().when(toDoMySqlRepository).closeSession();
 		toDoJavaFxView.stop();
 	}
 	

@@ -70,6 +70,10 @@ public class ToDoMySqlRepository implements ToDoRepository {
 		var sessionFactory = entityManagerFactory.unwrap(SessionFactory.class);
 		return sessionFactory.openSession();
 	}
+	
+	public void closeSession() {
+		hibernateSession.close();
+	}
 
 	@Override
 	public User findUserByEmail(String email) {

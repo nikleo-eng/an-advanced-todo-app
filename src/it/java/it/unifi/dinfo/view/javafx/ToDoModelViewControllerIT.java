@@ -7,7 +7,6 @@ import static org.testfx.util.WaitForAsyncUtils.waitFor;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
@@ -21,7 +20,6 @@ import org.testfx.framework.junit.ApplicationTest;
 import com.sun.javafx.application.ParametersImpl;
 
 import it.unifi.dinfo.app.main.ToDoAppMain;
-import it.unifi.dinfo.controller.ToDoController;
 import it.unifi.dinfo.model.Detail;
 import it.unifi.dinfo.model.Log;
 import it.unifi.dinfo.model.User;
@@ -60,7 +58,6 @@ import javafx.stage.Stage;
 public class ToDoModelViewControllerIT extends ApplicationTest {
 	
 	private ToDoRepository toDoRepository;
-	private ToDoController toDoController;
 	private ToDoJavaFxView toDoJavaFxView;
 
 	@Override
@@ -82,15 +79,13 @@ public class ToDoModelViewControllerIT extends ApplicationTest {
 	
 	@Override
 	public void start(Stage stage) throws Exception {
-		toDoController = toDoJavaFxView.getToDoController();
-		toDoRepository = toDoController.getToDoRepository();
+		toDoRepository = toDoJavaFxView.getToDoMySqlRepository();
 		toDoJavaFxView.start(stage);
 	}
 	
 	@Override
 	public void stop() throws Exception {
 		toDoJavaFxView.stop();
-		cleanUpDataBase();
 	}
 	
 	@Test
@@ -476,37 +471,6 @@ public class ToDoModelViewControllerIT extends ApplicationTest {
 				() -> lookup("#" + DetailsJavaFxView.getRowLabelId("TEST-D_NEW")).tryQuery().isPresent());
 		assertThat(toDoRepository.findDetailByTodoAndListId("TEST-D", list.getId())).isNull();
 		assertThat(toDoRepository.findDetailByTodoAndListId("TEST-D_NEW", list.getId())).isNotNull();
-	}
-	
-	private void cleanUpDataBase() {
-		Set<User> users = toDoRepository.findAllUsers();
-		Iterator<User> usersIt = users.iterator();
-		while (usersIt.hasNext()) {
-			User user = usersIt.next();
-			Set<Log> logs = toDoRepository.findAllLogsByUserId(user.getId());
-			Iterator<Log> logsIt = logs.iterator();
-			while (logsIt.hasNext()) {
-				Log log = logsIt.next();
-				toDoRepository.deleteLog(log);
-				logsIt.remove();
-			}
-			Set<it.unifi.dinfo.model.List> lists = toDoRepository.findAllListsByUserId(user.getId());
-			Iterator<it.unifi.dinfo.model.List> listsIt = lists.iterator();
-			while (listsIt.hasNext()) {
-				it.unifi.dinfo.model.List list = listsIt.next();
-				Set<Detail> details = toDoRepository.findAllDetailsByListId(list.getId());
-				Iterator<Detail> detailsIt = details.iterator();
-				while (detailsIt.hasNext()) {
-					Detail detail = detailsIt.next();
-					toDoRepository.deleteDetail(detail);
-					detailsIt.remove();
-				}
-				toDoRepository.deleteList(list);
-				listsIt.remove();
-			}
-			toDoRepository.deleteUser(user);
-			usersIt.remove();
-		}
 	}
 	
 }

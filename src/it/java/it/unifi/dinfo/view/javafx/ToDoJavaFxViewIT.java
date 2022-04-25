@@ -6,7 +6,6 @@ import static org.testfx.util.WaitForAsyncUtils.waitFor;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Iterator;
 import java.util.Locale;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -49,6 +48,7 @@ public class ToDoJavaFxViewIT extends ApplicationTest {
 		var hibernateSession = sessionFactory.openSession();
 		toDoRepository = new ToDoMySqlRepository(hibernateSession);
 		toDoController = new ToDoController(toDoJavaFxView, toDoRepository);
+		toDoJavaFxView.setToDoMySqlRepository((ToDoMySqlRepository) toDoRepository);
 		toDoJavaFxView.setToDoController(toDoController);
 		toDoJavaFxView.setLoginJavaFxView(new LoginJavaFxView(toDoController));
 		toDoJavaFxView.setRegistrationJavaFxView(new RegistrationJavaFxView(toDoController));
@@ -75,7 +75,6 @@ public class ToDoJavaFxViewIT extends ApplicationTest {
 	@Override
 	public void stop() throws Exception {
 		toDoJavaFxView.stop();
-		cleanUpDataBase();
 	}
 	
 	@Test
@@ -168,37 +167,6 @@ public class ToDoJavaFxViewIT extends ApplicationTest {
 		assertThat(detail.getTodo()).isEqualTo("TEST-D");
 		assertThat(lookup("#" + DetailsJavaFxView.LISTVIEW_ID).queryListView()
 				.getItems()).hasSize(1).containsExactly(detail);
-	}
-	
-	private void cleanUpDataBase() {
-		Set<User> users = toDoRepository.findAllUsers();
-		Iterator<User> usersIt = users.iterator();
-		while (usersIt.hasNext()) {
-			User user = usersIt.next();
-			Set<Log> logs = toDoRepository.findAllLogsByUserId(user.getId());
-			Iterator<Log> logsIt = logs.iterator();
-			while (logsIt.hasNext()) {
-				Log log = logsIt.next();
-				toDoRepository.deleteLog(log);
-				logsIt.remove();
-			}
-			Set<it.unifi.dinfo.model.List> lists = toDoRepository.findAllListsByUserId(user.getId());
-			Iterator<it.unifi.dinfo.model.List> listsIt = lists.iterator();
-			while (listsIt.hasNext()) {
-				it.unifi.dinfo.model.List list = listsIt.next();
-				Set<Detail> details = toDoRepository.findAllDetailsByListId(list.getId());
-				Iterator<Detail> detailsIt = details.iterator();
-				while (detailsIt.hasNext()) {
-					Detail detail = detailsIt.next();
-					toDoRepository.deleteDetail(detail);
-					detailsIt.remove();
-				}
-				toDoRepository.deleteList(list);
-				listsIt.remove();
-			}
-			toDoRepository.deleteUser(user);
-			usersIt.remove();
-		}
 	}
 	
 }

@@ -52,6 +52,7 @@ public class ToDoJavaFxView extends Application implements ToDoView {
 			+ "7 L 5.8925781 20.263672 C 6.0245781 21.253672 6.877 22 7.875 22 L 16.123047 22 C "
 			+ "17.121047 22 17.974422 21.254859 18.107422 20.255859 L 19.634766 7 L 4.3652344 7 z";
 	
+	private ToDoMySqlRepository toDoMySqlRepository;
 	private ToDoController toDoController;
 	private LoginJavaFxView loginJavaFxView;
 	private RegistrationJavaFxView registrationJavaFxView;
@@ -65,6 +66,7 @@ public class ToDoJavaFxView extends Application implements ToDoView {
 	private FlowPane userRoot;
 	
 	public ToDoJavaFxView() {
+		toDoMySqlRepository = null;
 		toDoController = null;
 		loginJavaFxView = null;
 		registrationJavaFxView = null;
@@ -86,7 +88,7 @@ public class ToDoJavaFxView extends Application implements ToDoView {
 		String user = mainArgs.get(ToDoAppMain.MY_SQL_USER_OPNAME);
 		String pass = mainArgs.get(ToDoAppMain.MY_SQL_PASS_OPNAME);
 		
-		var toDoMySqlRepository = new ToDoMySqlRepository(host, port, dbName, user, pass);
+		toDoMySqlRepository = new ToDoMySqlRepository(host, port, dbName, user, pass);
 		toDoController = new ToDoController(this, toDoMySqlRepository);
 		
 		loginJavaFxView = new LoginJavaFxView(toDoController);
@@ -150,6 +152,7 @@ public class ToDoJavaFxView extends Application implements ToDoView {
 			userJavaFxView.logout(true);
 		}
 		
+		toDoMySqlRepository.closeSession();
 		LOGGER.info("Application Stopped");
     }
 
@@ -241,6 +244,16 @@ public class ToDoJavaFxView extends Application implements ToDoView {
 	/* Only for tests */
 	protected ToDoController getToDoController() {
 		return toDoController;
+	}
+
+	/* Only for tests */
+	protected void setToDoMySqlRepository(ToDoMySqlRepository toDoMySqlRepository) {
+		this.toDoMySqlRepository = toDoMySqlRepository;
+	}
+
+	/* Only for tests */
+	protected ToDoMySqlRepository getToDoMySqlRepository() {
+		return toDoMySqlRepository;
 	}
 
 	/* Only for tests */
