@@ -388,6 +388,49 @@ public class ToDoModelViewControllerIT extends ApplicationTest {
 	}
 	
 	@Test
+	public void shouldClickOnModifyIconOnOneItemInListsAreaEnableAdditionModificationAreaForUpdatingCorrectlyTheNameOfTheSelectedList() 
+			throws TimeoutException {
+		User user = new User("Mario", "Rossi", "email@email.com", "password");
+		Calendar calendar = Calendar.getInstance();
+		calendar.add(Calendar.HOUR, -1);
+		Log log = new Log(calendar.getTime(), user);
+		it.unifi.dinfo.model.List list = new it.unifi.dinfo.model.List("TEST", user);
+		user = toDoRepository.createUser(user);
+		log = toDoRepository.createLog(log);
+		list = toDoRepository.createList(list);
+		clickOn("#" + LoginJavaFxView.EMAIL_TEXTFIELD_ID);
+		write(user.getEmail());
+		clickOn("#" + LoginJavaFxView.PASSWORD_FIELD_ID);
+		write(user.getPassword());
+		clickOn("#" + LoginJavaFxView.LOGIN_BUTTON_ID);
+		waitFor(10, TimeUnit.SECONDS, 
+				() -> lookup("#" + ListsJavaFxView.getRowLabelId("TEST")).tryQuery().isPresent());
+		clickOn("#" + ListsJavaFxView.getRowLabelId("TEST"));
+		waitFor(10, TimeUnit.SECONDS, 
+				() -> lookup("#" + ListsJavaFxView.getRowModifyButtonId("TEST")).tryQuery().isPresent());
+		assertThat(lookup("#" + AdditionModificationJavaFxView.TEXTAREA_ID)
+				.queryAs(TextArea.class).isDisabled()).isTrue();
+		assertThat(lookup("#" + AdditionModificationJavaFxView.SAVE_BUTTON_ID)
+				.queryButton().isDisabled()).isTrue();
+		clickOn("#" + ListsJavaFxView.getRowModifyButtonId("TEST"));
+		assertThat(lookup("#" + AdditionModificationJavaFxView.TEXTAREA_ID)
+				.queryAs(TextArea.class).isDisabled()).isFalse();
+		assertThat(lookup("#" + AdditionModificationJavaFxView.SAVE_BUTTON_ID)
+				.queryButton().isDisabled()).isFalse();
+		clickOn("#" + AdditionModificationJavaFxView.TEXTAREA_ID);
+		write("_NEW");
+		assertThat(lookup("#" + AdditionModificationJavaFxView.TEXTAREA_ID)
+				.queryAs(TextArea.class).getText()).isEqualTo("TEST_NEW");
+		clickOn("#" + AdditionModificationJavaFxView.SAVE_BUTTON_ID);
+		waitFor(10, TimeUnit.SECONDS, 
+				() -> !lookup("#" + ListsJavaFxView.getRowModifyButtonId("TEST")).tryQuery().isPresent());
+		waitFor(10, TimeUnit.SECONDS, 
+				() -> lookup("#" + ListsJavaFxView.getRowModifyButtonId("TEST_NEW")).tryQuery().isPresent());
+		assertThat(toDoRepository.findListByNameAndUserId("TEST", user.getId())).isNull();
+		assertThat(toDoRepository.findListByNameAndUserId("TEST_NEW", user.getId())).isNotNull();
+	}
+	
+	@Test
 	public void shouldClickOnModifyIconOnOneItemInDetailsAreaEnableAdditionModificationAreaForUpdatingCorrectlyTheTodoOfTheSelectedDetail() 
 			throws TimeoutException {
 		User user = new User("Mario", "Rossi", "email@email.com", "password");
