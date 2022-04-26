@@ -10,6 +10,9 @@ import java.util.Date;
 import java.util.Properties;
 import java.util.Set;
 
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -51,16 +54,27 @@ public class ToDoControllerIT {
 	
 	private ToDoController toDoController;
 	
+	private SessionFactory hibernateSessionFactory;
+	private Session hibernateSession;
+	
 	@Before
 	public void setUp() throws IOException {
 		MockitoAnnotations.openMocks(this);
 		Properties properties = new Properties();
 		properties.load(getClass().getClassLoader().getResourceAsStream("mysql.properties"));
-		toDoMySqlRepository = new ToDoMySqlRepository(properties.getProperty("MY_SQL_HOST"), 
+		hibernateSessionFactory = ToDoMySqlRepository.createSessionFactory(properties.getProperty("MY_SQL_HOST"), 
 				System.getProperty("mysql.port", properties.getProperty("MY_SQL_PORT")), 
 				properties.getProperty("MY_SQL_DB_NAME"), properties.getProperty("MY_SQL_USER"), 
 				properties.getProperty("MY_SQL_PASS"));
+		hibernateSession = hibernateSessionFactory.openSession();
+		toDoMySqlRepository = new ToDoMySqlRepository(hibernateSession);
 		toDoController = new ToDoController(toDoView, toDoMySqlRepository);
+	}
+	
+	@After
+	public void tearDown() {
+		hibernateSession.close();
+		hibernateSessionFactory.close();
 	}
 	
 	@Test
@@ -74,8 +88,6 @@ public class ToDoControllerIT {
 		assertThat(log).isNotNull();
 		verify(toDoView).userLoggedIn(user, log, null);
 		verifyNoMoreInteractions(ignoreStubs(toDoView));
-		toDoMySqlRepository.deleteLog(log);
-		toDoMySqlRepository.deleteUser(user);
 	}
 	
 	@Test
@@ -88,8 +100,6 @@ public class ToDoControllerIT {
 		assertThat(log.getOut()).isNotNull().isAfter(log.getIn());
 		verify(toDoView).userLoggedOut();
 		verifyNoMoreInteractions(ignoreStubs(toDoView));
-		toDoMySqlRepository.deleteLog(log);
-		toDoMySqlRepository.deleteUser(user);
 	}
 	
 	@Test
@@ -103,8 +113,6 @@ public class ToDoControllerIT {
 		assertThat(log).isNotNull();
 		verify(toDoView).userLoggedIn(user, log, null);
 		verifyNoMoreInteractions(ignoreStubs(toDoView));
-		toDoMySqlRepository.deleteLog(log);
-		toDoMySqlRepository.deleteUser(user);
 	}
 	
 	@Test
@@ -118,8 +126,6 @@ public class ToDoControllerIT {
 		assertThat(list).isNotNull();
 		verify(toDoView).addList(list);
 		verifyNoMoreInteractions(ignoreStubs(toDoView));
-		toDoMySqlRepository.deleteList(list);
-		toDoMySqlRepository.deleteUser(user);
 	}
 	
 	@Test
@@ -135,9 +141,6 @@ public class ToDoControllerIT {
 		assertThat(detail).isNotNull();
 		verify(toDoView).addDetail(detail);
 		verifyNoMoreInteractions(ignoreStubs(toDoView));
-		toDoMySqlRepository.deleteDetail(detail);
-		toDoMySqlRepository.deleteList(list);
-		toDoMySqlRepository.deleteUser(user);
 	}
 	
 	@Test
@@ -152,8 +155,6 @@ public class ToDoControllerIT {
 		assertThat(list.getName()).isEqualTo("TEST_NEW");
 		verify(toDoView).saveList(list);
 		verifyNoMoreInteractions(ignoreStubs(toDoView));
-		toDoMySqlRepository.deleteList(list);
-		toDoMySqlRepository.deleteUser(user);
 	}
 	
 	@Test
@@ -170,9 +171,6 @@ public class ToDoControllerIT {
 		assertThat(detail.getTodo()).isEqualTo("TEST-D_NEW");
 		verify(toDoView).saveDetail(detail);
 		verifyNoMoreInteractions(ignoreStubs(toDoView));
-		toDoMySqlRepository.deleteDetail(detail);
-		toDoMySqlRepository.deleteList(list);
-		toDoMySqlRepository.deleteUser(user);
 	}
 	
 	@Test
@@ -189,9 +187,6 @@ public class ToDoControllerIT {
 		assertThat(detail.getDone()).isTrue();
 		verify(toDoView).saveDetail(detail);
 		verifyNoMoreInteractions(ignoreStubs(toDoView));
-		toDoMySqlRepository.deleteDetail(detail);
-		toDoMySqlRepository.deleteList(list);
-		toDoMySqlRepository.deleteUser(user);
 	}
 	
 	@Test
@@ -207,7 +202,6 @@ public class ToDoControllerIT {
 		assertThat(lists).isNotNull().isEmpty();
 		verify(toDoView).deleteList(list);
 		verifyNoMoreInteractions(ignoreStubs(toDoView));
-		toDoMySqlRepository.deleteUser(user);
 	}
 	
 	@Test
@@ -223,8 +217,6 @@ public class ToDoControllerIT {
 		assertThat(details).isNotNull().isEmpty();
 		verify(toDoView).deleteDetail(detail);
 		verifyNoMoreInteractions(ignoreStubs(toDoView));
-		toDoMySqlRepository.deleteList(list);
-		toDoMySqlRepository.deleteUser(user);
 	}
 	
 	@Test
@@ -240,9 +232,6 @@ public class ToDoControllerIT {
 		assertThat(lists).isNotNull().containsExactlyInAnyOrder(list1, list2);
 		verify(toDoView).showAllLists(lists);
 		verifyNoMoreInteractions(ignoreStubs(toDoView));
-		toDoMySqlRepository.deleteList(list2);
-		toDoMySqlRepository.deleteList(list1);
-		toDoMySqlRepository.deleteUser(user);
 	}
 	
 	@Test
@@ -260,10 +249,6 @@ public class ToDoControllerIT {
 		assertThat(details).isNotNull().containsExactlyInAnyOrder(detail1, detail2);
 		verify(toDoView).showAllDetails(details);
 		verifyNoMoreInteractions(ignoreStubs(toDoView));
-		toDoMySqlRepository.deleteDetail(detail2);
-		toDoMySqlRepository.deleteDetail(detail1);
-		toDoMySqlRepository.deleteList(list);
-		toDoMySqlRepository.deleteUser(user);
 	}
 	
 }

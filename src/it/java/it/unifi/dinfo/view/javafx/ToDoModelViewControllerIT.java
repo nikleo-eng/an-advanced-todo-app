@@ -79,7 +79,7 @@ public class ToDoModelViewControllerIT extends ApplicationTest {
 	
 	@Override
 	public void start(Stage stage) throws Exception {
-		toDoRepository = toDoJavaFxView.getToDoMySqlRepository();
+		toDoRepository = toDoJavaFxView.getToDoController().getToDoRepository();
 		toDoJavaFxView.start(stage);
 	}
 	

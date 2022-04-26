@@ -44,11 +44,12 @@ public class ToDoJavaFxViewIT extends ApplicationTest {
 	public void init() throws Exception {
 		toDoJavaFxView = new ToDoJavaFxView();
 		var entityManagerFactory = Persistence.createEntityManagerFactory("an-advanced-todo-app-test");
-		var sessionFactory = entityManagerFactory.unwrap(SessionFactory.class);
-		var hibernateSession = sessionFactory.openSession();
+		var hibenateSessionFactory = entityManagerFactory.unwrap(SessionFactory.class);
+		var hibernateSession = hibenateSessionFactory.openSession();
+		toDoJavaFxView.setHibernateSessionFactory(hibenateSessionFactory);
+		toDoJavaFxView.setHibernateSession(hibernateSession);
 		toDoRepository = new ToDoMySqlRepository(hibernateSession);
 		toDoController = new ToDoController(toDoJavaFxView, toDoRepository);
-		toDoJavaFxView.setToDoMySqlRepository((ToDoMySqlRepository) toDoRepository);
 		toDoJavaFxView.setToDoController(toDoController);
 		toDoJavaFxView.setLoginJavaFxView(new LoginJavaFxView(toDoController));
 		toDoJavaFxView.setRegistrationJavaFxView(new RegistrationJavaFxView(toDoController));

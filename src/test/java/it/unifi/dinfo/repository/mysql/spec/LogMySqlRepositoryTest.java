@@ -11,9 +11,8 @@ import javax.persistence.Persistence;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.junit.AfterClass;
+import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import it.unifi.dinfo.model.Log;
@@ -21,25 +20,23 @@ import it.unifi.dinfo.model.User;
 
 public class LogMySqlRepositoryTest {
 
-	private static Session session;
+	private SessionFactory sessionFactory;
+	private Session session;
 	
 	private LogMySqlRepository logMySqlRepository;
 	
-	@BeforeClass
-	public static void setUpClass() {
-		var entityManagerFactory = Persistence.createEntityManagerFactory("an-advanced-todo-app-test");
-		var sessionFactory = entityManagerFactory.unwrap(SessionFactory.class);
-		session = sessionFactory.openSession();
-	}
-	
-	@AfterClass
-	public static void tearDownClass() {
-		session.close();
-	}
-	
 	@Before
 	public void setUp() {
+		var entityManagerFactory = Persistence.createEntityManagerFactory("an-advanced-todo-app-test");
+		sessionFactory = entityManagerFactory.unwrap(SessionFactory.class);
+		session = sessionFactory.openSession();
 		logMySqlRepository = new LogMySqlRepository(session);
+	}
+	
+	@After
+	public void tearDown() {
+		session.close();
+		sessionFactory.close();
 	}
 	
 	@Test
@@ -55,11 +52,6 @@ public class LogMySqlRepositoryTest {
 		Log retrievedLog = session.createQuery("select l from Log l where l.id = ?0", Log.class)
 				.setParameter(0, log.getId()).getSingleResult();
 		assertEquals(log, retrievedLog);
-		
-		session.getTransaction().begin();
-		session.delete(log);
-		session.delete(user);
-		session.getTransaction().commit();
 	}
 	
 	@Test
@@ -79,11 +71,6 @@ public class LogMySqlRepositoryTest {
 				.setParameter(0, log.getId()).getSingleResult();
 		assertEquals(log, retrievedLog);
 		assertNotNull(retrievedLog.getOut());
-		
-		session.getTransaction().begin();
-		session.delete(log);
-		session.delete(user);
-		session.getTransaction().commit();
 	}
 	
 	@Test
@@ -122,13 +109,6 @@ public class LogMySqlRepositoryTest {
 		
 		retrievedLog = logMySqlRepository.findLastBeforeIdAndByUserId(log2.getId(), user.getId());
 		assertEquals(log1, retrievedLog);
-		
-		session.getTransaction().begin();
-		session.delete(log3);
-		session.delete(log2);
-		session.delete(log1);
-		session.delete(user);
-		session.getTransaction().commit();
 	}
 	
 }

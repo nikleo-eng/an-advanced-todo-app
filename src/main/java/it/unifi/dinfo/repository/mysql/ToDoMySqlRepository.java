@@ -28,8 +28,6 @@ public class ToDoMySqlRepository implements ToDoRepository {
 	private DetailMySqlRepository detailMySqlRepository;
 	private LogMySqlRepository logMySqlRepository;
 	
-	private Session hibernateSession;
-	
 	/* Only for tests */
 	protected ToDoMySqlRepository(UserMySqlRepository userMySqlRepository, 
 			ListMySqlRepository listMySqlRepository, DetailMySqlRepository detailMySqlRepository, 
@@ -39,26 +37,15 @@ public class ToDoMySqlRepository implements ToDoRepository {
 		this.detailMySqlRepository = detailMySqlRepository;
 		this.logMySqlRepository = logMySqlRepository;
 	}
-
-	public ToDoMySqlRepository(String host, String port, String dbName, 
-			String user, String pass) {
-		hibernateSession = createHibernateSession(host, port, dbName, user, pass);
-		userMySqlRepository = new UserMySqlRepository(hibernateSession);
-		listMySqlRepository = new ListMySqlRepository(hibernateSession);
-		detailMySqlRepository = new DetailMySqlRepository(hibernateSession);
-		logMySqlRepository = new LogMySqlRepository(hibernateSession);
-	}
 	
-	/* Only for tests */
 	public ToDoMySqlRepository(Session hibernateSession) {
-		this.hibernateSession = hibernateSession;
 		userMySqlRepository = new UserMySqlRepository(hibernateSession);
 		listMySqlRepository = new ListMySqlRepository(hibernateSession);
 		detailMySqlRepository = new DetailMySqlRepository(hibernateSession);
 		logMySqlRepository = new LogMySqlRepository(hibernateSession);
 	}
 	
-	private static Session createHibernateSession(String host, String port, String dbName, 
+	public static SessionFactory createSessionFactory(String host, String port, String dbName, 
 			String user, String pass) {
 		Map<String, String> properties = new HashMap<>();
 		properties.put(URL, "jdbc:mysql://" + host + ":" + port + "/" + dbName);
@@ -67,12 +54,7 @@ public class ToDoMySqlRepository implements ToDoRepository {
 		
 		var entityManagerFactory = Persistence.createEntityManagerFactory("an-advanced-todo-app", 
 				properties);
-		var sessionFactory = entityManagerFactory.unwrap(SessionFactory.class);
-		return sessionFactory.openSession();
-	}
-	
-	public void closeSession() {
-		hibernateSession.close();
+		return entityManagerFactory.unwrap(SessionFactory.class);
 	}
 
 	@Override
@@ -178,11 +160,6 @@ public class ToDoMySqlRepository implements ToDoRepository {
 	@Override
 	public Set<User> findAllUsers() {
 		return userMySqlRepository.findAll();
-	}
-	
-	/* Only for tests */
-	protected Session getHibernateSession() {
-		return hibernateSession;
 	}
 	
 }

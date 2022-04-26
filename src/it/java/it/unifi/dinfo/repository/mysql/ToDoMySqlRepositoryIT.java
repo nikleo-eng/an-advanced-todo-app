@@ -8,6 +8,8 @@ import java.util.Properties;
 import java.util.Set;
 
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -38,18 +40,27 @@ import it.unifi.dinfo.model.User;
  */
 public class ToDoMySqlRepositoryIT {
 
+	private SessionFactory hibernateSessionFactory;
 	private Session hibernateSession;
+	
 	private ToDoMySqlRepository toDoMySqlRepository;
 	
 	@Before
 	public void setUp() throws Exception {
 		Properties properties = new Properties();
 		properties.load(getClass().getClassLoader().getResourceAsStream("mysql.properties"));
-		toDoMySqlRepository = new ToDoMySqlRepository(properties.getProperty("MY_SQL_HOST"), 
+		hibernateSessionFactory = ToDoMySqlRepository.createSessionFactory(properties.getProperty("MY_SQL_HOST"), 
 				System.getProperty("mysql.port", properties.getProperty("MY_SQL_PORT")), 
 				properties.getProperty("MY_SQL_DB_NAME"), properties.getProperty("MY_SQL_USER"), 
 				properties.getProperty("MY_SQL_PASS"));
-		hibernateSession = toDoMySqlRepository.getHibernateSession();
+		hibernateSession = hibernateSessionFactory.openSession();
+		toDoMySqlRepository = new ToDoMySqlRepository(hibernateSession);
+	}
+	
+	@After
+	public void tearDown() {
+		hibernateSession.close();
+		hibernateSessionFactory.close();
 	}
 	
 	@Test
@@ -61,9 +72,6 @@ public class ToDoMySqlRepositoryIT {
 		User returnedUser = toDoMySqlRepository.findUserByEmail(user.getEmail());
 		assertThat(returnedUser).isNotNull().isEqualTo(user);
 		assertThat(returnedUser.getId()).isEqualTo(user.getId());
-		hibernateSession.getTransaction().begin();
-		hibernateSession.delete(user);
-		hibernateSession.getTransaction().commit();
 	}
 	
 	@Test
@@ -75,9 +83,6 @@ public class ToDoMySqlRepositoryIT {
 				User.class).setParameter(0, user.getEmail()).getSingleResult();
 		assertThat(retrievedUser).isNotNull().isEqualTo(createdUser);
 		assertThat(retrievedUser.getId()).isEqualTo(createdUser.getId());
-		hibernateSession.getTransaction().begin();
-		hibernateSession.delete(createdUser);
-		hibernateSession.getTransaction().commit();
 	}
 	
 	@Test
@@ -93,10 +98,6 @@ public class ToDoMySqlRepositoryIT {
 		List returnedList = returnedLists.iterator().next();
 		assertThat(returnedList).isNotNull().isEqualTo(list);
 		assertThat(returnedList.getId()).isEqualTo(list.getId());
-		hibernateSession.getTransaction().begin();
-		hibernateSession.delete(list);
-		hibernateSession.delete(user);
-		hibernateSession.getTransaction().commit();
 	}
 	
 	@Test
@@ -110,10 +111,6 @@ public class ToDoMySqlRepositoryIT {
 		List returnedList = toDoMySqlRepository.findListByNameAndUserId(list.getName(), user.getId());
 		assertThat(returnedList).isNotNull().isEqualTo(list);
 		assertThat(returnedList.getId()).isEqualTo(list.getId());
-		hibernateSession.getTransaction().begin();
-		hibernateSession.delete(list);
-		hibernateSession.delete(user);
-		hibernateSession.getTransaction().commit();
 	}
 	
 	@Test
@@ -129,10 +126,6 @@ public class ToDoMySqlRepositoryIT {
 				List.class).setParameter(0, user.getId()).setParameter(1, list.getName()).getSingleResult();
 		assertThat(retrievedList).isNotNull().isEqualTo(createdList);
 		assertThat(retrievedList.getId()).isEqualTo(createdList.getId());
-		hibernateSession.getTransaction().begin();
-		hibernateSession.delete(createdList);
-		hibernateSession.delete(user);
-		hibernateSession.getTransaction().commit();
 	}
 	
 	@Test
@@ -152,10 +145,6 @@ public class ToDoMySqlRepositoryIT {
 				List.class).setParameter(0, user.getId()).setParameter(1, savedList.getName()).getSingleResult();
 		assertThat(retrievedList).isNotNull().isEqualTo(savedList);
 		assertThat(retrievedList.getId()).isEqualTo(savedList.getId());
-		hibernateSession.getTransaction().begin();
-		hibernateSession.delete(savedList);
-		hibernateSession.delete(user);
-		hibernateSession.getTransaction().commit();
 	}
 	
 	@Test
@@ -171,9 +160,6 @@ public class ToDoMySqlRepositoryIT {
 				List.class).setParameter(0, user.getId()).setParameter(1, list.getName())
 				.uniqueResultOptional().orElse(null);
 		assertThat(retrievedList).isNull();
-		hibernateSession.getTransaction().begin();
-		hibernateSession.delete(user);
-		hibernateSession.getTransaction().commit();
 	}
 	
 	@Test
@@ -191,11 +177,6 @@ public class ToDoMySqlRepositoryIT {
 		Detail returnedDetail = returnedDetails.iterator().next();
 		assertThat(returnedDetail).isNotNull().isEqualTo(detail);
 		assertThat(returnedDetail.getId()).isEqualTo(detail.getId());
-		hibernateSession.getTransaction().begin();
-		hibernateSession.delete(detail);
-		hibernateSession.delete(list);
-		hibernateSession.delete(user);
-		hibernateSession.getTransaction().commit();
 	}
 	
 	@Test
@@ -211,11 +192,6 @@ public class ToDoMySqlRepositoryIT {
 		Detail returnedDetail = toDoMySqlRepository.findDetailByTodoAndListId(detail.getTodo(), list.getId());
 		assertThat(returnedDetail).isNotNull().isEqualTo(detail);
 		assertThat(returnedDetail.getId()).isEqualTo(detail.getId());
-		hibernateSession.getTransaction().begin();
-		hibernateSession.delete(detail);
-		hibernateSession.delete(list);
-		hibernateSession.delete(user);
-		hibernateSession.getTransaction().commit();
 	}
 	
 	@Test
@@ -234,11 +210,6 @@ public class ToDoMySqlRepositoryIT {
 				.getSingleResult();
 		assertThat(retrievedDetail).isNotNull().isEqualTo(createdDetail);
 		assertThat(retrievedDetail.getId()).isEqualTo(createdDetail.getId());
-		hibernateSession.getTransaction().begin();
-		hibernateSession.delete(createdDetail);
-		hibernateSession.delete(list);
-		hibernateSession.delete(user);
-		hibernateSession.getTransaction().commit();
 	}
 	
 	@Test
@@ -263,11 +234,6 @@ public class ToDoMySqlRepositoryIT {
 				.getSingleResult();
 		assertThat(retrievedDetail).isNotNull().isEqualTo(savedDetail);
 		assertThat(retrievedDetail.getId()).isEqualTo(savedDetail.getId());
-		hibernateSession.getTransaction().begin();
-		hibernateSession.delete(savedDetail);
-		hibernateSession.delete(list);
-		hibernateSession.delete(user);
-		hibernateSession.getTransaction().commit();
 	}
 	
 	@Test
@@ -285,10 +251,6 @@ public class ToDoMySqlRepositoryIT {
 				+ "and d.todo = ?1", Detail.class).setParameter(0, list.getId()).setParameter(1, detail.getTodo())
 				.uniqueResultOptional().orElse(null);
 		assertThat(retrievedDetail).isNull();
-		hibernateSession.getTransaction().begin();
-		hibernateSession.delete(list);
-		hibernateSession.delete(user);
-		hibernateSession.getTransaction().commit();
 	}
 	
 	@Test
@@ -305,10 +267,6 @@ public class ToDoMySqlRepositoryIT {
 				.getSingleResult();
 		assertThat(retrievedLog).isNotNull().isEqualTo(createdLog);
 		assertThat(retrievedLog.getId()).isEqualTo(createdLog.getId());
-		hibernateSession.getTransaction().begin();
-		hibernateSession.delete(createdLog);
-		hibernateSession.delete(user);
-		hibernateSession.getTransaction().commit();
 	}
 	
 	@Test
@@ -329,10 +287,6 @@ public class ToDoMySqlRepositoryIT {
 				.getSingleResult();
 		assertThat(retrievedLog).isNotNull().isEqualTo(savedLog);
 		assertThat(retrievedLog.getId()).isEqualTo(savedLog.getId());
-		hibernateSession.getTransaction().begin();
-		hibernateSession.delete(savedLog);
-		hibernateSession.delete(user);
-		hibernateSession.getTransaction().commit();
 	}
 	
 	@Test
@@ -351,11 +305,6 @@ public class ToDoMySqlRepositoryIT {
 		Log returnedLog = toDoMySqlRepository.findLastLogBeforeIdAndByUserId(log2.getId(), user.getId());
 		assertThat(returnedLog).isNotNull().isEqualTo(log1);
 		assertThat(returnedLog.getId()).isEqualTo(log1.getId());
-		hibernateSession.getTransaction().begin();
-		hibernateSession.delete(log2);
-		hibernateSession.delete(log1);
-		hibernateSession.delete(user);
-		hibernateSession.getTransaction().commit();
 	}
 	
 	@Test
@@ -369,10 +318,6 @@ public class ToDoMySqlRepositoryIT {
 		List returnedList = toDoMySqlRepository.findListById(list.getId());
 		assertThat(returnedList).isNotNull().isEqualTo(list);
 		assertThat(returnedList.getId()).isEqualTo(list.getId());
-		hibernateSession.getTransaction().begin();
-		hibernateSession.delete(list);
-		hibernateSession.delete(user);
-		hibernateSession.getTransaction().commit();
 	}
 	
 	@Test
@@ -388,11 +333,6 @@ public class ToDoMySqlRepositoryIT {
 		Detail returnedDetail = toDoMySqlRepository.findDetailById(detail.getId());
 		assertThat(returnedDetail).isNotNull().isEqualTo(detail);
 		assertThat(returnedDetail.getId()).isEqualTo(detail.getId());
-		hibernateSession.getTransaction().begin();
-		hibernateSession.delete(detail);
-		hibernateSession.delete(list);
-		hibernateSession.delete(user);
-		hibernateSession.getTransaction().commit();
 	}
 	
 }

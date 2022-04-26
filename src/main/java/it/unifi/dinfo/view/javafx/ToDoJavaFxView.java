@@ -5,6 +5,8 @@ import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 
 import it.unifi.dinfo.app.main.ToDoAppMain;
 import it.unifi.dinfo.controller.ToDoController;
@@ -52,7 +54,6 @@ public class ToDoJavaFxView extends Application implements ToDoView {
 			+ "7 L 5.8925781 20.263672 C 6.0245781 21.253672 6.877 22 7.875 22 L 16.123047 22 C "
 			+ "17.121047 22 17.974422 21.254859 18.107422 20.255859 L 19.634766 7 L 4.3652344 7 z";
 	
-	private ToDoMySqlRepository toDoMySqlRepository;
 	private ToDoController toDoController;
 	private LoginJavaFxView loginJavaFxView;
 	private RegistrationJavaFxView registrationJavaFxView;
@@ -61,12 +62,16 @@ public class ToDoJavaFxView extends Application implements ToDoView {
 	private AdditionModificationJavaFxView additionModificationJavaFxView;
 	private UserJavaFxView userJavaFxView;
 	
+	private SessionFactory hibernateSessionFactory;
+	private Session hibernateSession;
+	
 	private Stage stage;
 	private FlowPane appRoot;
 	private FlowPane userRoot;
 	
 	public ToDoJavaFxView() {
-		toDoMySqlRepository = null;
+		hibernateSessionFactory = null;
+		hibernateSession = null;
 		toDoController = null;
 		loginJavaFxView = null;
 		registrationJavaFxView = null;
@@ -88,7 +93,9 @@ public class ToDoJavaFxView extends Application implements ToDoView {
 		String user = mainArgs.get(ToDoAppMain.MY_SQL_USER_OPNAME);
 		String pass = mainArgs.get(ToDoAppMain.MY_SQL_PASS_OPNAME);
 		
-		toDoMySqlRepository = new ToDoMySqlRepository(host, port, dbName, user, pass);
+		hibernateSessionFactory = ToDoMySqlRepository.createSessionFactory(host, port, dbName, user, pass);
+		hibernateSession = hibernateSessionFactory.openSession();
+		var toDoMySqlRepository = new ToDoMySqlRepository(hibernateSession);
 		toDoController = new ToDoController(this, toDoMySqlRepository);
 		
 		loginJavaFxView = new LoginJavaFxView(toDoController);
@@ -152,7 +159,14 @@ public class ToDoJavaFxView extends Application implements ToDoView {
 			userJavaFxView.logout(true);
 		}
 		
-		toDoMySqlRepository.closeSession();
+		if (null != hibernateSession) {
+			hibernateSession.close();
+		}
+		
+		if (null != hibernateSessionFactory) {
+			hibernateSessionFactory.close();
+		}
+		
 		LOGGER.info("Application Stopped");
     }
 
@@ -247,16 +261,6 @@ public class ToDoJavaFxView extends Application implements ToDoView {
 	}
 
 	/* Only for tests */
-	protected void setToDoMySqlRepository(ToDoMySqlRepository toDoMySqlRepository) {
-		this.toDoMySqlRepository = toDoMySqlRepository;
-	}
-
-	/* Only for tests */
-	protected ToDoMySqlRepository getToDoMySqlRepository() {
-		return toDoMySqlRepository;
-	}
-
-	/* Only for tests */
 	protected void setLoginJavaFxView(LoginJavaFxView loginJavaFxView) {
 		this.loginJavaFxView = loginJavaFxView;
 	}
@@ -324,6 +328,16 @@ public class ToDoJavaFxView extends Application implements ToDoView {
 	/* Only for tests */
 	protected UserJavaFxView getUserJavaFxView() {
 		return userJavaFxView;
+	}
+
+	/* Only for tests */
+	protected void setHibernateSessionFactory(SessionFactory hibernateSessionFactory) {
+		this.hibernateSessionFactory = hibernateSessionFactory;
+	}
+
+	/* Only for tests */
+	protected void setHibernateSession(Session hibernateSession) {
+		this.hibernateSession = hibernateSession;
 	}
 	
 }
