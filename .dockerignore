@@ -1,8 +1,8 @@
 **
-!docker-cmd.sh
-!docker-cmd.win.ps1
-!wait-for-it.sh
-!initialize-mysql.ps1
+!/.docker-util/docker-cmd.sh
+!/.docker-util/docker-cmd.win.ps1
+!/.docker-util/wait-for-it.sh
+!/.docker-util/initialize-mysql.ps1
 !/target/maven-javafx-dependencies/linux/*.jar
 !/target/maven-javafx-dependencies/windows/*.jar
 !/target/*jar-with-dependencies.jar

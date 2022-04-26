@@ -17,7 +17,7 @@ RUN choco feature disable --name showDownloadProgress; \
     choco feature enable --name allowGlobalConfirmation; \
     choco install -y mysql --version=8.0.28
 
-COPY initialize-mysql.ps1 /App/initialize-mysql.ps1
+COPY .docker-util/initialize-mysql.ps1 /App/initialize-mysql.ps1
 
 RUN C:\App\initialize-mysql.ps1
 

@@ -6,8 +6,8 @@ ENV MY_SQL_DB_NAME an_advanced_todo_app_db
 ENV MY_SQL_USER user
 ENV MY_SQL_PASS password
 
-COPY wait-for-it.sh /app/wait-for-it.sh
-COPY docker-cmd.sh /app/docker-cmd.sh
+COPY .docker-util/wait-for-it.sh /app/wait-for-it.sh
+COPY .docker-util/docker-cmd.sh /app/docker-cmd.sh
 COPY /target/maven-javafx-dependencies/linux /lib
 COPY /target/*jar-with-dependencies.jar /app/app.jar
 
