@@ -20,8 +20,8 @@ public class AdditionModificationJavaFxView extends BaseJavaFxView
 	private ListsJavaFxView listsJavaFxView;
 	private DetailsJavaFxView detailsJavaFxView;
 	private User currentUser;
-	private Boolean calledForCreation;
-	private Boolean calledFromLists;
+	private boolean calledForCreation;
+	private boolean calledFromLists;
 
 	private TextArea textArea;
 	private Button cancelButton;
@@ -45,12 +45,12 @@ public class AdditionModificationJavaFxView extends BaseJavaFxView
 	}
 
 	/* Only for tests */
-	protected void setCalledForCreation(Boolean calledForCreation) {
+	protected void setCalledForCreation(boolean calledForCreation) {
 		this.calledForCreation = calledForCreation;
 	}
 
 	/* Only for tests */
-	protected void setCalledFromLists(Boolean calledFromLists) {
+	protected void setCalledFromLists(boolean calledFromLists) {
 		this.calledFromLists = calledFromLists;
 	}
 
@@ -71,7 +71,7 @@ public class AdditionModificationJavaFxView extends BaseJavaFxView
 		}
 	}
 	
-	public void enableArea(Boolean calledForCreation, Boolean calledFromLists) {
+	public void enableArea(boolean calledForCreation, boolean calledFromLists) {
 		this.calledForCreation = calledForCreation;
 		this.calledFromLists = calledFromLists;
 		textArea.setDisable(false);
@@ -91,8 +91,6 @@ public class AdditionModificationJavaFxView extends BaseJavaFxView
 	
 	@Override
 	public void resetGUI() {
-		this.calledForCreation = null;
-		this.calledFromLists = null;
 		textArea.setDisable(true);
 		textArea.clear();
 		cancelButton.setDisable(true);
