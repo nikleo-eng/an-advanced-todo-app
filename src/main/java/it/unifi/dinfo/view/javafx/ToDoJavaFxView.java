@@ -14,6 +14,7 @@ import it.unifi.dinfo.model.Detail;
 import it.unifi.dinfo.model.List;
 import it.unifi.dinfo.model.Log;
 import it.unifi.dinfo.model.User;
+import it.unifi.dinfo.repository.ToDoRepository;
 import it.unifi.dinfo.repository.mysql.ToDoMySqlRepository;
 import it.unifi.dinfo.view.ToDoView;
 import it.unifi.dinfo.view.javafx.spec.AdditionModificationJavaFxView;
@@ -54,6 +55,7 @@ public class ToDoJavaFxView extends Application implements ToDoView {
 			+ "7 L 5.8925781 20.263672 C 6.0245781 21.253672 6.877 22 7.875 22 L 16.123047 22 C "
 			+ "17.121047 22 17.974422 21.254859 18.107422 20.255859 L 19.634766 7 L 4.3652344 7 z";
 	
+	private ToDoRepository toDoRepository;
 	private ToDoController toDoController;
 	private LoginJavaFxView loginJavaFxView;
 	private RegistrationJavaFxView registrationJavaFxView;
@@ -72,6 +74,7 @@ public class ToDoJavaFxView extends Application implements ToDoView {
 	public ToDoJavaFxView() {
 		hibernateSessionFactory = null;
 		hibernateSession = null;
+		toDoRepository = null;
 		toDoController = null;
 		loginJavaFxView = null;
 		registrationJavaFxView = null;
@@ -95,8 +98,8 @@ public class ToDoJavaFxView extends Application implements ToDoView {
 		
 		hibernateSessionFactory = ToDoMySqlRepository.createSessionFactory(host, port, dbName, user, pass);
 		hibernateSession = hibernateSessionFactory.openSession();
-		var toDoMySqlRepository = new ToDoMySqlRepository(hibernateSession);
-		toDoController = new ToDoController(this, toDoMySqlRepository);
+		toDoRepository = new ToDoMySqlRepository(hibernateSession);
+		toDoController = new ToDoController(this, toDoRepository);
 		
 		loginJavaFxView = new LoginJavaFxView(toDoController);
 		registrationJavaFxView = new RegistrationJavaFxView(toDoController);
@@ -254,11 +257,6 @@ public class ToDoJavaFxView extends Application implements ToDoView {
 	protected void setToDoController(ToDoController toDoController) {
 		this.toDoController = toDoController;
 	}
-	
-	/* Only for tests */
-	protected ToDoController getToDoController() {
-		return toDoController;
-	}
 
 	/* Only for tests */
 	protected void setLoginJavaFxView(LoginJavaFxView loginJavaFxView) {
@@ -338,6 +336,16 @@ public class ToDoJavaFxView extends Application implements ToDoView {
 	/* Only for tests */
 	protected void setHibernateSession(Session hibernateSession) {
 		this.hibernateSession = hibernateSession;
+	}
+
+	/* Only for tests */
+	protected ToDoRepository getToDoRepository() {
+		return toDoRepository;
+	}
+
+	/* Only for tests */
+	protected void setToDoRepository(ToDoRepository toDoRepository) {
+		this.toDoRepository = toDoRepository;
 	}
 	
 }

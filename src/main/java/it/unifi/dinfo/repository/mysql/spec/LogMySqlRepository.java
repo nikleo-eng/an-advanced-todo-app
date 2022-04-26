@@ -44,16 +44,6 @@ public class LogMySqlRepository extends BaseMySqlRepository implements LogReposi
 	}
 	
 	@Override
-	public void delete(Log log) {
-		getHibernateSession().getTransaction().begin();
-		getHibernateSession()
-			.createQuery("delete from Log l where l.id = ?0")
-			.setParameter(0, log.getId())
-			.executeUpdate();
-		getHibernateSession().getTransaction().commit();
-	}
-	
-	@Override
 	public Set<Log> findAllByUserId(Long userId) {
 		return getHibernateSession()
 				.createQuery("select l from Log l where l.user.id = ?0 order by l.id desc", Log.class)

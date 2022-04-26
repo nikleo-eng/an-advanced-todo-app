@@ -13,9 +13,6 @@ public interface LogRepository {
 	Log findLastBeforeIdAndByUserId(Long id, Long userId);
 	
 	/* Only for tests */
-	void delete(Log log);
-	
-	/* Only for tests */
 	Set<Log> findAllByUserId(Long userId);
 	
 }

@@ -143,23 +143,8 @@ public class ToDoMySqlRepository implements ToDoRepository {
 	}
 	
 	@Override
-	public void deleteUser(User user) {
-		userMySqlRepository.delete(user);
-	}
-	
-	@Override
-	public void deleteLog(Log log) {
-		logMySqlRepository.delete(log);
-	}
-	
-	@Override
 	public Set<Log> findAllLogsByUserId(Long userId) {
 		return logMySqlRepository.findAllByUserId(userId);
-	}
-	
-	@Override
-	public Set<User> findAllUsers() {
-		return userMySqlRepository.findAll();
 	}
 	
 }

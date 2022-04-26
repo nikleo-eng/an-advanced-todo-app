@@ -14,9 +14,6 @@ import it.unifi.dinfo.view.ToDoView;
 
 public class ToDoController {
 
-	private ToDoView toDoView;
-	private ToDoRepository toDoRepository;
-	
 	private LogController logController;
 	private RegistrationController registrationController;
 	private ListsController listsController;
@@ -24,8 +21,6 @@ public class ToDoController {
 	private AdditionModificationController additionModificationController;
 	
 	public ToDoController(ToDoView toDoView, ToDoRepository toDoRepository) {
-		this.toDoView = toDoView;
-		this.toDoRepository = toDoRepository;
 		logController = new LogController(toDoView, toDoRepository);
 		registrationController = new RegistrationController(toDoView, toDoRepository);
 		listsController = new ListsController(toDoView, toDoRepository);
@@ -92,16 +87,6 @@ public class ToDoController {
 	
 	public void getAllDetails(Long listId) {
 		detailsController.getAll(listId);
-	}
-
-	/* Only for tests */
-	public ToDoView getToDoView() {
-		return toDoView;
-	}
-
-	/* Only for tests */
-	public ToDoRepository getToDoRepository() {
-		return toDoRepository;
 	}
 	
 }

@@ -18,6 +18,9 @@
 			**/it/unifi/dinfo/app/main/*.*,
 			**/it/unifi/dinfo/model/*.*
 		</sonar.coverage.exclusions>
+		<sonar.cpd.exclusions>
+	        **/it/unifi/dinfo/model/*.*
+	    </sonar.cpd.exclusions>
 		<sonar.junit.reportPaths>
 			${project.build.directory}/surefire-reports,
 			${project.build.directory}/failsafe-reports
@@ -259,10 +262,10 @@
 			<version>5.6.5.Final</version>
 		</dependency>
 		<dependency>
-		    <groupId>org.testcontainers</groupId>
-		    <artifactId>mysql</artifactId>
-		    <version>1.16.3</version>
-		    <scope>test</scope>
+			<groupId>org.testcontainers</groupId>
+			<artifactId>mysql</artifactId>
+			<version>1.16.3</version>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.h2database</groupId>
@@ -387,8 +390,7 @@
 											<limit>
 												<counter>LINE</counter>
 												<value>COVEREDRATIO</value>
-												<!-- Bring back to 1.00 when project is completed -->
-												<minimum>0.58</minimum>
+												<minimum>1.00</minimum>
 											</limit>
 										</limits>
 									</rule>
@@ -621,9 +623,9 @@
 											<port>mysql.mapped.port:3306</port>
 										</ports>
 										<wait>
-		                                    <log>MySQL init process done. Ready for start up</log>
+											<log>MySQL init process done. Ready for start up</log>
 											<time>60000</time>
-		                                </wait>
+										</wait>
 									</run>
 								</image>
 							</images>

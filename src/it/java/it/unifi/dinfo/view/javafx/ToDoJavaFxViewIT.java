@@ -49,6 +49,7 @@ public class ToDoJavaFxViewIT extends ApplicationTest {
 		toDoJavaFxView.setHibernateSessionFactory(hibenateSessionFactory);
 		toDoJavaFxView.setHibernateSession(hibernateSession);
 		toDoRepository = new ToDoMySqlRepository(hibernateSession);
+		toDoJavaFxView.setToDoRepository(toDoRepository);
 		toDoController = new ToDoController(toDoJavaFxView, toDoRepository);
 		toDoJavaFxView.setToDoController(toDoController);
 		toDoJavaFxView.setLoginJavaFxView(new LoginJavaFxView(toDoController));
