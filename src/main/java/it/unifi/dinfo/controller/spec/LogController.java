@@ -44,7 +44,7 @@ public class LogController extends BaseController {
 	
 	public void logout(Log log, boolean stop) {
 		log.setOut(new Date());
-		log = getToDoRepository().saveLog(log);
+		getToDoRepository().saveLog(log);
 		
 		if (!stop) {
 			getToDoView().userLoggedOut();
