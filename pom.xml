@@ -27,7 +27,7 @@
 		</sonar.junit.reportPaths>
 		
 		<sonar.issue.ignore.multicriteria>
-			e01
+			e01,e02
 		</sonar.issue.ignore.multicriteria>
 		<sonar.issue.ignore.multicriteria.e01.ruleKey>
 	    	java:S110
@@ -35,6 +35,12 @@
 		<sonar.issue.ignore.multicriteria.e01.resourceKey>
 	    	**/it/unifi/dinfo/view/javafx/spec/*.*
 	    </sonar.issue.ignore.multicriteria.e01.resourceKey>
+	    <sonar.issue.ignore.multicriteria.e02.ruleKey>
+	    	java:S3577
+	    </sonar.issue.ignore.multicriteria.e02.ruleKey>
+		<sonar.issue.ignore.multicriteria.e02.resourceKey>
+	    	**/it/unifi/dinfo/view/javafx/*E2E.*
+	    </sonar.issue.ignore.multicriteria.e02.resourceKey>
 		
 		<javafx.version>11.0.2</javafx.version>
 	</properties>
