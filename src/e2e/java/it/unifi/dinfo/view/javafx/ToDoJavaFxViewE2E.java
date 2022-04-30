@@ -57,7 +57,7 @@ import javafx.stage.Stage;
  * docker run -p 3306:3306 --rm custom_mysql:latest
  * </pre>
  */
-public class ToDoModelViewControllerIT extends ApplicationTest {
+public class ToDoJavaFxViewE2E extends ApplicationTest {
 	
 	/* https://github.com/TestFX/TestFX/issues/367#issuecomment-347077166 */
 	@Rule
@@ -129,6 +129,7 @@ public class ToDoModelViewControllerIT extends ApplicationTest {
 		Calendar calendar = Calendar.getInstance();
 		calendar.add(Calendar.HOUR, -1);
 		Log log = new Log(calendar.getTime(), user);
+		log.setOut(Calendar.getInstance().getTime());
 		user = toDoRepository.createUser(user);
 		log = toDoRepository.createLog(log);
 		clickOn("#" + LoginJavaFxView.EMAIL_TEXTFIELD_ID);
@@ -183,6 +184,7 @@ public class ToDoModelViewControllerIT extends ApplicationTest {
 		Calendar calendar = Calendar.getInstance();
 		calendar.add(Calendar.HOUR, -1);
 		Log log = new Log(calendar.getTime(), user);
+		log.setOut(Calendar.getInstance().getTime());
 		user = toDoRepository.createUser(user);
 		log = toDoRepository.createLog(log);
 		clickOn("#" + LoginJavaFxView.EMAIL_TEXTFIELD_ID);
@@ -200,6 +202,7 @@ public class ToDoModelViewControllerIT extends ApplicationTest {
 		Calendar calendar = Calendar.getInstance();
 		calendar.add(Calendar.HOUR, -1);
 		Log log = new Log(calendar.getTime(), user);
+		log.setOut(Calendar.getInstance().getTime());
 		user = toDoRepository.createUser(user);
 		log = toDoRepository.createLog(log);
 		clickOn("#" + LoginJavaFxView.EMAIL_TEXTFIELD_ID);
@@ -225,6 +228,7 @@ public class ToDoModelViewControllerIT extends ApplicationTest {
 		Calendar calendar = Calendar.getInstance();
 		calendar.add(Calendar.HOUR, -1);
 		Log log = new Log(calendar.getTime(), user);
+		log.setOut(Calendar.getInstance().getTime());
 		user = toDoRepository.createUser(user);
 		log = toDoRepository.createLog(log);
 		clickOn("#" + LoginJavaFxView.EMAIL_TEXTFIELD_ID);
@@ -260,6 +264,7 @@ public class ToDoModelViewControllerIT extends ApplicationTest {
 		Calendar calendar = Calendar.getInstance();
 		calendar.add(Calendar.HOUR, -1);
 		Log log = new Log(calendar.getTime(), user);
+		log.setOut(Calendar.getInstance().getTime());
 		it.unifi.dinfo.model.List list = new it.unifi.dinfo.model.List("TEST", user);
 		user = toDoRepository.createUser(user);
 		log = toDoRepository.createLog(log);
@@ -298,6 +303,7 @@ public class ToDoModelViewControllerIT extends ApplicationTest {
 		Calendar calendar = Calendar.getInstance();
 		calendar.add(Calendar.HOUR, -1);
 		Log log = new Log(calendar.getTime(), user);
+		log.setOut(Calendar.getInstance().getTime());
 		it.unifi.dinfo.model.List list = new it.unifi.dinfo.model.List("TEST", user);
 		user = toDoRepository.createUser(user);
 		log = toDoRepository.createLog(log);
@@ -327,6 +333,7 @@ public class ToDoModelViewControllerIT extends ApplicationTest {
 		Calendar calendar = Calendar.getInstance();
 		calendar.add(Calendar.HOUR, -1);
 		Log log = new Log(calendar.getTime(), user);
+		log.setOut(Calendar.getInstance().getTime());
 		it.unifi.dinfo.model.List list = new it.unifi.dinfo.model.List("TEST", user);
 		Detail detail = new Detail("TEST-D", list);
 		user = toDoRepository.createUser(user);
@@ -359,6 +366,7 @@ public class ToDoModelViewControllerIT extends ApplicationTest {
 		Calendar calendar = Calendar.getInstance();
 		calendar.add(Calendar.HOUR, -1);
 		Log log = new Log(calendar.getTime(), user);
+		log.setOut(Calendar.getInstance().getTime());
 		it.unifi.dinfo.model.List list = new it.unifi.dinfo.model.List("TEST", user);
 		Detail detail = new Detail("TEST-D", list);
 		user = toDoRepository.createUser(user);
@@ -395,6 +403,7 @@ public class ToDoModelViewControllerIT extends ApplicationTest {
 		Calendar calendar = Calendar.getInstance();
 		calendar.add(Calendar.HOUR, -1);
 		Log log = new Log(calendar.getTime(), user);
+		log.setOut(Calendar.getInstance().getTime());
 		it.unifi.dinfo.model.List list = new it.unifi.dinfo.model.List("TEST", user);
 		user = toDoRepository.createUser(user);
 		log = toDoRepository.createLog(log);
@@ -438,6 +447,7 @@ public class ToDoModelViewControllerIT extends ApplicationTest {
 		Calendar calendar = Calendar.getInstance();
 		calendar.add(Calendar.HOUR, -1);
 		Log log = new Log(calendar.getTime(), user);
+		log.setOut(Calendar.getInstance().getTime());
 		it.unifi.dinfo.model.List list = new it.unifi.dinfo.model.List("TEST", user);
 		Detail detail = new Detail("TEST-D", list);
 		user = toDoRepository.createUser(user);
