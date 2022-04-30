@@ -19,7 +19,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testfx.framework.junit.ApplicationTest;
 
-import it.unifi.dinfo.controller.ToDoController;
 import it.unifi.dinfo.model.Detail;
 import it.unifi.dinfo.model.List;
 import it.unifi.dinfo.model.Log;
@@ -41,9 +40,6 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class ToDoJavaFxViewTest extends ApplicationTest {
-	
-	@Mock
-	private ToDoController toDoController;
 	
 	@Mock
 	private LoginJavaFxView loginJavaFxView;
@@ -70,12 +66,12 @@ public class ToDoJavaFxViewTest extends ApplicationTest {
 	private static final String ADDITION_MODIFICATION_TEXT = "ADDITION_MODIFICATION";
 	private static final String USER_TEXT = "USER";
 	
-	private ToDoJavaFxView toDoJavaFxView = new ToDoJavaFxView();
+	private ToDoJavaFxView toDoJavaFxView;
 	
 	@Override
 	public void init() throws Exception {
 		MockitoAnnotations.openMocks(this);
-		toDoJavaFxView.setToDoController(toDoController);
+		toDoJavaFxView = new ToDoJavaFxView();
 		toDoJavaFxView.setLoginJavaFxView(loginJavaFxView);
 		toDoJavaFxView.setRegistrationJavaFxView(registrationJavaFxView);
 		toDoJavaFxView.setListsJavaFxView(listsJavaFxView);
@@ -98,8 +94,13 @@ public class ToDoJavaFxViewTest extends ApplicationTest {
 			createVBox(ans.getArgument(0), ans.getArgument(1), ADDITION_MODIFICATION_TEXT));
 		when(userJavaFxView.createGUI(anyDouble(), anyDouble())).then(ans -> 
 			createVBox(ans.getArgument(0), ans.getArgument(1), USER_TEXT));
-		
 		toDoJavaFxView.start(stage);
+	}
+	
+	@Override
+	public void stop() throws Exception {
+		when(userJavaFxView.getCurrentUser()).thenReturn(null);
+		toDoJavaFxView.stop();
 	}
 	
 	private static VBox createVBox(double width, double height, String text) {
@@ -189,7 +190,7 @@ public class ToDoJavaFxViewTest extends ApplicationTest {
 		List list = new List("TEST", user);
 		toDoJavaFxView.addList(list);
 		verify(listsJavaFxView).add(list);
-		verifyNoMoreInteractions(ignoreStubs(toDoController, loginJavaFxView, registrationJavaFxView, 
+		verifyNoMoreInteractions(ignoreStubs(loginJavaFxView, registrationJavaFxView, 
 				listsJavaFxView, detailsJavaFxView, additionModificationJavaFxView, userJavaFxView));
 	}
 	
@@ -200,7 +201,7 @@ public class ToDoJavaFxViewTest extends ApplicationTest {
 		Detail detail = new Detail("TEST-D", list);
 		toDoJavaFxView.addDetail(detail);
 		verify(detailsJavaFxView).add(detail);
-		verifyNoMoreInteractions(ignoreStubs(toDoController, loginJavaFxView, registrationJavaFxView, 
+		verifyNoMoreInteractions(ignoreStubs(loginJavaFxView, registrationJavaFxView, 
 				listsJavaFxView, detailsJavaFxView, additionModificationJavaFxView, userJavaFxView));
 	}
 	
@@ -210,7 +211,7 @@ public class ToDoJavaFxViewTest extends ApplicationTest {
 		List list = new List("TEST", user);
 		toDoJavaFxView.saveList(list);
 		verify(listsJavaFxView).save(list);
-		verifyNoMoreInteractions(ignoreStubs(toDoController, loginJavaFxView, registrationJavaFxView, 
+		verifyNoMoreInteractions(ignoreStubs(loginJavaFxView, registrationJavaFxView, 
 				listsJavaFxView, detailsJavaFxView, additionModificationJavaFxView, userJavaFxView));
 	}
 	
@@ -221,7 +222,7 @@ public class ToDoJavaFxViewTest extends ApplicationTest {
 		Detail detail = new Detail("TEST-D", list);
 		toDoJavaFxView.saveDetail(detail);
 		verify(detailsJavaFxView).save(detail);
-		verifyNoMoreInteractions(ignoreStubs(toDoController, loginJavaFxView, registrationJavaFxView, 
+		verifyNoMoreInteractions(ignoreStubs(loginJavaFxView, registrationJavaFxView, 
 				listsJavaFxView, detailsJavaFxView, additionModificationJavaFxView, userJavaFxView));
 	}
 	
@@ -231,7 +232,7 @@ public class ToDoJavaFxViewTest extends ApplicationTest {
 				AdditionModificationView.ERRORS.DETAIL_ALREADY_FOUND.getValue());
 		verify(additionModificationJavaFxView).renderError(
 				AdditionModificationView.ERRORS.DETAIL_ALREADY_FOUND.getValue());
-		verifyNoMoreInteractions(ignoreStubs(toDoController, loginJavaFxView, registrationJavaFxView, 
+		verifyNoMoreInteractions(ignoreStubs(loginJavaFxView, registrationJavaFxView, 
 				listsJavaFxView, detailsJavaFxView, additionModificationJavaFxView, userJavaFxView));
 	}
 	
@@ -244,7 +245,7 @@ public class ToDoJavaFxViewTest extends ApplicationTest {
 		details.add(detail);
 		toDoJavaFxView.showAllDetails(details);
 		verify(detailsJavaFxView).showAll(details);
-		verifyNoMoreInteractions(ignoreStubs(toDoController, loginJavaFxView, registrationJavaFxView, 
+		verifyNoMoreInteractions(ignoreStubs(loginJavaFxView, registrationJavaFxView, 
 				listsJavaFxView, detailsJavaFxView, additionModificationJavaFxView, userJavaFxView));
 	}
 	
@@ -255,7 +256,7 @@ public class ToDoJavaFxViewTest extends ApplicationTest {
 		Detail detail = new Detail("TEST-D", list);
 		toDoJavaFxView.deleteDetail(detail);
 		verify(detailsJavaFxView).delete(detail);
-		verifyNoMoreInteractions(ignoreStubs(toDoController, loginJavaFxView, registrationJavaFxView, 
+		verifyNoMoreInteractions(ignoreStubs(loginJavaFxView, registrationJavaFxView, 
 				listsJavaFxView, detailsJavaFxView, additionModificationJavaFxView, userJavaFxView));
 	}
 	
@@ -267,7 +268,7 @@ public class ToDoJavaFxViewTest extends ApplicationTest {
 		lists.add(list);
 		toDoJavaFxView.showAllLists(lists);
 		verify(listsJavaFxView).showAll(lists);
-		verifyNoMoreInteractions(ignoreStubs(toDoController, loginJavaFxView, registrationJavaFxView, 
+		verifyNoMoreInteractions(ignoreStubs(loginJavaFxView, registrationJavaFxView, 
 				listsJavaFxView, detailsJavaFxView, additionModificationJavaFxView, userJavaFxView));
 	}
 	
@@ -277,7 +278,7 @@ public class ToDoJavaFxViewTest extends ApplicationTest {
 		List list = new List("TEST", user);
 		toDoJavaFxView.deleteList(list);
 		verify(listsJavaFxView).delete(list);
-		verifyNoMoreInteractions(ignoreStubs(toDoController, loginJavaFxView, registrationJavaFxView, 
+		verifyNoMoreInteractions(ignoreStubs(loginJavaFxView, registrationJavaFxView, 
 				listsJavaFxView, detailsJavaFxView, additionModificationJavaFxView, userJavaFxView));
 	}
 	
@@ -285,7 +286,7 @@ public class ToDoJavaFxViewTest extends ApplicationTest {
 	public void shouldRenderLoginErrorCallRenderErrorOnLoginView() {
 		toDoJavaFxView.renderLoginError(LoginView.ERRORS.USER_NOT_FOUND.getValue());
 		verify(loginJavaFxView).renderError(LoginView.ERRORS.USER_NOT_FOUND.getValue());
-		verifyNoMoreInteractions(ignoreStubs(toDoController, loginJavaFxView, registrationJavaFxView, 
+		verifyNoMoreInteractions(ignoreStubs(loginJavaFxView, registrationJavaFxView, 
 				listsJavaFxView, detailsJavaFxView, additionModificationJavaFxView, userJavaFxView));
 	}
 	
@@ -293,7 +294,7 @@ public class ToDoJavaFxViewTest extends ApplicationTest {
 	public void shouldRenderRegistrationErrorCallRenderErrorOnRegistrationView() {
 		toDoJavaFxView.renderRegistrationError(RegistrationView.ERRORS.USER_ALREADY_FOUND.getValue());
 		verify(registrationJavaFxView).renderError(RegistrationView.ERRORS.USER_ALREADY_FOUND.getValue());
-		verifyNoMoreInteractions(ignoreStubs(toDoController, loginJavaFxView, registrationJavaFxView, 
+		verifyNoMoreInteractions(ignoreStubs(loginJavaFxView, registrationJavaFxView, 
 				listsJavaFxView, detailsJavaFxView, additionModificationJavaFxView, userJavaFxView));
 	}
 	
@@ -301,7 +302,7 @@ public class ToDoJavaFxViewTest extends ApplicationTest {
 	public void shouldRenderListsErrorCallRenderErrorOnListsView() {
 		toDoJavaFxView.renderListsError(ListsView.ERRORS.LIST_NO_LONGER_EXISTS.getValue());
 		verify(listsJavaFxView).renderError(ListsView.ERRORS.LIST_NO_LONGER_EXISTS.getValue());
-		verifyNoMoreInteractions(ignoreStubs(toDoController, loginJavaFxView, registrationJavaFxView, 
+		verifyNoMoreInteractions(ignoreStubs(loginJavaFxView, registrationJavaFxView, 
 				listsJavaFxView, detailsJavaFxView, additionModificationJavaFxView, userJavaFxView));
 	}
 	
@@ -309,7 +310,7 @@ public class ToDoJavaFxViewTest extends ApplicationTest {
 	public void shouldRenderDetailsErrorCallRenderErrorOnDetailsView() {
 		toDoJavaFxView.renderDetailsError(DetailsView.ERRORS.DETAIL_NO_LONGER_EXISTS.getValue());
 		verify(detailsJavaFxView).renderError(DetailsView.ERRORS.DETAIL_NO_LONGER_EXISTS.getValue());
-		verifyNoMoreInteractions(ignoreStubs(toDoController, loginJavaFxView, registrationJavaFxView, 
+		verifyNoMoreInteractions(ignoreStubs(loginJavaFxView, registrationJavaFxView, 
 				listsJavaFxView, detailsJavaFxView, additionModificationJavaFxView, userJavaFxView));
 	}
 	

@@ -1,5 +1,9 @@
 package it.unifi.dinfo.repository.mysql.spec;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import org.hibernate.Session;
 
 import it.unifi.dinfo.model.Log;
@@ -37,6 +41,14 @@ public class LogMySqlRepository extends BaseMySqlRepository implements LogReposi
 		getHibernateSession().getTransaction().commit();
 		
 		return log;
+	}
+	
+	@Override
+	public Set<Log> findAllByUserId(Long userId) {
+		return getHibernateSession()
+				.createQuery("select l from Log l where l.user.id = ?0 order by l.id desc", Log.class)
+				.setParameter(0, userId)
+				.getResultStream().collect(Collectors.toCollection(LinkedHashSet::new));
 	}
 
 }

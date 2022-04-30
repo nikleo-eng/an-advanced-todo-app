@@ -50,6 +50,8 @@ public class AdditionModificationJavaFxViewTest extends ApplicationTest {
 		additionModificationJavaFxView.setCurrentUser(user);
 		
 		FlowPane flowPane = new FlowPane();
+		/* https://stackoverflow.com/questions/67893273 */
+		flowPane.setStyle(FONT_FAMILY);
 		Scene scene = new Scene(flowPane, SCENE_WIDTH, SCENE_HEIGHT);
 		VBox vBox = additionModificationJavaFxView.createGUI(scene.getWidth(), scene.getHeight());
 		flowPane.getChildren().add(vBox);

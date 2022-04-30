@@ -37,6 +37,8 @@ public class LoginJavaFxViewTest extends ApplicationTest {
 		loginJavaFxView = new LoginJavaFxView(toDoController);
 		
 		FlowPane flowPane = new FlowPane();
+		/* https://stackoverflow.com/questions/67893273 */
+		flowPane.setStyle(FONT_FAMILY);
 		Scene scene = new Scene(flowPane, SCENE_WIDTH, SCENE_HEIGHT);
 		VBox vBox = loginJavaFxView.createGUI(scene.getWidth(), scene.getHeight());
 		flowPane.getChildren().add(vBox);

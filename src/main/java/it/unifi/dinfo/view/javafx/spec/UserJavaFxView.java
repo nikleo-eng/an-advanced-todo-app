@@ -19,14 +19,15 @@ import javafx.scene.text.Text;
 public class UserJavaFxView extends BaseJavaFxView implements UserView {
 	
 	protected static final String LOGOUT_BUTTON_TEXT = "Logout";
-	protected static final String LOGOUT_BUTTON_ID = "USER_LOGOUT_BUTTON_ID";
+	public static final String LOGOUT_BUTTON_ID = "USER_LOGOUT_BUTTON_ID";
 	protected static final String REFRESH_BUTTON_TEXT = "Refresh";
-	protected static final String REFRESH_BUTTON_ID = "USER_REFRESH_BUTTON_ID";
-	protected static final String USER_TEXT_ID = "USER_TEXT_ID";
-	protected static final String LOG_TEXT_ID = "LOG_TEXT_ID";
+	public static final String REFRESH_BUTTON_ID = "USER_REFRESH_BUTTON_ID";
+	public static final String USER_TEXT_ID = "USER_TEXT_ID";
+	public static final String LOG_TEXT_ID = "LOG_TEXT_ID";
 	
-	protected static final String LOG_STARTING_TEXT = "Last Login: ";
-	protected static final String SDF_PATTERN = "dd/MM/yyyy HH:mm:ss z";
+	public static final String LOG_STARTING_TEXT = "Last Login: ";
+	public static final String LOG_NOT_AVAILABLE_TEXT = "N.A.";
+	public static final String SDF_PATTERN = "dd/MM/yyyy HH:mm:ss z";
 	
 	private static final String ITALIC_STYLE = "-fx-font-style: italic;";
 	
@@ -78,7 +79,7 @@ public class UserJavaFxView extends BaseJavaFxView implements UserView {
 	
 	private void setLogText(Log log) {
 		SimpleDateFormat sdf = new SimpleDateFormat(SDF_PATTERN, Locale.ITALIAN);
-		String formattedDate = log != null ? sdf.format(log.getIn()) : "N.A.";
+		String formattedDate = log != null ? sdf.format(log.getIn()) : LOG_NOT_AVAILABLE_TEXT;
 		logText.setText(logText.getText() + formattedDate);
 	}
 
@@ -87,7 +88,7 @@ public class UserJavaFxView extends BaseJavaFxView implements UserView {
 	}
 	
 	/* Only for tests */
-	protected Log getCurrentLog() {
+	public Log getCurrentLog() {
 		return currentLog;
 	}
 

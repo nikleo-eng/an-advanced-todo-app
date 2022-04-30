@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: windows-2019
     env:
       DOCKER_HOST: tcp://localhost:2375
       workdir: .
@@ -43,9 +43,9 @@ jobs:
     # https://github.com/TestFX/TestFX/issues/226
     # https://stackoverflow.com/questions/45754473
     # https://superuser.com/questions/988379
-    - name: Build with Maven and SonarCloud
+    - name: Build with Maven, SonarCloud and Docker
       run: >
-        mvn verify -P jacoco,mutation-testing sonar:sonar
+        mvn verify -P jacoco,mutation-testing,docker-win sonar:sonar
         "-Dsonar.organization=nikleo-eng-github"
         "-Dsonar.host.url=https://sonarcloud.io"
         "-Dsonar.projectKey=nikleo-eng_an-advanced-todo-app"

@@ -10,9 +10,8 @@ import javax.persistence.Persistence;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.junit.AfterClass;
+import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import it.unifi.dinfo.model.Detail;
@@ -21,25 +20,23 @@ import it.unifi.dinfo.model.User;
 
 public class DetailMySqlRepositoryTest {
 
-	private static Session session;
+	private SessionFactory sessionFactory;
+	private Session session;
 	
 	private DetailMySqlRepository detailMySqlRepository;
 	
-	@BeforeClass
-	public static void setUpClass() {
-		var entityManagerFactory = Persistence.createEntityManagerFactory("an-advanced-todo-app-test");
-		var sessionFactory = entityManagerFactory.unwrap(SessionFactory.class);
-		session = sessionFactory.openSession();
-	}
-	
-	@AfterClass
-	public static void tearDownClass() {
-		session.close();
-	}
-	
 	@Before
 	public void setUp() {
+		var entityManagerFactory = Persistence.createEntityManagerFactory("an-advanced-todo-app-test");
+		sessionFactory = entityManagerFactory.unwrap(SessionFactory.class);
+		session = sessionFactory.openSession();
 		detailMySqlRepository = new DetailMySqlRepository(session);
+	}
+	
+	@After
+	public void tearDown() {
+		session.close();
+		sessionFactory.close();
 	}
 	
 	@Test
@@ -57,12 +54,6 @@ public class DetailMySqlRepositoryTest {
 		Detail retrievedDetail = session.createQuery("select d from Detail d where d.id = ?0", 
 				Detail.class).setParameter(0, detail.getId()).getSingleResult();
 		assertEquals(detail, retrievedDetail);
-		
-		session.getTransaction().begin();
-		session.delete(detail);
-		session.delete(list);
-		session.delete(user);
-		session.getTransaction().commit();
 	}
 	
 	@Test
@@ -87,12 +78,6 @@ public class DetailMySqlRepositoryTest {
 		assertEquals(detail, retrievedDetail);
 		assertEquals("TEST-D_NEW", retrievedDetail.getTodo());
 		assertEquals(Boolean.TRUE, retrievedDetail.getDone());
-		
-		session.getTransaction().begin();
-		session.delete(detail);
-		session.delete(list);
-		session.delete(user);
-		session.getTransaction().commit();
 	}
 	
 	@Test
@@ -111,11 +96,6 @@ public class DetailMySqlRepositoryTest {
 		Long countedDetails = session.createQuery("select count(d) from Detail d where d.id = ?0", 
 				Long.class).setParameter(0, list.getId()).getSingleResult();
 		assertEquals(0L, (long) countedDetails);
-		
-		session.getTransaction().begin();
-		session.delete(list);
-		session.delete(user);
-		session.getTransaction().commit();
 	}
 	
 	@Test
@@ -133,13 +113,6 @@ public class DetailMySqlRepositoryTest {
 		
 		Set<Detail> retrievedDetails = detailMySqlRepository.findAllByListId(list.getId());
 		assertThat(retrievedDetails).containsExactly(detail1, detail2);
-		
-		session.getTransaction().begin();
-		session.delete(detail1);
-		session.delete(detail2);
-		session.delete(list);
-		session.delete(user);
-		session.getTransaction().commit();
 	}
 	
 	@Test
@@ -162,12 +135,6 @@ public class DetailMySqlRepositoryTest {
 		Detail retrievedDetail = detailMySqlRepository.findByTodoAndListId(detail.getTodo(), 
 				list.getId());
 		assertEquals(detail, retrievedDetail);
-		
-		session.getTransaction().begin();
-		session.delete(detail);
-		session.delete(list);
-		session.delete(user);
-		session.getTransaction().commit();
 	}
 	
 	@Test
@@ -189,12 +156,6 @@ public class DetailMySqlRepositoryTest {
 		
 		Detail retrievedDetail = detailMySqlRepository.findById(detail.getId());
 		assertEquals(detail, retrievedDetail);
-		
-		session.getTransaction().begin();
-		session.delete(detail);
-		session.delete(list);
-		session.delete(user);
-		session.getTransaction().commit();
 	}
 	
 }

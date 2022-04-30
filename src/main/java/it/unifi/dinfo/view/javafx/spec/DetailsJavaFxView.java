@@ -27,9 +27,9 @@ public class DetailsJavaFxView extends BaseJavaFxView implements DetailsView {
 	private Text errorText;
 	
 	protected static final String ADD_BUTTON_TEXT = "Add";
-	protected static final String ADD_BUTTON_ID = "DETAILS_ADD_BUTTON_ID";
-	protected static final String LISTVIEW_ID = "DETAILS_LISTVIEW_ID";
-	protected static final String ERROR_TEXT_ID = "DETAILS_ERROR_TEXT_ID";
+	public static final String ADD_BUTTON_ID = "DETAILS_ADD_BUTTON_ID";
+	public static final String LISTVIEW_ID = "DETAILS_LISTVIEW_ID";
+	public static final String ERROR_TEXT_ID = "DETAILS_ERROR_TEXT_ID";
 	
 	private static final String ROW_PATTERN_ID ="DETAILS_%s_ROW_ID";
 	private static final String CHECKBOX_PATTERN_ID ="DETAILS_%s_CHECKBOX_ID";
@@ -37,23 +37,23 @@ public class DetailsJavaFxView extends BaseJavaFxView implements DetailsView {
 	private static final String MODIFY_BUTTON_PATTERN_ID ="DETAILS_%s_MODIFY_BUTTON_ID";
 	private static final String DELETE_BUTTON_PATTERN_ID ="DETAILS_%s_DELETE_BUTTON_ID";
 	
-	protected static String getRowId(String todo) {
+	public static String getRowId(String todo) {
 		return replaceString(ROW_PATTERN_ID, todo);
 	}
 	
-	protected static String getRowCheckBoxId(String todo) {
+	public static String getRowCheckBoxId(String todo) {
 		return replaceString(CHECKBOX_PATTERN_ID, todo);
 	}
 	
-	protected static String getRowLabelId(String todo) {
+	public static String getRowLabelId(String todo) {
 		return replaceString(LABEL_PATTERN_ID, todo);
 	}
 	
-	protected static String getRowModifyButtonId(String todo) {
+	public static String getRowModifyButtonId(String todo) {
 		return replaceString(MODIFY_BUTTON_PATTERN_ID, todo);
 	}
 	
-	protected static String getRowDeleteButtonId(String todo) {
+	public static String getRowDeleteButtonId(String todo) {
 		return replaceString(DELETE_BUTTON_PATTERN_ID, todo);
 	}
 	

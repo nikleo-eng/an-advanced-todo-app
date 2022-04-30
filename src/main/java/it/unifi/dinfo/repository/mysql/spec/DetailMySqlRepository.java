@@ -1,5 +1,6 @@
 package it.unifi.dinfo.repository.mysql.spec;
 
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -34,7 +35,7 @@ public class DetailMySqlRepository extends BaseMySqlRepository implements Detail
 		return getHibernateSession()
 				.createQuery("select d from Detail d where d.list.id = ?0 order by d.id", Detail.class)
 				.setParameter(0, listId)
-				.getResultStream().collect(Collectors.toSet());
+				.getResultStream().collect(Collectors.toCollection(LinkedHashSet::new));
 	}
 
 	@Override

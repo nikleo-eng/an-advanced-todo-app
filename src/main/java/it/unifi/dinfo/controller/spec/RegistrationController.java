@@ -41,10 +41,7 @@ public class RegistrationController extends BaseController {
 		Log newLog = new Log(new Date(), newUser);
 		newLog = getToDoRepository().createLog(newLog);
 		
-		Log lastLog = getToDoRepository().findLastLogBeforeIdAndByUserId(
-				newLog.getId(), newUser.getId());
-		
-		getToDoView().userLoggedIn(newUser, newLog, lastLog);
+		getToDoView().userLoggedIn(newUser, newLog, null);
 	}
 	
 }

@@ -1,5 +1,6 @@
 package it.unifi.dinfo.repository.mysql.spec;
 
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -34,7 +35,7 @@ public class ListMySqlRepository extends BaseMySqlRepository implements ListRepo
 		return getHibernateSession()
 				.createQuery("select l from List l where l.user.id = ?0 order by l.id", List.class)
 				.setParameter(0, userId)
-				.getResultStream().collect(Collectors.toSet());
+				.getResultStream().collect(Collectors.toCollection(LinkedHashSet::new));
 	}
 
 	@Override

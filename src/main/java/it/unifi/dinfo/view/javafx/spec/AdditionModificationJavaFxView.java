@@ -20,18 +20,18 @@ public class AdditionModificationJavaFxView extends BaseJavaFxView
 	private ListsJavaFxView listsJavaFxView;
 	private DetailsJavaFxView detailsJavaFxView;
 	private User currentUser;
-	private Boolean calledForCreation;
-	private Boolean calledFromLists;
+	private boolean calledForCreation;
+	private boolean calledFromLists;
 
 	private TextArea textArea;
 	private Button cancelButton;
 	private Button saveButton;
 	private Text errorText;
 	
-	protected static final String TEXTAREA_ID = "ADDITION_MODIFICATION_TEXTAREA_ID";
-	protected static final String CANCEL_BUTTON_ID = "ADDITION_MODIFICATION_CANCEL_BUTTON_ID";
-	protected static final String SAVE_BUTTON_ID = "ADDITION_MODIFICATION_SAVE_BUTTON_ID";
-	protected static final String ERROR_TEXT_ID = "ADDITION_MODIFICATION_ERROR_TEXT_ID";
+	public static final String TEXTAREA_ID = "ADDITION_MODIFICATION_TEXTAREA_ID";
+	public static final String CANCEL_BUTTON_ID = "ADDITION_MODIFICATION_CANCEL_BUTTON_ID";
+	public static final String SAVE_BUTTON_ID = "ADDITION_MODIFICATION_SAVE_BUTTON_ID";
+	public static final String ERROR_TEXT_ID = "ADDITION_MODIFICATION_ERROR_TEXT_ID";
 	
 	protected static final String CANCEL_BUTTON_TEXT = "Cancel";
 	protected static final String SAVE_BUTTON_TEXT = "Save";
@@ -45,17 +45,22 @@ public class AdditionModificationJavaFxView extends BaseJavaFxView
 	}
 
 	/* Only for tests */
-	protected void setCalledForCreation(Boolean calledForCreation) {
+	protected void setCalledForCreation(boolean calledForCreation) {
 		this.calledForCreation = calledForCreation;
 	}
 
 	/* Only for tests */
-	protected void setCalledFromLists(Boolean calledFromLists) {
+	protected void setCalledFromLists(boolean calledFromLists) {
 		this.calledFromLists = calledFromLists;
 	}
 
 	public void setCurrentUser(User currentUser) {
 		this.currentUser = currentUser;
+	}
+	
+	/* Only for tests */
+	public User getCurrentUser() {
+		return currentUser;
 	}
 
 	private void cancel() {
@@ -66,7 +71,7 @@ public class AdditionModificationJavaFxView extends BaseJavaFxView
 		}
 	}
 	
-	public void enableArea(Boolean calledForCreation, Boolean calledFromLists) {
+	public void enableArea(boolean calledForCreation, boolean calledFromLists) {
 		this.calledForCreation = calledForCreation;
 		this.calledFromLists = calledFromLists;
 		textArea.setDisable(false);
@@ -86,8 +91,6 @@ public class AdditionModificationJavaFxView extends BaseJavaFxView
 	
 	@Override
 	public void resetGUI() {
-		this.calledForCreation = null;
-		this.calledFromLists = null;
 		textArea.setDisable(true);
 		textArea.clear();
 		cancelButton.setDisable(true);

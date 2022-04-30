@@ -37,17 +37,15 @@ public class ToDoMySqlRepository implements ToDoRepository {
 		this.detailMySqlRepository = detailMySqlRepository;
 		this.logMySqlRepository = logMySqlRepository;
 	}
-
-	public ToDoMySqlRepository(String host, String port, String dbName, 
-			String user, String pass) {
-		var hibernateSession = createHibernateSession(host, port, dbName, user, pass);
+	
+	public ToDoMySqlRepository(Session hibernateSession) {
 		userMySqlRepository = new UserMySqlRepository(hibernateSession);
 		listMySqlRepository = new ListMySqlRepository(hibernateSession);
 		detailMySqlRepository = new DetailMySqlRepository(hibernateSession);
 		logMySqlRepository = new LogMySqlRepository(hibernateSession);
 	}
 	
-	private static Session createHibernateSession(String host, String port, String dbName, 
+	public static SessionFactory createSessionFactory(String host, String port, String dbName, 
 			String user, String pass) {
 		Map<String, String> properties = new HashMap<>();
 		properties.put(URL, "jdbc:mysql://" + host + ":" + port + "/" + dbName);
@@ -56,8 +54,7 @@ public class ToDoMySqlRepository implements ToDoRepository {
 		
 		var entityManagerFactory = Persistence.createEntityManagerFactory("an-advanced-todo-app", 
 				properties);
-		var sessionFactory = entityManagerFactory.unwrap(SessionFactory.class);
-		return sessionFactory.openSession();
+		return entityManagerFactory.unwrap(SessionFactory.class);
 	}
 
 	@Override
@@ -143,6 +140,11 @@ public class ToDoMySqlRepository implements ToDoRepository {
 	@Override
 	public Detail findDetailById(Long id) {
 		return detailMySqlRepository.findById(id);
+	}
+	
+	@Override
+	public Set<Log> findAllLogsByUserId(Long userId) {
+		return logMySqlRepository.findAllByUserId(userId);
 	}
 	
 }

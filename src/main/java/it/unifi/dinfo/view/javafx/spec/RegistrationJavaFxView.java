@@ -19,18 +19,18 @@ public class RegistrationJavaFxView extends BaseJavaFxView implements Registrati
 	private PasswordField passwordField;
 	private PasswordField confirmPasswordField;
 	
-	protected static final String EMAIL_LABEL_ID = "REGISTRATION_EMAIL_LABEL_ID";
-	protected static final String EMAIL_TEXTFIELD_ID = "REGISTRATION_EMAIL_TEXTFIELD_ID";
-	protected static final String NAME_LABEL_ID = "REGISTRATION_NAME_LABEL_ID";
-	protected static final String NAME_TEXTFIELD_ID = "REGISTRATION_NAME_TEXTFIELD_ID";
-	protected static final String SURNAME_LABEL_ID = "REGISTRATION_SURNAME_LABEL_ID";
-	protected static final String SURNAME_TEXTFIELD_ID = "REGISTRATION_SURNAME_TEXTFIELD_ID";
-	protected static final String PASSWORD_LABEL_ID = "REGISTRATION_PASSWORD_LABEL_ID";
-	protected static final String PASSWORD_FIELD_ID = "REGISTRATION_PASSWORD_FIELD_ID";
-	protected static final String CONFIRM_PASSWORD_LABEL_ID = "REGISTRATION_CONFIRM_PASSWORD_LABEL_ID";
-	protected static final String CONFIRM_PASSWORD_FIELD_ID = "REGISTRATION_CONFIRM_PASSWORD_FIELD_ID";
-	protected static final String REGISTER_BUTTON_ID = "REGISTRATION_BUTTON_ID";
-	protected static final String ERROR_TEXT_ID = "REGISTRATION_ERROR_TEXT_ID";
+	public static final String EMAIL_LABEL_ID = "REGISTRATION_EMAIL_LABEL_ID";
+	public static final String EMAIL_TEXTFIELD_ID = "REGISTRATION_EMAIL_TEXTFIELD_ID";
+	public static final String NAME_LABEL_ID = "REGISTRATION_NAME_LABEL_ID";
+	public static final String NAME_TEXTFIELD_ID = "REGISTRATION_NAME_TEXTFIELD_ID";
+	public static final String SURNAME_LABEL_ID = "REGISTRATION_SURNAME_LABEL_ID";
+	public static final String SURNAME_TEXTFIELD_ID = "REGISTRATION_SURNAME_TEXTFIELD_ID";
+	public static final String PASSWORD_LABEL_ID = "REGISTRATION_PASSWORD_LABEL_ID";
+	public static final String PASSWORD_FIELD_ID = "REGISTRATION_PASSWORD_FIELD_ID";
+	public static final String CONFIRM_PASSWORD_LABEL_ID = "REGISTRATION_CONFIRM_PASSWORD_LABEL_ID";
+	public static final String CONFIRM_PASSWORD_FIELD_ID = "REGISTRATION_CONFIRM_PASSWORD_FIELD_ID";
+	public static final String REGISTER_BUTTON_ID = "REGISTRATION_BUTTON_ID";
+	public static final String ERROR_TEXT_ID = "REGISTRATION_ERROR_TEXT_ID";
 	
 	protected static final String EMAIL_LABEL_TEXT = "Email";
 	protected static final String NAME_LABEL_TEXT = "Name";

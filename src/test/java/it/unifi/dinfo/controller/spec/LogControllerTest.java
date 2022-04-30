@@ -13,6 +13,7 @@ import java.util.Date;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -22,7 +23,10 @@ import it.unifi.dinfo.model.User;
 import it.unifi.dinfo.repository.ToDoRepository;
 import it.unifi.dinfo.view.ToDoView;
 import it.unifi.dinfo.view.spec.LoginView.ERRORS;
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
 
+@RunWith(JUnitParamsRunner.class)
 public class LogControllerTest {
 
 	@Mock
@@ -40,31 +44,26 @@ public class LogControllerTest {
 	}
 	
 	@Test
-	public void shouldLoginWithEmailNullRenderErrorEmptyField() {
-		logController.login(null, "password");
+	@Parameters(
+			method = 
+				"parametersForshouldLoginWithEmailNullOrBlankOrPasswordNullOrEmptyRenderErrorEmptyField")
+	public void shouldLoginWithEmailNullOrBlankOrPasswordNullOrEmptyRenderErrorEmptyField(
+			String email, String password) {
+		logController.login(email, password);
 		verify(toDoView).renderLoginError(ERRORS.EMAIL_PASSWORD_EMPTY.getValue());
 		verify(toDoView, never()).userLoggedIn(any(User.class), any(Log.class), any(Log.class));
 	}
 	
-	@Test
-	public void shouldLoginWithEmailBlankRenderErrorEmptyField() {
-		logController.login(" ", "password");
-		verify(toDoView).renderLoginError(ERRORS.EMAIL_PASSWORD_EMPTY.getValue());
-		verify(toDoView, never()).userLoggedIn(any(User.class), any(Log.class), any(Log.class));
-	}
-	
-	@Test
-	public void shouldLoginWithPasswordNullRenderErrorEmptyField() {
-		logController.login("email@email.com", null);
-		verify(toDoView).renderLoginError(ERRORS.EMAIL_PASSWORD_EMPTY.getValue());
-		verify(toDoView, never()).userLoggedIn(any(User.class), any(Log.class), any(Log.class));
-	}
-	
-	@Test
-	public void shouldLoginWithPasswordEmptyRenderErrorEmptyField() {
-		logController.login("email@email.com", "");
-		verify(toDoView).renderLoginError(ERRORS.EMAIL_PASSWORD_EMPTY.getValue());
-		verify(toDoView, never()).userLoggedIn(any(User.class), any(Log.class), any(Log.class));
+	@SuppressWarnings("unused")
+	private Object[] parametersForshouldLoginWithEmailNullOrBlankOrPasswordNullOrEmptyRenderErrorEmptyField() {
+	    return new Object[] { 
+	        new String[] { null, "password" }, 
+	        new String[] { " ", "password" }, 
+	        new String[] { "email@email.com", null }, 
+	        new String[] { "email@email.com", "" }, 
+	        new String[] { null, null }, 
+	        new String[] { " ", "" } 
+	    };
 	}
 	
 	@Test

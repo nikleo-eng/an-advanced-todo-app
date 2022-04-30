@@ -26,28 +26,28 @@ public class ListsJavaFxView extends BaseJavaFxView implements ListsView {
 	private Text errorText;
 	
 	protected static final String ADD_BUTTON_TEXT = "Add";
-	protected static final String ADD_BUTTON_ID = "LISTS_ADD_BUTTON_ID";
-	protected static final String LISTVIEW_ID = "LISTS_LISTVIEW_ID";
-	protected static final String ERROR_TEXT_ID = "LISTS_ERROR_TEXT_ID";
+	public static final String ADD_BUTTON_ID = "LISTS_ADD_BUTTON_ID";
+	public static final String LISTVIEW_ID = "LISTS_LISTVIEW_ID";
+	public static final String ERROR_TEXT_ID = "LISTS_ERROR_TEXT_ID";
 	
 	private static final String ROW_PATTERN_ID ="LISTS_%s_ROW_ID";
 	private static final String LABEL_PATTERN_ID ="LISTS_%s_LABEL_ID";
 	private static final String MODIFY_BUTTON_PATTERN_ID ="LISTS_%s_MODIFY_BUTTON_ID";
 	private static final String DELETE_BUTTON_PATTERN_ID ="LISTS_%s_DELETE_BUTTON_ID";
 	
-	protected static String getRowId(String name) {
+	public static String getRowId(String name) {
 		return replaceString(ROW_PATTERN_ID, name);
 	}
 	
-	protected static String getRowLabelId(String name) {
+	public static String getRowLabelId(String name) {
 		return replaceString(LABEL_PATTERN_ID, name);
 	}
 	
-	protected static String getRowModifyButtonId(String name) {
+	public static String getRowModifyButtonId(String name) {
 		return replaceString(MODIFY_BUTTON_PATTERN_ID, name);
 	}
 	
-	protected static String getRowDeleteButtonId(String name) {
+	public static String getRowDeleteButtonId(String name) {
 		return replaceString(DELETE_BUTTON_PATTERN_ID, name);
 	}
 	

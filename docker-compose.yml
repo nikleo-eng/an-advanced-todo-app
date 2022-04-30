@@ -17,7 +17,7 @@ services:
     environment:
       - MY_SQL_HOST=mysql
       - MY_SQL_PORT=3306
-      - MY_SQL_DB_NAME=an-advanced-todo-app-db
+      - MY_SQL_DB_NAME=an_advanced_todo_app_db
       - MY_SQL_USER=user
       - MY_SQL_PASS=password
     networks:
@@ -40,7 +40,7 @@ services:
     restart: always
     environment:
       - MYSQL_ROOT_PASSWORD=passwordR
-      - MYSQL_DATABASE=an-advanced-todo-app-db
+      - MYSQL_DATABASE=an_advanced_todo_app_db
       - MYSQL_USER=user
       - MYSQL_PASSWORD=password
     ports:

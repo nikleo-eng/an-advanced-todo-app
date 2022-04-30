@@ -7,34 +7,31 @@ import javax.persistence.Persistence;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.junit.AfterClass;
+import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import it.unifi.dinfo.model.User;
 
 public class UserMySqlRepositoryTest {
 
-	private static Session session;
+	private SessionFactory sessionFactory;
+	private Session session;
 	
 	private UserMySqlRepository userMySqlRepository;
 	
-	@BeforeClass
-	public static void setUpClass() {
-		var entityManagerFactory = Persistence.createEntityManagerFactory("an-advanced-todo-app-test");
-		var sessionFactory = entityManagerFactory.unwrap(SessionFactory.class);
-		session = sessionFactory.openSession();
-	}
-	
-	@AfterClass
-	public static void tearDownClass() {
-		session.close();
-	}
-	
 	@Before
 	public void setUp() {
+		var entityManagerFactory = Persistence.createEntityManagerFactory("an-advanced-todo-app-test");
+		sessionFactory = entityManagerFactory.unwrap(SessionFactory.class);
+		session = sessionFactory.openSession();
 		userMySqlRepository = new UserMySqlRepository(session);
+	}
+	
+	@After
+	public void tearDown() {
+		session.close();
+		sessionFactory.close();
 	}
 	
 	@Test
@@ -52,10 +49,6 @@ public class UserMySqlRepositoryTest {
 		
 		User retrievedUser = userMySqlRepository.findByEmail("email@email.com");
 		assertEquals(user, retrievedUser);
-		
-		session.getTransaction().begin();
-		session.delete(user);
-		session.getTransaction().commit();
 	}
 	
 	@Test
@@ -66,10 +59,6 @@ public class UserMySqlRepositoryTest {
 		User retrievedUser = session.createQuery("select u from User u where u.id = ?0", User.class)
 				.setParameter(0, user.getId()).getSingleResult();
 		assertEquals(user, retrievedUser);
-		
-		session.getTransaction().begin();
-		session.delete(user);
-		session.getTransaction().commit();
 	}
 	
 }

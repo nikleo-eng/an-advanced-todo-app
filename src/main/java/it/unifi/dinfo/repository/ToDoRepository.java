@@ -43,4 +43,7 @@ public interface ToDoRepository {
 	
 	Log findLastLogBeforeIdAndByUserId(Long id, Long userId);
 	
+	/* Only for tests */
+	Set<Log> findAllLogsByUserId(Long userId);
+	
 }
