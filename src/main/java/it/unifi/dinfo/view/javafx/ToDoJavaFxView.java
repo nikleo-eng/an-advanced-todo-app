@@ -39,6 +39,7 @@ public class ToDoJavaFxView extends Application implements ToDoView {
 	public static final String BORDER_STYLE = "-fx-border-color: black; "
 			+ "-fx-border-insets: 4; -fx-border-width: 2;";
 	public static final String BOLD_STYLE = "-fx-font-weight: bold;";
+	public static final String FONT_FAMILY = "-fx-font-family: 'serif'";
 	public static final double BUTTON_WIDTH = 100;
 	public static final double HEADER_FOOTER_HEIGHT = 50;
 	public static final double TEXT_FIELD_WIDTH = 300;
@@ -123,7 +124,10 @@ public class ToDoJavaFxView extends Application implements ToDoView {
 		this.stage = stage;
 		
 		userRoot = new FlowPane();
+		/* https://stackoverflow.com/questions/67893273 */
+		userRoot.setStyle(FONT_FAMILY);
 		appRoot = new FlowPane();
+		appRoot.setStyle(FONT_FAMILY);
 		
 		var scene = new Scene(userRoot, SCENE_WIDTH, SCENE_HEIGHT);
 		

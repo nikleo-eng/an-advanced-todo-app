@@ -59,6 +59,8 @@ public class UserJavaFxViewTest extends ApplicationTest {
 				additionModificationJavaFxView, loginJavaFxView, registrationJavaFxView);
 		
 		FlowPane appRoot = new FlowPane();
+		/* https://stackoverflow.com/questions/67893273 */
+		appRoot.setStyle(FONT_FAMILY);
 		Scene scene = new Scene(appRoot, SCENE_WIDTH, SCENE_HEIGHT);
 		VBox vBox = userJavaFxView.createGUI(scene.getWidth(), scene.getHeight());
 		((HBox) vBox.getChildren().get(0)).setAlignment(Pos.CENTER);

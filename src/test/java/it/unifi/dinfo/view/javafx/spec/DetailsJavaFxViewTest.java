@@ -62,6 +62,8 @@ public class DetailsJavaFxViewTest extends ApplicationTest {
 		detailsJavaFxView.setAdditionModificationJavaFxView(additionModificationJavaFxView);
 		
 		FlowPane flowPane = new FlowPane();
+		/* https://stackoverflow.com/questions/67893273 */
+		flowPane.setStyle(FONT_FAMILY);
 		Scene scene = new Scene(flowPane, SCENE_WIDTH, SCENE_HEIGHT);
 		VBox vBox = detailsJavaFxView.createGUI(scene.getWidth(), scene.getHeight());
 		flowPane.getChildren().add(vBox);
