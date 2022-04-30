@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/windows/servercore:ltsc2019-amd64
+FROM mcr.microsoft.com/windows/servercore:ltsc2019
 
 ENV MYSQL_ROOT_PASSWORD passwordR
 ENV MYSQL_DATABASE an_advanced_todo_app_db
