@@ -2,6 +2,7 @@ package it.unifi.dinfo.view.javafx;
 
 import static it.unifi.dinfo.view.javafx.ToDoJavaFxView.STAGE_TITLE;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.testfx.util.WaitForAsyncUtils.checkAllExceptions;
 import static org.testfx.util.WaitForAsyncUtils.waitFor;
 
 import java.text.SimpleDateFormat;
@@ -14,8 +15,10 @@ import java.util.concurrent.TimeoutException;
 import javax.persistence.Persistence;
 
 import org.hibernate.SessionFactory;
+import org.junit.Rule;
 import org.junit.Test;
 import org.testfx.framework.junit.ApplicationTest;
+import org.testfx.framework.junit.TestFXRule;
 
 import it.unifi.dinfo.controller.ToDoController;
 import it.unifi.dinfo.model.Detail;
@@ -30,11 +33,18 @@ import it.unifi.dinfo.view.javafx.spec.ListsJavaFxView;
 import it.unifi.dinfo.view.javafx.spec.LoginJavaFxView;
 import it.unifi.dinfo.view.javafx.spec.RegistrationJavaFxView;
 import it.unifi.dinfo.view.javafx.spec.UserJavaFxView;
+import it.unifi.dinfo.view.spec.DetailsView;
 import it.unifi.dinfo.view.spec.RegistrationView;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.TextArea;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class ToDoJavaFxViewIT extends ApplicationTest {
+	
+	/* https://github.com/TestFX/TestFX/issues/367#issuecomment-347077166 */
+	@Rule
+    public TestFXRule testFXRule = new TestFXRule(3);
 
 	private ToDoRepository toDoRepository;
 	private ToDoController toDoController;
@@ -119,14 +129,19 @@ public class ToDoJavaFxViewIT extends ApplicationTest {
 	}
 	
 	@Test
-	public void shouldAddListFromControllerAddCorrectlyAListInDatabaseAndListViewOfListsArea() throws TimeoutException {
+	public void shouldAddListFromControllerAddCorrectlyAListInDatabaseAndListViewOfListsArea() 
+			throws TimeoutException {
 		User user = new User("Mario", "Rossi", "email@email.com", "password");
 		Calendar calendar = Calendar.getInstance();
 		calendar.add(Calendar.HOUR, -1);
 		Log log = new Log(calendar.getTime(), user);
 		user = toDoRepository.createUser(user);
 		log = toDoRepository.createLog(log);
-		toDoController.login(user.getEmail(), user.getPassword());
+		clickOn("#" + LoginJavaFxView.EMAIL_TEXTFIELD_ID);
+		write(user.getEmail());
+		clickOn("#" + LoginJavaFxView.PASSWORD_FIELD_ID);
+		write(user.getPassword());
+		clickOn("#" + LoginJavaFxView.LOGIN_BUTTON_ID);
 		assertThat(toDoRepository.findAllListsByUserId(user.getId())).isNullOrEmpty();
 		assertThat(lookup("#" + ListsJavaFxView.LISTVIEW_ID).queryListView().getItems()).isEmpty();
 		toDoController.addList("TEST", user);
@@ -153,7 +168,11 @@ public class ToDoJavaFxViewIT extends ApplicationTest {
 		user = toDoRepository.createUser(user);
 		log = toDoRepository.createLog(log);
 		list = toDoRepository.createList(list);
-		toDoController.login(user.getEmail(), user.getPassword());
+		clickOn("#" + LoginJavaFxView.EMAIL_TEXTFIELD_ID);
+		write(user.getEmail());
+		clickOn("#" + LoginJavaFxView.PASSWORD_FIELD_ID);
+		write(user.getPassword());
+		clickOn("#" + LoginJavaFxView.LOGIN_BUTTON_ID);
 		waitFor(10, TimeUnit.SECONDS, 
 				() -> lookup("#" + ListsJavaFxView.getRowLabelId("TEST")).tryQuery().isPresent());
 		clickOn("#" + ListsJavaFxView.getRowLabelId("TEST"));
@@ -169,6 +188,149 @@ public class ToDoJavaFxViewIT extends ApplicationTest {
 		assertThat(detail.getTodo()).isEqualTo("TEST-D");
 		assertThat(lookup("#" + DetailsJavaFxView.LISTVIEW_ID).queryListView()
 				.getItems()).hasSize(1).containsExactly(detail);
+	}
+	
+	@Test
+	public void shouldLogoutFromControllerEndLogInfoOfLoggedUserAndBringViewToUserRoot() {
+		clickOn("#" + RegistrationJavaFxView.NAME_TEXTFIELD_ID);
+		write("Mario");
+		clickOn("#" + RegistrationJavaFxView.SURNAME_TEXTFIELD_ID);
+		write("Rossi");
+		clickOn("#" + RegistrationJavaFxView.EMAIL_TEXTFIELD_ID);
+		write("email@email.com");
+		clickOn("#" + RegistrationJavaFxView.PASSWORD_FIELD_ID);
+		write("password");
+		clickOn("#" + RegistrationJavaFxView.CONFIRM_PASSWORD_FIELD_ID);
+		write("password");
+		clickOn("#" + RegistrationJavaFxView.REGISTER_BUTTON_ID);
+		Log log = toDoJavaFxView.getUserJavaFxView().getCurrentLog();
+		toDoController.logout(log, false);
+		assertThat(window(STAGE_TITLE).getScene().getRoot()).isEqualTo(toDoJavaFxView.getUserRoot());
+		Log modifiedLog = toDoRepository.findAllLogsByUserId(log.getUser().getId())
+				.stream().filter(innerLog -> innerLog.equals(log)).findAny().orElse(null);
+		assertThat(modifiedLog).isNotNull();
+		assertThat(modifiedLog.getOut()).isNotNull();
+	}
+	
+	@Test
+	public void shouldWrongModifyNameListFromControllerWithNoNameDoNotDisableAdditionModificationAreaAndShowErrorMessage() 
+			throws TimeoutException {
+		User user = new User("Mario", "Rossi", "email@email.com", "password");
+		Calendar calendar = Calendar.getInstance();
+		calendar.add(Calendar.HOUR, -1);
+		Log log = new Log(calendar.getTime(), user);
+		List list = new List("TEST", user);
+		user = toDoRepository.createUser(user);
+		log = toDoRepository.createLog(log);
+		list = toDoRepository.createList(list);
+		clickOn("#" + LoginJavaFxView.EMAIL_TEXTFIELD_ID);
+		write(user.getEmail());
+		clickOn("#" + LoginJavaFxView.PASSWORD_FIELD_ID);
+		write(user.getPassword());
+		clickOn("#" + LoginJavaFxView.LOGIN_BUTTON_ID);
+		waitFor(10, TimeUnit.SECONDS, 
+				() -> lookup("#" + ListsJavaFxView.getRowLabelId("TEST")).tryQuery().isPresent());
+		clickOn("#" + ListsJavaFxView.getRowLabelId("TEST"));
+		waitFor(10, TimeUnit.SECONDS, 
+				() -> lookup("#" + ListsJavaFxView.getRowModifyButtonId("TEST")).tryQuery().isPresent());
+		clickOn("#" + ListsJavaFxView.getRowModifyButtonId("TEST"));
+		Text errorText = lookup("#" + AdditionModificationJavaFxView.ERROR_TEXT_ID).queryText();
+		assertThat(errorText.isVisible()).isFalse();
+		assertThat(errorText.getText()).isEmpty();
+		toDoController.modifyNameList("", list);
+		assertThat(lookup("#" + AdditionModificationJavaFxView.TEXTAREA_ID).queryAs(TextArea.class)
+				.isDisabled()).isFalse();
+		assertThat(lookup("#" + AdditionModificationJavaFxView.CANCEL_BUTTON_ID).queryButton()
+				.isDisabled()).isFalse();
+		assertThat(lookup("#" + AdditionModificationJavaFxView.SAVE_BUTTON_ID).queryButton()
+				.isDisabled()).isFalse();
+		assertThat(errorText.isVisible()).isTrue();
+		assertThat(errorText.getText()).isEqualTo(AdditionModificationJavaFxView.ERRORS.FIELD_EMPTY.getValue());
+	}
+	
+	@Test
+	public void shouldWrongModifyTodoDetailFromControllerWithTodoAlreadyCreatedDoNotDisableAdditionModificationAreaAndShowErrorMessage() 
+			throws TimeoutException {
+		User user = new User("Mario", "Rossi", "email@email.com", "password");
+		Calendar calendar = Calendar.getInstance();
+		calendar.add(Calendar.HOUR, -1);
+		Log log = new Log(calendar.getTime(), user);
+		List list = new List("TEST", user);
+		Detail detail1 = new Detail("TEST-D", list);
+		Detail detail2 = new Detail("TEST-D_OTHER", list);
+		user = toDoRepository.createUser(user);
+		log = toDoRepository.createLog(log);
+		list = toDoRepository.createList(list);
+		detail1 = toDoRepository.createDetail(detail1);
+		detail2 = toDoRepository.createDetail(detail2);
+		clickOn("#" + LoginJavaFxView.EMAIL_TEXTFIELD_ID);
+		write(user.getEmail());
+		clickOn("#" + LoginJavaFxView.PASSWORD_FIELD_ID);
+		write(user.getPassword());
+		clickOn("#" + LoginJavaFxView.LOGIN_BUTTON_ID);
+		waitFor(10, TimeUnit.SECONDS, 
+				() -> lookup("#" + ListsJavaFxView.getRowLabelId("TEST")).tryQuery().isPresent());
+		clickOn("#" + ListsJavaFxView.getRowLabelId("TEST"));
+		waitFor(10, TimeUnit.SECONDS, 
+				() -> lookup("#" + DetailsJavaFxView.getRowLabelId("TEST-D")).tryQuery().isPresent());
+		clickOn("#" + DetailsJavaFxView.getRowLabelId("TEST-D"));
+		waitFor(10, TimeUnit.SECONDS, 
+				() -> lookup("#" + DetailsJavaFxView.getRowModifyButtonId("TEST-D")).tryQuery().isPresent());
+		clickOn("#" + DetailsJavaFxView.getRowModifyButtonId("TEST-D"));
+		Text errorText = lookup("#" + AdditionModificationJavaFxView.ERROR_TEXT_ID).queryText();
+		assertThat(errorText.isVisible()).isFalse();
+		assertThat(errorText.getText()).isEmpty();
+		toDoController.modifyTodoDetail("TEST-D_OTHER", detail1);
+		assertThat(lookup("#" + AdditionModificationJavaFxView.TEXTAREA_ID).queryAs(TextArea.class)
+				.isDisabled()).isFalse();
+		assertThat(lookup("#" + AdditionModificationJavaFxView.CANCEL_BUTTON_ID).queryButton()
+				.isDisabled()).isFalse();
+		assertThat(lookup("#" + AdditionModificationJavaFxView.SAVE_BUTTON_ID).queryButton()
+				.isDisabled()).isFalse();
+		assertThat(errorText.isVisible()).isTrue();
+		assertThat(errorText.getText()).isEqualTo(AdditionModificationJavaFxView
+				.ERRORS.DETAIL_ALREADY_FOUND.getValue());
+	}
+	
+	@Test
+	public void shouldWrongModifyDoneDetailFromControllerWithDetailAlreadyDeletedDoNotModifySelectedDetailAndShowErrorMessageInDetailsArea() 
+			throws TimeoutException {
+		User user = new User("Mario", "Rossi", "email@email.com", "password");
+		Calendar calendar = Calendar.getInstance();
+		calendar.add(Calendar.HOUR, -1);
+		Log log = new Log(calendar.getTime(), user);
+		List list = new List("TEST", user);
+		Detail detail = new Detail("TEST-D", list);
+		user = toDoRepository.createUser(user);
+		log = toDoRepository.createLog(log);
+		list = toDoRepository.createList(list);
+		detail = toDoRepository.createDetail(detail);
+		clickOn("#" + LoginJavaFxView.EMAIL_TEXTFIELD_ID);
+		write(user.getEmail());
+		clickOn("#" + LoginJavaFxView.PASSWORD_FIELD_ID);
+		write(user.getPassword());
+		clickOn("#" + LoginJavaFxView.LOGIN_BUTTON_ID);
+		waitFor(10, TimeUnit.SECONDS, 
+				() -> lookup("#" + ListsJavaFxView.getRowLabelId("TEST")).tryQuery().isPresent());
+		clickOn("#" + ListsJavaFxView.getRowLabelId("TEST"));
+		waitFor(10, TimeUnit.SECONDS, 
+				() -> lookup("#" + DetailsJavaFxView.getRowLabelId("TEST-D")).tryQuery().isPresent());
+		clickOn("#" + DetailsJavaFxView.getRowLabelId("TEST-D"));
+		Text errorText = lookup("#" + DetailsJavaFxView.ERROR_TEXT_ID).queryText();
+		assertThat(errorText.isVisible()).isFalse();
+		assertThat(errorText.getText()).isEmpty();
+		toDoRepository.deleteDetail(detail);
+		waitFor(10, TimeUnit.SECONDS, 
+				() -> lookup("#" + DetailsJavaFxView.getRowCheckBoxId("TEST-D")).tryQuery().isPresent());
+		assertThat(lookup("#" + DetailsJavaFxView.getRowCheckBoxId("TEST-D"))
+				.queryAs(CheckBox.class).isSelected()).isFalse();
+		/* https://github.com/TestFX/TestFX/issues/713 */
+		checkAllExceptions = false;
+		toDoController.modifyDoneDetail(Boolean.TRUE, detail);
+		assertThat(lookup("#" + DetailsJavaFxView.getRowCheckBoxId("TEST-D"))
+				.queryAs(CheckBox.class).isSelected()).isFalse();
+		assertThat(errorText.isVisible()).isTrue();
+		assertThat(errorText.getText()).isEqualTo(DetailsView.ERRORS.DETAIL_NO_LONGER_EXISTS.getValue());
 	}
 	
 }

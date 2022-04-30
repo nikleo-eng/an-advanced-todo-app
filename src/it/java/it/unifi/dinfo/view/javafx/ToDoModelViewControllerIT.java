@@ -14,8 +14,10 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import org.junit.Rule;
 import org.junit.Test;
 import org.testfx.framework.junit.ApplicationTest;
+import org.testfx.framework.junit.TestFXRule;
 
 import com.sun.javafx.application.ParametersImpl;
 
@@ -56,6 +58,10 @@ import javafx.stage.Stage;
  * </pre>
  */
 public class ToDoModelViewControllerIT extends ApplicationTest {
+	
+	/* https://github.com/TestFX/TestFX/issues/367#issuecomment-347077166 */
+	@Rule
+    public TestFXRule testFXRule = new TestFXRule(3);
 	
 	private ToDoRepository toDoRepository;
 	private ToDoJavaFxView toDoJavaFxView;
