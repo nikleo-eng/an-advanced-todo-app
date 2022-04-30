@@ -47,7 +47,7 @@ public class RegistrationJavaFxViewTest extends ApplicationTest {
 	}
 	
 	@Test
-	public void shouldViewContainNameSurnameEmailPasswordAndConfirmPasswordLabelsAndInputsAndRegisterButton() {
+	public void shouldViewContainNameSurnameEmailPasswordAndConfirmPasswordLabelsAndInputs() {
 		Node nameLabelNode = lookup("#" + NAME_LABEL_ID).tryQuery().orElse(null);
 		assertThat(nameLabelNode).isNotNull().isOfAnyClassIn(Label.class);
 		Label nameLabel = (Label) nameLabelNode;
@@ -102,7 +102,10 @@ public class RegistrationJavaFxViewTest extends ApplicationTest {
 		assertThat(confirmPasswordFieldNode).isNotNull().isOfAnyClassIn(PasswordField.class);
 		PasswordField confirmPasswordField = (PasswordField) confirmPasswordFieldNode;
 		assertThat(confirmPasswordField.isVisible()).isTrue();
-		
+	}
+	
+	@Test
+	public void shouldViewContainRegisterButton() {
 		Node registerButtonNode = lookup("#" + REGISTER_BUTTON_ID).tryQuery().orElse(null);
 		assertThat(registerButtonNode).isNotNull().isOfAnyClassIn(Button.class);
 		Button registerButton = (Button) registerButtonNode;
