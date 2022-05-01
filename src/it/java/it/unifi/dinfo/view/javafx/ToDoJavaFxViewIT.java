@@ -43,7 +43,7 @@ public class ToDoJavaFxViewIT extends ApplicationTest {
 	
 	/* https://github.com/TestFX/TestFX/issues/367#issuecomment-347077166 */
 	@Rule
-    public TestFXRule testFXRule = new TestFXRule(3);
+	public TestFXRule testFXRule = new TestFXRule(3);
 
 	private ToDoRepository toDoRepository;
 	private ToDoController toDoController;

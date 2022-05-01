@@ -7,10 +7,12 @@ import static org.mockito.Mockito.ignoreStubs;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
+import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testfx.framework.junit.ApplicationTest;
+import org.testfx.framework.junit.TestFXRule;
 
 import it.unifi.dinfo.controller.ToDoController;
 import it.unifi.dinfo.view.spec.RegistrationView.ERRORS;
@@ -26,6 +28,10 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class RegistrationJavaFxViewTest extends ApplicationTest {
+	
+	/* https://github.com/TestFX/TestFX/issues/367#issuecomment-347077166 */
+	@Rule
+	public TestFXRule testFXRule = new TestFXRule(3);
 
 	@Mock
 	private ToDoController toDoController;

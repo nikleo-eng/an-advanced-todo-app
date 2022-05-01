@@ -42,7 +42,7 @@ public class DetailsJavaFxViewTest extends ApplicationTest {
 	
 	/* https://github.com/TestFX/TestFX/issues/367#issuecomment-347077166 */
 	@Rule
-    public TestFXRule testFXRule = new TestFXRule(3);
+	public TestFXRule testFXRule = new TestFXRule(3);
 
 	@Mock
 	private ToDoController toDoController;

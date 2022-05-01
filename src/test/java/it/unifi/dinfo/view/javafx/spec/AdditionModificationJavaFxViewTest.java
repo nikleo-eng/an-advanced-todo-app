@@ -9,10 +9,12 @@ import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
+import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testfx.framework.junit.ApplicationTest;
+import org.testfx.framework.junit.TestFXRule;
 
 import it.unifi.dinfo.controller.ToDoController;
 import it.unifi.dinfo.model.Detail;
@@ -28,6 +30,10 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class AdditionModificationJavaFxViewTest extends ApplicationTest {
+	
+	/* https://github.com/TestFX/TestFX/issues/367#issuecomment-347077166 */
+	@Rule
+	public TestFXRule testFXRule = new TestFXRule(3);
 
 	@Mock
 	private ToDoController toDoController;

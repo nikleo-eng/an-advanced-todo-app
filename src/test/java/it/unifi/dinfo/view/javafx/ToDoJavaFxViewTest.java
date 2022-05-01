@@ -14,10 +14,12 @@ import java.util.Set;
 import static org.assertj.core.api.Assertions.assertThat;
 import static it.unifi.dinfo.view.javafx.ToDoJavaFxView.*;
 
+import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testfx.framework.junit.ApplicationTest;
+import org.testfx.framework.junit.TestFXRule;
 
 import it.unifi.dinfo.model.Detail;
 import it.unifi.dinfo.model.List;
@@ -40,6 +42,10 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class ToDoJavaFxViewTest extends ApplicationTest {
+	
+	/* https://github.com/TestFX/TestFX/issues/367#issuecomment-347077166 */
+	@Rule
+	public TestFXRule testFXRule = new TestFXRule(3);
 	
 	@Mock
 	private LoginJavaFxView loginJavaFxView;
