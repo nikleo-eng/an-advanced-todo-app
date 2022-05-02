@@ -1,21 +1,16 @@
 package it.unifi.dinfo.view.javafx;
 
-import java.util.Map;
 import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 
-import it.unifi.dinfo.app.main.ToDoAppMain;
-import it.unifi.dinfo.controller.ToDoController;
+import com.google.inject.Inject;
+
 import it.unifi.dinfo.model.Detail;
 import it.unifi.dinfo.model.List;
 import it.unifi.dinfo.model.Log;
 import it.unifi.dinfo.model.User;
-import it.unifi.dinfo.repository.ToDoRepository;
-import it.unifi.dinfo.repository.mysql.ToDoMySqlRepository;
 import it.unifi.dinfo.view.ToDoView;
 import it.unifi.dinfo.view.javafx.spec.AdditionModificationJavaFxView;
 import it.unifi.dinfo.view.javafx.spec.DetailsJavaFxView;
@@ -56,66 +51,30 @@ public class ToDoJavaFxView extends Application implements ToDoView {
 			+ "7 L 5.8925781 20.263672 C 6.0245781 21.253672 6.877 22 7.875 22 L 16.123047 22 C "
 			+ "17.121047 22 17.974422 21.254859 18.107422 20.255859 L 19.634766 7 L 4.3652344 7 z";
 	
-	private ToDoRepository toDoRepository;
-	private ToDoController toDoController;
+	@Inject
 	private LoginJavaFxView loginJavaFxView;
-	private RegistrationJavaFxView registrationJavaFxView;
-	private ListsJavaFxView listsJavaFxView;
-	private DetailsJavaFxView detailsJavaFxView;
-	private AdditionModificationJavaFxView additionModificationJavaFxView;
-	private UserJavaFxView userJavaFxView;
 	
-	private SessionFactory hibernateSessionFactory;
-	private Session hibernateSession;
+	@Inject
+	private RegistrationJavaFxView registrationJavaFxView;
+	
+	@Inject
+	private ListsJavaFxView listsJavaFxView;
+	
+	@Inject
+	private DetailsJavaFxView detailsJavaFxView;
+	
+	@Inject
+	private AdditionModificationJavaFxView additionModificationJavaFxView;
+	
+	@Inject
+	private UserJavaFxView userJavaFxView;
 	
 	private Stage stage;
 	private FlowPane appRoot;
 	private FlowPane userRoot;
 	
-	public ToDoJavaFxView() {
-		hibernateSessionFactory = null;
-		hibernateSession = null;
-		toDoRepository = null;
-		toDoController = null;
-		loginJavaFxView = null;
-		registrationJavaFxView = null;
-		listsJavaFxView = null;
-		detailsJavaFxView = null;
-		additionModificationJavaFxView = null;
-		userJavaFxView = null;
-		stage = null;
-		appRoot = null;
-		userRoot = null;
-	}
-	
 	@Override
 	public void init() throws Exception {
-		Map<String, String> mainArgs = getParameters().getNamed();
-		String host = mainArgs.get(ToDoAppMain.MY_SQL_HOST_OPNAME);
-		String port = mainArgs.get(ToDoAppMain.MY_SQL_PORT_OPNAME);
-		String dbName = mainArgs.get(ToDoAppMain.MY_SQL_DB_NAME_OPNAME);
-		String user = mainArgs.get(ToDoAppMain.MY_SQL_USER_OPNAME);
-		String pass = mainArgs.get(ToDoAppMain.MY_SQL_PASS_OPNAME);
-		
-		hibernateSessionFactory = ToDoMySqlRepository.createSessionFactory(host, port, dbName, user, pass);
-		hibernateSession = hibernateSessionFactory.openSession();
-		toDoRepository = new ToDoMySqlRepository(hibernateSession);
-		toDoController = new ToDoController(this, toDoRepository);
-		
-		loginJavaFxView = new LoginJavaFxView(toDoController);
-		registrationJavaFxView = new RegistrationJavaFxView(toDoController);
-		
-		listsJavaFxView = new ListsJavaFxView(toDoController);
-		detailsJavaFxView = new DetailsJavaFxView(listsJavaFxView, toDoController);
-		additionModificationJavaFxView = new AdditionModificationJavaFxView(listsJavaFxView, 
-				detailsJavaFxView, toDoController);
-		listsJavaFxView.setAdditionModificationJavaFxView(additionModificationJavaFxView);
-		listsJavaFxView.setDetailsJavaFxView(detailsJavaFxView);
-		detailsJavaFxView.setAdditionModificationJavaFxView(additionModificationJavaFxView);
-		
-		userJavaFxView = new UserJavaFxView(toDoController, listsJavaFxView, detailsJavaFxView, 
-				additionModificationJavaFxView, loginJavaFxView, registrationJavaFxView);
-		
 		LOGGER.info("Application Initialized");
 	}
 	
@@ -164,14 +123,6 @@ public class ToDoJavaFxView extends Application implements ToDoView {
 	public void stop() throws Exception {
 		if (userJavaFxView.getCurrentUser() != null) {
 			userJavaFxView.logout(true);
-		}
-		
-		if (null != hibernateSession) {
-			hibernateSession.close();
-		}
-		
-		if (null != hibernateSessionFactory) {
-			hibernateSessionFactory.close();
 		}
 		
 		LOGGER.info("Application Stopped");
@@ -258,11 +209,6 @@ public class ToDoJavaFxView extends Application implements ToDoView {
 	}
 
 	/* Only for tests */
-	protected void setToDoController(ToDoController toDoController) {
-		this.toDoController = toDoController;
-	}
-
-	/* Only for tests */
 	protected void setLoginJavaFxView(LoginJavaFxView loginJavaFxView) {
 		this.loginJavaFxView = loginJavaFxView;
 	}
@@ -301,26 +247,6 @@ public class ToDoJavaFxView extends Application implements ToDoView {
 	protected FlowPane getUserRoot() {
 		return userRoot;
 	}
-	
-	/* Only for tests */
-	protected LoginJavaFxView getLoginJavaFxView() {
-		return loginJavaFxView;
-	}
-
-	/* Only for tests */
-	protected RegistrationJavaFxView getRegistrationJavaFxView() {
-		return registrationJavaFxView;
-	}
-
-	/* Only for tests */
-	protected ListsJavaFxView getListsJavaFxView() {
-		return listsJavaFxView;
-	}
-
-	/* Only for tests */
-	protected DetailsJavaFxView getDetailsJavaFxView() {
-		return detailsJavaFxView;
-	}
 
 	/* Only for tests */
 	protected AdditionModificationJavaFxView getAdditionModificationJavaFxView() {
@@ -330,26 +256,6 @@ public class ToDoJavaFxView extends Application implements ToDoView {
 	/* Only for tests */
 	protected UserJavaFxView getUserJavaFxView() {
 		return userJavaFxView;
-	}
-
-	/* Only for tests */
-	protected void setHibernateSessionFactory(SessionFactory hibernateSessionFactory) {
-		this.hibernateSessionFactory = hibernateSessionFactory;
-	}
-
-	/* Only for tests */
-	protected void setHibernateSession(Session hibernateSession) {
-		this.hibernateSession = hibernateSession;
-	}
-
-	/* Only for tests */
-	protected ToDoRepository getToDoRepository() {
-		return toDoRepository;
-	}
-
-	/* Only for tests */
-	protected void setToDoRepository(ToDoRepository toDoRepository) {
-		this.toDoRepository = toDoRepository;
 	}
 	
 }

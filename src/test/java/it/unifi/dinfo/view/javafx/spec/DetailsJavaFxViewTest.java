@@ -58,7 +58,8 @@ public class DetailsJavaFxViewTest extends ApplicationTest {
 	@Override
 	public void start(Stage stage) throws Exception {
 		MockitoAnnotations.openMocks(this);
-		detailsJavaFxView = new DetailsJavaFxView(listsJavaFxView, toDoController);
+		detailsJavaFxView = new DetailsJavaFxView(toDoController);
+		detailsJavaFxView.setListsJavaFxView(listsJavaFxView);
 		detailsJavaFxView.setAdditionModificationJavaFxView(additionModificationJavaFxView);
 		
 		FlowPane flowPane = new FlowPane();

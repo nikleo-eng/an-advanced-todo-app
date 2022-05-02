@@ -9,8 +9,11 @@ import it.unifi.dinfo.view.ToDoView;
 
 import static it.unifi.dinfo.view.spec.AdditionModificationView.*;
 
+import com.google.inject.Inject;
+
 public class AdditionModificationController extends BaseController {
 
+	@Inject
 	public AdditionModificationController(ToDoView toDoView, ToDoRepository toDoRepository) {
 		super(toDoView, toDoRepository);
 	}

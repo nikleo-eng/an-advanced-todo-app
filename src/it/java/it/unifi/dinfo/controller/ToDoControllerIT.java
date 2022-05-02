@@ -18,6 +18,13 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.google.inject.util.Modules;
+
+import it.unifi.dinfo.guice.controller.ToDoControllerModule;
+import it.unifi.dinfo.guice.mysql.ToDoMySqlModule;
 import it.unifi.dinfo.model.Detail;
 import it.unifi.dinfo.model.List;
 import it.unifi.dinfo.model.Log;
@@ -62,19 +69,31 @@ public class ToDoControllerIT {
 		MockitoAnnotations.openMocks(this);
 		Properties properties = new Properties();
 		properties.load(getClass().getClassLoader().getResourceAsStream("mysql.properties"));
-		hibernateSessionFactory = ToDoMySqlRepository.createSessionFactory(properties.getProperty("MY_SQL_HOST"), 
-				System.getProperty("mysql.port", properties.getProperty("MY_SQL_PORT")), 
-				properties.getProperty("MY_SQL_DB_NAME"), properties.getProperty("MY_SQL_USER"), 
-				properties.getProperty("MY_SQL_PASS"));
-		hibernateSession = hibernateSessionFactory.openSession();
-		toDoMySqlRepository = new ToDoMySqlRepository(hibernateSession);
-		toDoController = new ToDoController(toDoView, toDoMySqlRepository);
+		Injector injector = Guice.createInjector(
+				Modules.combine(
+						new ToDoMySqlModule(
+								properties.getProperty("MY_SQL_HOST"), 
+								Integer.valueOf(System.getProperty("mysql.port", 
+										properties.getProperty("MY_SQL_PORT"))), 
+								properties.getProperty("MY_SQL_DB_NAME"), 
+								properties.getProperty("MY_SQL_USER"), 
+								properties.getProperty("MY_SQL_PASS")), 
+						new ToDoControllerModule(), 
+						new AbstractModule() {
+							@Override
+						    protected void configure() {
+								bind(ToDoView.class).toInstance(toDoView);
+							}
+						}));
+		toDoMySqlRepository = injector.getInstance(ToDoMySqlRepository.class);
+		toDoController = injector.getInstance(ToDoController.class);
+		hibernateSessionFactory = injector.getInstance(SessionFactory.class);
+		hibernateSession = injector.getInstance(Session.class);
 	}
 	
 	@After
 	public void tearDown() {
-		hibernateSession.close();
-		hibernateSessionFactory.close();
+		ToDoMySqlModule.closeSessionFactory(hibernateSessionFactory, hibernateSession);
 	}
 	
 	@Test

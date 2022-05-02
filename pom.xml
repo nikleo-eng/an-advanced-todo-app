@@ -16,6 +16,7 @@
 		
 		<sonar.coverage.exclusions>
 			**/it/unifi/dinfo/app/main/*.*,
+			**/it/unifi/dinfo/guice/**/*.*,
 			**/it/unifi/dinfo/model/*.*
 		</sonar.coverage.exclusions>
 		<sonar.cpd.exclusions>
@@ -43,6 +44,7 @@
 	    </sonar.issue.ignore.multicriteria.e02.resourceKey>
 		
 		<javafx.version>11.0.2</javafx.version>
+		<guice.version>5.1.0</guice.version>
 	</properties>
 
 	<dependencyManagement>
@@ -58,6 +60,16 @@
 	</dependencyManagement>
 
 	<dependencies>
+		<dependency>
+			<groupId>com.google.inject</groupId>
+			<artifactId>guice</artifactId>
+			<version>${guice.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.inject.extensions</groupId>
+			<artifactId>guice-assistedinject</artifactId>
+			<version>${guice.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-controls</artifactId>
@@ -395,6 +407,7 @@
 					<configuration>
 						<excludes>
 							<exclude>it/unifi/dinfo/app/main/*.*</exclude>
+							<exclude>it/unifi/dinfo/guice/**/*.*</exclude>
 							<exclude>it/unifi/dinfo/model/*.*</exclude>
 						</excludes>
 					</configuration>

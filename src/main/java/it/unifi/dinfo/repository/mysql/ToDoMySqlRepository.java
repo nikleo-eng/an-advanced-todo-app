@@ -1,15 +1,8 @@
 package it.unifi.dinfo.repository.mysql;
 
-import static org.hibernate.cfg.AvailableSettings.*;
-
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 
-import javax.persistence.Persistence;
-
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
+import com.google.inject.Inject;
 
 import it.unifi.dinfo.model.Detail;
 import it.unifi.dinfo.model.List;
@@ -28,33 +21,14 @@ public class ToDoMySqlRepository implements ToDoRepository {
 	private DetailMySqlRepository detailMySqlRepository;
 	private LogMySqlRepository logMySqlRepository;
 	
-	/* Only for tests */
-	protected ToDoMySqlRepository(UserMySqlRepository userMySqlRepository, 
+	@Inject
+	public ToDoMySqlRepository(UserMySqlRepository userMySqlRepository, 
 			ListMySqlRepository listMySqlRepository, DetailMySqlRepository detailMySqlRepository, 
 			LogMySqlRepository logMySqlRepository) {
 		this.userMySqlRepository = userMySqlRepository;
 		this.listMySqlRepository = listMySqlRepository;
 		this.detailMySqlRepository = detailMySqlRepository;
 		this.logMySqlRepository = logMySqlRepository;
-	}
-	
-	public ToDoMySqlRepository(Session hibernateSession) {
-		userMySqlRepository = new UserMySqlRepository(hibernateSession);
-		listMySqlRepository = new ListMySqlRepository(hibernateSession);
-		detailMySqlRepository = new DetailMySqlRepository(hibernateSession);
-		logMySqlRepository = new LogMySqlRepository(hibernateSession);
-	}
-	
-	public static SessionFactory createSessionFactory(String host, String port, String dbName, 
-			String user, String pass) {
-		Map<String, String> properties = new HashMap<>();
-		properties.put(URL, "jdbc:mysql://" + host + ":" + port + "/" + dbName);
-		properties.put(USER, user);
-		properties.put(PASS, pass);
-		
-		var entityManagerFactory = Persistence.createEntityManagerFactory("an-advanced-todo-app", 
-				properties);
-		return entityManagerFactory.unwrap(SessionFactory.class);
 	}
 
 	@Override

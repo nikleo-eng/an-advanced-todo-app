@@ -4,12 +4,15 @@ import javax.persistence.NoResultException;
 
 import org.hibernate.Session;
 
+import com.google.inject.Inject;
+
 import it.unifi.dinfo.model.User;
 import it.unifi.dinfo.repository.mysql.spec.base.BaseMySqlRepository;
 import it.unifi.dinfo.repository.spec.UserRepository;
 
 public class UserMySqlRepository extends BaseMySqlRepository implements UserRepository {
 
+	@Inject
 	public UserMySqlRepository(Session hibernateSession) {
 		super(hibernateSession);
 	}

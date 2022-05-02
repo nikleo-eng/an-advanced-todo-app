@@ -2,6 +2,8 @@ package it.unifi.dinfo.view.javafx.spec;
 
 import static it.unifi.dinfo.view.javafx.spec.util.LoginRegistrationGUI.*;
 
+import com.google.inject.Inject;
+
 import it.unifi.dinfo.controller.ToDoController;
 import it.unifi.dinfo.view.javafx.spec.base.BaseJavaFxView;
 import it.unifi.dinfo.view.spec.LoginView;
@@ -27,11 +29,9 @@ public class LoginJavaFxView extends BaseJavaFxView implements LoginView {
 	protected static final String PASSWORD_LABEL_TEXT = "Password";
 	protected static final String LOGIN_BUTTON_TEXT = "Login";
 
+	@Inject
 	public LoginJavaFxView(ToDoController toDoController) {
 		super(toDoController);
-		errorText = null;
-		emailTextField = null;
-		passwordField = null;
 	}
 
 	@Override

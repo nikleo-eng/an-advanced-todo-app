@@ -10,8 +10,11 @@ import static it.unifi.dinfo.view.spec.RegistrationView.*;
 
 import java.util.Date;
 
+import com.google.inject.Inject;
+
 public class RegistrationController extends BaseController {
 
+	@Inject
 	public RegistrationController(ToDoView toDoView, ToDoRepository toDoRepository) {
 		super(toDoView, toDoRepository);
 	}

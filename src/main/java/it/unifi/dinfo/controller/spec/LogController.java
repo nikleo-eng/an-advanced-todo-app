@@ -10,8 +10,11 @@ import static it.unifi.dinfo.view.spec.LoginView.*;
 
 import java.util.Date;
 
+import com.google.inject.Inject;
+
 public class LogController extends BaseController {
 
+	@Inject
 	public LogController(ToDoView toDoView, ToDoRepository toDoRepository) {
 		super(toDoView, toDoRepository);
 	}

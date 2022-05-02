@@ -8,12 +8,15 @@ import javax.persistence.NoResultException;
 
 import org.hibernate.Session;
 
+import com.google.inject.Inject;
+
 import it.unifi.dinfo.model.Detail;
 import it.unifi.dinfo.repository.mysql.spec.base.BaseMySqlRepository;
 import it.unifi.dinfo.repository.spec.DetailRepository;
 
 public class DetailMySqlRepository extends BaseMySqlRepository implements DetailRepository {
 
+	@Inject
 	public DetailMySqlRepository(Session hibernateSession) {
 		super(hibernateSession);
 	}

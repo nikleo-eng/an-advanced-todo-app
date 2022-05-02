@@ -2,47 +2,41 @@ package it.unifi.dinfo.app.main;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.google.inject.util.Modules;
+
+import it.unifi.dinfo.guice.controller.ToDoControllerModule;
+import it.unifi.dinfo.guice.javafx.ToDoJavaFxModule;
+import it.unifi.dinfo.guice.mysql.ToDoMySqlModule;
 import it.unifi.dinfo.view.javafx.ToDoJavaFxView;
-import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.stage.Stage;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
-import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Option;
-import picocli.CommandLine.Spec;
 
 @Command(name = "an-advanced-todo-app", mixinStandardHelpOptions = true)
 public class ToDoAppMain implements Runnable {
 	
-	public static final String MY_SQL_HOST_OPNAME = "my-sql-host";
-	public static final String MY_SQL_PORT_OPNAME = "my-sql-port";
-	public static final String MY_SQL_DB_NAME_OPNAME = "my-sql-db-name";
-	public static final String MY_SQL_USER_OPNAME = "my-sql-user";
-	public static final String MY_SQL_PASS_OPNAME = "my-sql-pass";
-	
 	private static final Logger LOGGER = LogManager.getLogger();
 	
-	@Spec
-	private CommandSpec commandSpec;
-	
-	@Option(names = { "--" + MY_SQL_HOST_OPNAME }, description = "MySql Host Address", 
-			required = true)
+	@Option(names = { "--my-sql-host" }, description = "MySql Host Address", required = true)
 	private String mySqlHost;
 
-	@Option(names = { "--" + MY_SQL_PORT_OPNAME }, description = "MySql Host Port", 
-			required = true)
+	@Option(names = { "--my-sql-port" }, description = "MySql Host Port", required = true)
 	private int mySqlPort;
 
-	@Option(names = { "--" + MY_SQL_DB_NAME_OPNAME }, description = "MySql Database Name", 
-			required = true)
+	@Option(names = { "--my-sql-db-name" }, description = "MySql Database Name", required = true)
 	private String mySqlDbName;
 	
-	@Option(names = { "--" + MY_SQL_USER_OPNAME }, description = "MySql Database User", 
-			required = true)
+	@Option(names = { "--my-sql-user" }, description = "MySql Database User", required = true)
 	private String mySqlDbUser;
 
-	@Option(names = { "--" + MY_SQL_PASS_OPNAME }, description = "MySql Database Pass",
-			required = true)
+	@Option(names = { "--my-sql-pass" }, description = "MySql Database Pass", required = true)
 	private String mySqlDbPass;
 
 	public static void main(String[] args) {
@@ -51,10 +45,34 @@ public class ToDoAppMain implements Runnable {
 
 	@Override
 	public void run() {
-		String[] args = commandSpec.options().stream().map(opt -> opt.names()[0] + "=" 
-				+ opt.getValue().toString()).toArray(size -> new String[size]);
 		LOGGER.info("Application Runned");
-		Application.launch(ToDoJavaFxView.class, args);
+		Injector injector = Guice.createInjector(
+				Modules.combine(
+						new ToDoMySqlModule(mySqlHost, mySqlPort, mySqlDbName, mySqlDbUser, mySqlDbPass), 
+						new ToDoControllerModule(), 
+						new ToDoJavaFxModule()));
+		ToDoJavaFxView view = injector.getInstance(ToDoJavaFxView.class);
+		SessionFactory hibernateSessionFactory = injector.getInstance(SessionFactory.class);
+		Session hibernateSession = injector.getInstance(Session.class);
+		
+		Platform.startup(() -> {
+			try {
+				Stage stage = new Stage();
+				view.init();
+				view.start(stage);
+			} catch (Exception e) {
+				LOGGER.error(e);
+			}
+		});
+		
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+			try {
+				view.stop();
+				ToDoMySqlModule.closeSessionFactory(hibernateSessionFactory, hibernateSession);
+			} catch (Exception e) {
+				LOGGER.error(e);
+			}
+		}));
 	}
 	
 }

@@ -6,12 +6,15 @@ import java.util.stream.Collectors;
 
 import org.hibernate.Session;
 
+import com.google.inject.Inject;
+
 import it.unifi.dinfo.model.Log;
 import it.unifi.dinfo.repository.mysql.spec.base.BaseMySqlRepository;
 import it.unifi.dinfo.repository.spec.LogRepository;
 
 public class LogMySqlRepository extends BaseMySqlRepository implements LogRepository {
 
+	@Inject
 	public LogMySqlRepository(Session hibernateSession) {
 		super(hibernateSession);
 	}
