@@ -1,5 +1,7 @@
 package it.unifi.dinfo.controller;
 
+import com.google.inject.Inject;
+
 import it.unifi.dinfo.controller.spec.AdditionModificationController;
 import it.unifi.dinfo.controller.spec.DetailsController;
 import it.unifi.dinfo.controller.spec.ListsController;
@@ -9,8 +11,6 @@ import it.unifi.dinfo.model.Detail;
 import it.unifi.dinfo.model.List;
 import it.unifi.dinfo.model.Log;
 import it.unifi.dinfo.model.User;
-import it.unifi.dinfo.repository.ToDoRepository;
-import it.unifi.dinfo.view.ToDoView;
 
 public class ToDoController {
 
@@ -20,16 +20,8 @@ public class ToDoController {
 	private DetailsController detailsController;
 	private AdditionModificationController additionModificationController;
 	
-	public ToDoController(ToDoView toDoView, ToDoRepository toDoRepository) {
-		logController = new LogController(toDoView, toDoRepository);
-		registrationController = new RegistrationController(toDoView, toDoRepository);
-		listsController = new ListsController(toDoView, toDoRepository);
-		detailsController = new DetailsController(toDoView, toDoRepository);
-		additionModificationController = new AdditionModificationController(toDoView, toDoRepository);
-	}
-	
-	/* Only for tests */
-	protected ToDoController(LogController logController, 
+	@Inject
+	public ToDoController(LogController logController, 
 			RegistrationController registrationController, ListsController listsController, 
 			DetailsController detailsController, 
 			AdditionModificationController additionModificationController) {

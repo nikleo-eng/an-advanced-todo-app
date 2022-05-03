@@ -5,6 +5,8 @@ import static it.unifi.dinfo.view.javafx.spec.util.ListsDetailsGUI.*;
 import java.util.Set;
 import java.util.stream.IntStream;
 
+import com.google.inject.Inject;
+
 import it.unifi.dinfo.controller.ToDoController;
 import it.unifi.dinfo.model.Detail;
 import it.unifi.dinfo.view.javafx.ToDoJavaFxView;
@@ -61,20 +63,19 @@ public class DetailsJavaFxView extends BaseJavaFxView implements DetailsView {
 		return String.format(toReplace, replacing);
 	}
 
-	public DetailsJavaFxView(ListsJavaFxView listsJavaFxView, ToDoController toDoController) {
+	@Inject
+	public DetailsJavaFxView(ToDoController toDoController) {
 		super(toDoController);
-		this.listsJavaFxView = listsJavaFxView;
-		additionModificationJavaFxView = null;
-		listView = null;
-		addButton = null;
-		errorText = null;
 	}
-
-	public void setAdditionModificationJavaFxView(
-			AdditionModificationJavaFxView additionModificationJavaFxView) {
+	
+	public void setAdditionModificationJavaFxView(AdditionModificationJavaFxView additionModificationJavaFxView) {
 		this.additionModificationJavaFxView = additionModificationJavaFxView;
 	}
 	
+	public void setListsJavaFxView(ListsJavaFxView listsJavaFxView) {
+		this.listsJavaFxView = listsJavaFxView;
+	}
+
 	public void disableArea() {
 		listView.setDisable(true);
 		addButton.setDisable(true);

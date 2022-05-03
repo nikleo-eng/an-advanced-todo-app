@@ -5,6 +5,8 @@ import static it.unifi.dinfo.view.javafx.ToDoJavaFxView.*;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
+import com.google.inject.Inject;
+
 import it.unifi.dinfo.controller.ToDoController;
 import it.unifi.dinfo.model.Log;
 import it.unifi.dinfo.model.User;
@@ -45,26 +47,31 @@ public class UserJavaFxView extends BaseJavaFxView implements UserView {
 	private Button logoutButton;
 	private Button refreshButton;
 
-	public UserJavaFxView(ToDoController toDoController, ListsJavaFxView listsJavaFxView, 
-			DetailsJavaFxView detailsJavaFxView, 
-			AdditionModificationJavaFxView additionModificationJavaFxView, 
-			LoginJavaFxView loginJavaFxView, RegistrationJavaFxView registrationJavaFxView) {
+	@Inject
+	public UserJavaFxView(ToDoController toDoController) {
 		super(toDoController);
-		this.listsJavaFxView = listsJavaFxView;
-		this.detailsJavaFxView = detailsJavaFxView;
-		this.additionModificationJavaFxView = additionModificationJavaFxView;
-		this.loginJavaFxView = loginJavaFxView;
-		this.registrationJavaFxView = registrationJavaFxView;
-		
-		currentUser = null;
-		currentLog = null;
-		
-		userText = null;
-		logText = null;
-		logoutButton = null;
-		refreshButton = null;
 	}
 	
+	public void setListsJavaFxView(ListsJavaFxView listsJavaFxView) {
+		this.listsJavaFxView = listsJavaFxView;
+	}
+	
+	public void setDetailsJavaFxView(DetailsJavaFxView detailsJavaFxView) {
+		this.detailsJavaFxView = detailsJavaFxView;
+	}
+	
+	public void setAdditionModificationJavaFxView(AdditionModificationJavaFxView additionModificationJavaFxView) {
+		this.additionModificationJavaFxView = additionModificationJavaFxView;
+	}
+	
+	public void setLoginJavaFxView(LoginJavaFxView loginJavaFxView) {
+		this.loginJavaFxView = loginJavaFxView;
+	}
+	
+	public void setRegistrationJavaFxView(RegistrationJavaFxView registrationJavaFxView) {
+		this.registrationJavaFxView = registrationJavaFxView;
+	}
+
 	public void setCurrentUser(User user) {
 		currentUser = user;
 	}

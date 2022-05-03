@@ -21,6 +21,8 @@
 	      	<property name="hibernate.connection.username" value="sa" />
 	      	<property name="hibernate.connection.password" value="" />
 			<property name="hibernate.show_sql" value="true" />
+			<property name="hibernate.format_sql" value="true" />
+			<property name="hibernate.use_sql_comments" value="true" />
 			<property name="hibernate.current_session_context_class" value="thread" />
 			<property name="hibernate.hbm2ddl.auto" value="create-drop" />
 		</properties>
@@ -46,6 +48,8 @@
 	      	<property name="hibernate.connection.username" value="user" />
 	      	<property name="hibernate.connection.password" value="password" /> -->
 			<property name="hibernate.show_sql" value="true" />
+			<property name="hibernate.format_sql" value="true" />
+			<property name="hibernate.use_sql_comments" value="true" />
 			<property name="hibernate.current_session_context_class" value="thread" />
 			<property name="hibernate.hbm2ddl.auto" value="create-drop" />
 		</properties>

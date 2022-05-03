@@ -12,6 +12,8 @@
     </Appenders>
 
 	<Loggers>
+		<Logger name="org.hibernate.type" level="trace" />
+	
 		<Root level="debug">
             <AppenderRef ref="console" />
         </Root>

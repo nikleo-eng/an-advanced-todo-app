@@ -1,5 +1,7 @@
 package it.unifi.dinfo.view.javafx.spec;
 
+import com.google.inject.Inject;
+
 import it.unifi.dinfo.controller.ToDoController;
 import it.unifi.dinfo.model.User;
 import it.unifi.dinfo.view.javafx.ToDoJavaFxView;
@@ -36,11 +38,16 @@ public class AdditionModificationJavaFxView extends BaseJavaFxView
 	protected static final String CANCEL_BUTTON_TEXT = "Cancel";
 	protected static final String SAVE_BUTTON_TEXT = "Save";
 	
-	public AdditionModificationJavaFxView(ListsJavaFxView listsJavaFxView, 
-			DetailsJavaFxView detailsJavaFxView, ToDoController toDoController) {
+	@Inject
+	public AdditionModificationJavaFxView(ToDoController toDoController) {
 		super(toDoController);
-		currentUser = null;
+	}
+	
+	public void setListsJavaFxView(ListsJavaFxView listsJavaFxView) {
 		this.listsJavaFxView = listsJavaFxView;
+	}
+
+	public void setDetailsJavaFxView(DetailsJavaFxView detailsJavaFxView) {
 		this.detailsJavaFxView = detailsJavaFxView;
 	}
 

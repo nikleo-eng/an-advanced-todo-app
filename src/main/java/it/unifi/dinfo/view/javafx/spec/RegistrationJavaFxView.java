@@ -2,6 +2,8 @@ package it.unifi.dinfo.view.javafx.spec;
 
 import static it.unifi.dinfo.view.javafx.spec.util.LoginRegistrationGUI.*;
 
+import com.google.inject.Inject;
+
 import it.unifi.dinfo.controller.ToDoController;
 import it.unifi.dinfo.view.javafx.spec.base.BaseJavaFxView;
 import it.unifi.dinfo.view.spec.RegistrationView;
@@ -39,14 +41,9 @@ public class RegistrationJavaFxView extends BaseJavaFxView implements Registrati
 	protected static final String CONFIRM_PASSWORD_LABEL_TEXT = "Confirm Password";
 	protected static final String REGISTER_BUTTON_TEXT = "Register";
 
+	@Inject
 	public RegistrationJavaFxView(ToDoController toDoController) {
 		super(toDoController);
-		errorText = null;
-		nameTextField = null;
-		surnameTextField = null;
-		emailTextField = null;
-		passwordField = null;
-		confirmPasswordField = null;
 	}
 
 	@Override

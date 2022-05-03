@@ -5,23 +5,27 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.testfx.util.WaitForAsyncUtils.waitFor;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.junit.Rule;
 import org.junit.Test;
 import org.testfx.framework.junit.ApplicationTest;
 import org.testfx.framework.junit.TestFXRule;
 
-import com.sun.javafx.application.ParametersImpl;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.google.inject.util.Modules;
 
-import it.unifi.dinfo.app.main.ToDoAppMain;
+import it.unifi.dinfo.guice.controller.ToDoControllerModule;
+import it.unifi.dinfo.guice.javafx.ToDoJavaFxModule;
+import it.unifi.dinfo.guice.mysql.ToDoMySqlModule;
 import it.unifi.dinfo.model.Detail;
 import it.unifi.dinfo.model.Log;
 import it.unifi.dinfo.model.User;
@@ -65,33 +69,41 @@ public class ToDoJavaFxViewE2E extends ApplicationTest {
 	
 	private ToDoRepository toDoRepository;
 	private ToDoJavaFxView toDoJavaFxView;
+	
+	private SessionFactory hibernateSessionFactory;
+	private Session hibernateSession;
 
 	@Override
 	public void init() throws Exception {
-		toDoJavaFxView = new ToDoJavaFxView();
 		Properties properties = new Properties();
 		properties.load(getClass().getClassLoader().getResourceAsStream("mysql.properties"));
-		List<String> args = new ArrayList<>();
-		args.add("--" + ToDoAppMain.MY_SQL_HOST_OPNAME + "=" + properties.getProperty("MY_SQL_HOST"));
-		args.add("--" + ToDoAppMain.MY_SQL_PORT_OPNAME + "=" + System.getProperty("mysql.port", 
-				properties.getProperty("MY_SQL_PORT")));
-		args.add("--" + ToDoAppMain.MY_SQL_DB_NAME_OPNAME + "=" + properties.getProperty("MY_SQL_DB_NAME"));
-		args.add("--" + ToDoAppMain.MY_SQL_USER_OPNAME + "=" + properties.getProperty("MY_SQL_USER"));
-		args.add("--" + ToDoAppMain.MY_SQL_PASS_OPNAME + "=" + properties.getProperty("MY_SQL_PASS"));
-		ParametersImpl parameters = new ParametersImpl(args);
-		ParametersImpl.registerParameters(toDoJavaFxView, parameters);
+		Injector injector = Guice.createInjector(
+				Modules.combine(
+						new ToDoMySqlModule(
+								properties.getProperty("MY_SQL_HOST"), 
+								Integer.valueOf(System.getProperty("mysql.port", 
+										properties.getProperty("MY_SQL_PORT"))), 
+								properties.getProperty("MY_SQL_DB_NAME"), 
+								properties.getProperty("MY_SQL_USER"), 
+								properties.getProperty("MY_SQL_PASS")), 
+						new ToDoControllerModule(), 
+						new ToDoJavaFxModule()));
+		toDoRepository = injector.getInstance(ToDoRepository.class);
+		toDoJavaFxView = injector.getInstance(ToDoJavaFxView.class);
+		hibernateSessionFactory = injector.getInstance(SessionFactory.class);
+		hibernateSession = injector.getInstance(Session.class);
 		toDoJavaFxView.init();
 	}
 	
 	@Override
 	public void start(Stage stage) throws Exception {
-		toDoRepository = toDoJavaFxView.getToDoRepository();
 		toDoJavaFxView.start(stage);
 	}
 	
 	@Override
 	public void stop() throws Exception {
 		toDoJavaFxView.stop();
+		ToDoMySqlModule.closeSessionFactory(hibernateSessionFactory, hibernateSession);
 	}
 	
 	@Test

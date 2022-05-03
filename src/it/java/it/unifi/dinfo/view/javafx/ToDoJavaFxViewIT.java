@@ -13,19 +13,34 @@ import java.util.concurrent.TimeoutException;
 
 import javax.persistence.Persistence;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.junit.Rule;
 import org.junit.Test;
 import org.testfx.framework.junit.ApplicationTest;
 import org.testfx.framework.junit.TestFXRule;
 
-import it.unifi.dinfo.controller.ToDoController;
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.google.inject.Scopes;
+import com.google.inject.util.Modules;
+
+import it.unifi.dinfo.guice.controller.ToDoControllerModule;
+import it.unifi.dinfo.guice.javafx.ToDoJavaFxModule;
+import it.unifi.dinfo.guice.mysql.ToDoMySqlModule;
 import it.unifi.dinfo.model.Detail;
 import it.unifi.dinfo.model.List;
 import it.unifi.dinfo.model.Log;
 import it.unifi.dinfo.model.User;
 import it.unifi.dinfo.repository.ToDoRepository;
 import it.unifi.dinfo.repository.mysql.ToDoMySqlRepository;
+import it.unifi.dinfo.repository.mysql.spec.DetailMySqlRepository;
+import it.unifi.dinfo.repository.mysql.spec.ListMySqlRepository;
+import it.unifi.dinfo.repository.mysql.spec.LogMySqlRepository;
+import it.unifi.dinfo.repository.mysql.spec.UserMySqlRepository;
 import it.unifi.dinfo.view.javafx.spec.AdditionModificationJavaFxView;
 import it.unifi.dinfo.view.javafx.spec.DetailsJavaFxView;
 import it.unifi.dinfo.view.javafx.spec.ListsJavaFxView;
@@ -44,38 +59,53 @@ public class ToDoJavaFxViewIT extends ApplicationTest {
 	/* https://github.com/TestFX/TestFX/issues/367#issuecomment-347077166 */
 	@Rule
 	public TestFXRule testFXRule = new TestFXRule(3);
+	
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	private ToDoRepository toDoRepository;
-	private ToDoController toDoController;
 	private ToDoJavaFxView toDoJavaFxView;
+	
+	private SessionFactory hibernateSessionFactory;
+	private Session hibernateSession;
 	
 	@Override
 	public void init() throws Exception {
-		toDoJavaFxView = new ToDoJavaFxView();
 		var entityManagerFactory = Persistence.createEntityManagerFactory("an-advanced-todo-app-test");
-		var hibenateSessionFactory = entityManagerFactory.unwrap(SessionFactory.class);
-		var hibernateSession = hibenateSessionFactory.openSession();
-		toDoJavaFxView.setHibernateSessionFactory(hibenateSessionFactory);
-		toDoJavaFxView.setHibernateSession(hibernateSession);
-		toDoRepository = new ToDoMySqlRepository(hibernateSession);
-		toDoJavaFxView.setToDoRepository(toDoRepository);
-		toDoController = new ToDoController(toDoJavaFxView, toDoRepository);
-		toDoJavaFxView.setToDoController(toDoController);
-		toDoJavaFxView.setLoginJavaFxView(new LoginJavaFxView(toDoController));
-		toDoJavaFxView.setRegistrationJavaFxView(new RegistrationJavaFxView(toDoController));
-		toDoJavaFxView.setListsJavaFxView(new ListsJavaFxView(toDoController));
-		toDoJavaFxView.setDetailsJavaFxView(new DetailsJavaFxView(toDoJavaFxView.getListsJavaFxView(), 
-				toDoController));
-		toDoJavaFxView.setAdditionModificationJavaFxView(new AdditionModificationJavaFxView(
-				toDoJavaFxView.getListsJavaFxView(), toDoJavaFxView.getDetailsJavaFxView(), toDoController));
-		toDoJavaFxView.getListsJavaFxView().setAdditionModificationJavaFxView(
-				toDoJavaFxView.getAdditionModificationJavaFxView());
-		toDoJavaFxView.getListsJavaFxView().setDetailsJavaFxView(toDoJavaFxView.getDetailsJavaFxView());
-		toDoJavaFxView.getDetailsJavaFxView().setAdditionModificationJavaFxView(
-				toDoJavaFxView.getAdditionModificationJavaFxView());
-		toDoJavaFxView.setUserJavaFxView(new UserJavaFxView(toDoController, toDoJavaFxView.getListsJavaFxView(), 
-				toDoJavaFxView.getDetailsJavaFxView(), toDoJavaFxView.getAdditionModificationJavaFxView(), 
-				toDoJavaFxView.getLoginJavaFxView(), toDoJavaFxView.getRegistrationJavaFxView()));
+		hibernateSessionFactory = entityManagerFactory.unwrap(SessionFactory.class);
+		hibernateSession = hibernateSessionFactory.openSession();
+		Injector injector = Guice.createInjector(
+				Modules.combine(
+						new AbstractModule() {
+							@Override
+							protected void configure() {
+								bind(SessionFactory.class).toInstance(hibernateSessionFactory);
+								bind(Session.class).toInstance(hibernateSession);
+								
+								try {
+									bind(UserMySqlRepository.class)
+										.toConstructor(UserMySqlRepository.class.getConstructor(Session.class))
+										.in(Scopes.SINGLETON);
+									bind(LogMySqlRepository.class)
+										.toConstructor(LogMySqlRepository.class.getConstructor(Session.class))
+										.in(Scopes.SINGLETON);
+									bind(ListMySqlRepository.class)
+										.toConstructor(ListMySqlRepository.class.getConstructor(Session.class))
+										.in(Scopes.SINGLETON);
+									bind(DetailMySqlRepository.class)
+										.toConstructor(DetailMySqlRepository.class.getConstructor(Session.class))
+										.in(Scopes.SINGLETON);
+								} catch (NoSuchMethodException | SecurityException e) {
+									LOGGER.error(e);
+								}
+								
+								bind(ToDoRepository.class).to(ToDoMySqlRepository.class).in(Scopes.SINGLETON);
+							}
+						}, 
+						new ToDoControllerModule(), 
+						new ToDoJavaFxModule()));
+		toDoRepository = injector.getInstance(ToDoRepository.class);
+		toDoJavaFxView = injector.getInstance(ToDoJavaFxView.class);
+		toDoJavaFxView.init();
 	}
 	
 	@Override
@@ -86,6 +116,7 @@ public class ToDoJavaFxViewIT extends ApplicationTest {
 	@Override
 	public void stop() throws Exception {
 		toDoJavaFxView.stop();
+		ToDoMySqlModule.closeSessionFactory(hibernateSessionFactory, hibernateSession);
 	}
 	
 	@Test

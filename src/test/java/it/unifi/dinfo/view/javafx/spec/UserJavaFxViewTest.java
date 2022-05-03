@@ -61,8 +61,12 @@ public class UserJavaFxViewTest extends ApplicationTest {
 	@Override
 	public void start(Stage stage) throws Exception {
 		MockitoAnnotations.openMocks(this);
-		userJavaFxView = new UserJavaFxView(toDoController, listsJavaFxView, detailsJavaFxView, 
-				additionModificationJavaFxView, loginJavaFxView, registrationJavaFxView);
+		userJavaFxView = new UserJavaFxView(toDoController);
+		userJavaFxView.setListsJavaFxView(listsJavaFxView);
+		userJavaFxView.setDetailsJavaFxView(detailsJavaFxView);
+		userJavaFxView.setAdditionModificationJavaFxView(additionModificationJavaFxView);
+		userJavaFxView.setLoginJavaFxView(loginJavaFxView);
+		userJavaFxView.setRegistrationJavaFxView(registrationJavaFxView);
 		
 		FlowPane appRoot = new FlowPane();
 		/* https://stackoverflow.com/questions/67893273 */

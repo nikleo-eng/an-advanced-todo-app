@@ -2,6 +2,8 @@ package it.unifi.dinfo.controller.spec;
 
 import java.util.Set;
 
+import com.google.inject.Inject;
+
 import it.unifi.dinfo.controller.spec.base.BaseController;
 import it.unifi.dinfo.model.Detail;
 import it.unifi.dinfo.repository.ToDoRepository;
@@ -10,6 +12,7 @@ import it.unifi.dinfo.view.spec.DetailsView.ERRORS;
 
 public class DetailsController extends BaseController {
 
+	@Inject
 	public DetailsController(ToDoView toDoView, ToDoRepository toDoRepository) {
 		super(toDoView, toDoRepository);
 	}
