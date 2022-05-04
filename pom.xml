@@ -45,6 +45,7 @@
 		
 		<javafx.version>11.0.2</javafx.version>
 		<guice.version>5.1.0</guice.version>
+		<cucumber.version>7.3.3</cucumber.version>
 	</properties>
 
 	<dependencyManagement>
@@ -313,6 +314,18 @@
 			<version>jdk-11+26</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>io.cucumber</groupId>
+			<artifactId>cucumber-java</artifactId>
+			<version>${cucumber.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.cucumber</groupId>
+			<artifactId>cucumber-junit</artifactId>
+			<version>${cucumber.version}</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -460,6 +473,7 @@
 								<sources>
 									<source>src/it/java</source>
 									<source>src/e2e/java</source>
+									<source>src/bdd/java</source>
 								</sources>
 							</configuration>
 						</execution>
@@ -494,6 +508,21 @@
 								</excludes>
 								<includes>
 									<include>**/*E2E.java</include>
+								</includes>
+							</configuration>
+						</execution>
+						<execution>
+							<id>bdd-tests</id>
+							<goals>
+								<goal>integration-test</goal>
+								<goal>verify</goal>
+							</goals>
+							<configuration>
+								<excludes>
+									<exclude>**/*IT.java</exclude>
+								</excludes>
+								<includes>
+									<include>**/*BDD.java</include>
 								</includes>
 							</configuration>
 						</execution>
@@ -611,6 +640,9 @@
 			</testResource>
 			<testResource>
 				<directory>src/e2e/resources</directory>
+			</testResource>
+			<testResource>
+				<directory>src/bdd/resources</directory>
 			</testResource>
 		</testResources>
 	</build>

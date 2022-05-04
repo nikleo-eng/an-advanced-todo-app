@@ -239,12 +239,12 @@ public class ToDoJavaFxView extends Application implements ToDoView {
 	}
 
 	/* Only for tests */
-	protected FlowPane getAppRoot() {
+	public FlowPane getAppRoot() {
 		return appRoot;
 	}
 
 	/* Only for tests */
-	protected FlowPane getUserRoot() {
+	public FlowPane getUserRoot() {
 		return userRoot;
 	}
 
