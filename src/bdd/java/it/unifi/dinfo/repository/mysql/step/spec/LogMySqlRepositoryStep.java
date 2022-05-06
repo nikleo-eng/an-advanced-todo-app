@@ -47,7 +47,14 @@ public class LogMySqlRepositoryStep {
 	public void betweenTheLogsInTheDatataseThereIsALogForTheUserWithTheEmail(String email) {
 		User user = toDoMySqlRepository.findUserByEmail(email);
 		Set<Log> logs = toDoMySqlRepository.findAllLogsByUserId(user.getId());
-		assertThat(logs).isNotNull().isNotEmpty();
+		assertThat(logs).isNotNull().hasSize(1);
+	}
+	
+	@Then("Between the logs in the datatase there is an other log for the user with the email {string}")
+	public void betweenTheLogsInTheDatabaseThereIsAnOtherLogForTheUserWithTheEmail(String email) {
+		User user = toDoMySqlRepository.findUserByEmail(email);
+		Set<Log> logs = toDoMySqlRepository.findAllLogsByUserId(user.getId());
+		assertThat(logs).isNotNull().hasSizeGreaterThan(1);
 	}
 	
 }

@@ -7,6 +7,8 @@ import org.testfx.framework.junit.ApplicationTest;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import it.unifi.dinfo.view.javafx.spec.LoginJavaFxView;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
 
 public class LoginJavaFxViewStep extends ApplicationTest {
 	
@@ -31,6 +33,20 @@ public class LoginJavaFxViewStep extends ApplicationTest {
 	public void theLoginErrorTextShowsErrorMessage(String errorMessage) {
 		String loginErrorText = lookup("#" + LoginJavaFxView.ERROR_TEXT_ID).queryText().getText();
 		assertThat(loginErrorText).isEqualTo(errorMessage);
+	}
+	
+	@Then("The Email login input field is empty")
+	public void theEmailLoginInputFieldIsEmpty() {
+		String emailText = lookup("#" + LoginJavaFxView.EMAIL_TEXTFIELD_ID)
+				.queryAs(TextField.class).getText();
+		assertThat(emailText).isNullOrEmpty();
+	}
+	
+	@Then("The Password login input field is empty")
+	public void thePasswordLoginInputFieldIsEmpty() {
+		String passwordText = lookup("#" + LoginJavaFxView.PASSWORD_FIELD_ID)
+				.queryAs(PasswordField.class).getText();
+		assertThat(passwordText).isNullOrEmpty();
 	}
 	
 }

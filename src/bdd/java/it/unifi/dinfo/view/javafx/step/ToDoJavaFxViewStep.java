@@ -9,8 +9,8 @@ import com.google.inject.Inject;
 
 /* import io.cucumber.java.Before; */
 import io.cucumber.java.After;
-import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
 import it.unifi.dinfo.view.javafx.ToDoJavaFxView;
 import javafx.stage.Stage;
 
@@ -24,7 +24,7 @@ public class ToDoJavaFxViewStep extends ApplicationTest {
 	}
 
 	/* @Before */
-	@Given("The user runs An Advanced Todo App")
+	@When("The user runs An Advanced Todo App")
 	public void setUp() throws Exception {
 		super.internalBefore();
 	}

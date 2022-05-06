@@ -2,7 +2,7 @@ Feature: Registration View
   Specifications of the behavior of the Registration View
   
   Background: The Login and Registration Views
-		Given The user runs An Advanced Todo App
+		When The user runs An Advanced Todo App
 
 	Scenario Outline: Successful registration
     When The user enters "<name>" in the Name registration input field

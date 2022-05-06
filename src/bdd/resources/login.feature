@@ -2,7 +2,7 @@ Feature: Login View
   Specifications of the behavior of the Login View
   
   Background: The Login and Registration Views
-		Given The user runs An Advanced Todo App
+		When The user runs An Advanced Todo App
 
 	Scenario Outline: Successful login
     Given The database contains a user with the following values

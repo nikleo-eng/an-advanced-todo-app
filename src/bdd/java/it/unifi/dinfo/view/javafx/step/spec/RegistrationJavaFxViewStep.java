@@ -7,6 +7,8 @@ import org.testfx.framework.junit.ApplicationTest;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import it.unifi.dinfo.view.javafx.spec.RegistrationJavaFxView;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
 
 public class RegistrationJavaFxViewStep extends ApplicationTest {
 
@@ -51,6 +53,41 @@ public class RegistrationJavaFxViewStep extends ApplicationTest {
 		String registrationErrorText = lookup("#" + RegistrationJavaFxView.ERROR_TEXT_ID)
 				.queryText().getText();
 		assertThat(registrationErrorText).isEqualTo(errorMessage);
+	}
+	
+	@Then("The Name registration input field is empty")
+	public void theNameRegistrationInputFieldIsEmpty() {
+		String emailText = lookup("#" + RegistrationJavaFxView.NAME_TEXTFIELD_ID)
+				.queryAs(TextField.class).getText();
+		assertThat(emailText).isNullOrEmpty();
+	}
+	
+	@Then("The Surname registration input field is empty")
+	public void theSurnameRegistrationInputFieldIsEmpty() {
+		String emailText = lookup("#" + RegistrationJavaFxView.SURNAME_TEXTFIELD_ID)
+				.queryAs(TextField.class).getText();
+		assertThat(emailText).isNullOrEmpty();
+	}
+	
+	@Then("The Email registration input field is empty")
+	public void theEmailRegistrationInputFieldIsEmpty() {
+		String emailText = lookup("#" + RegistrationJavaFxView.EMAIL_TEXTFIELD_ID)
+				.queryAs(TextField.class).getText();
+		assertThat(emailText).isNullOrEmpty();
+	}
+	
+	@Then("The Password registration input field is empty")
+	public void thePasswordRegistrationInputFieldIsEmpty() {
+		String passwordText = lookup("#" + RegistrationJavaFxView.PASSWORD_FIELD_ID)
+				.queryAs(PasswordField.class).getText();
+		assertThat(passwordText).isNullOrEmpty();
+	}
+	
+	@Then("The Confirm Password registration input field is empty")
+	public void theConfirmPasswordRegistrationInputFieldIsEmpty() {
+		String passwordText = lookup("#" + RegistrationJavaFxView.CONFIRM_PASSWORD_FIELD_ID)
+				.queryAs(PasswordField.class).getText();
+		assertThat(passwordText).isNullOrEmpty();
 	}
 	
 }
