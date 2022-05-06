@@ -7,7 +7,7 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>An Advanced ToDo App</name>
-	<description>A project for the Advanced Programming Techniques Course</description>
+	<description>A project for the Advanced Programming Techniques course</description>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -326,6 +326,18 @@
 			<version>${cucumber.version}</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>io.cucumber</groupId>
+			<artifactId>cucumber-guice</artifactId>
+			<version>${cucumber.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.cucumber</groupId>
+			<artifactId>cucumber-core</artifactId>
+			<version>${cucumber.version}</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -475,6 +487,26 @@
 									<source>src/e2e/java</source>
 									<source>src/bdd/java</source>
 								</sources>
+							</configuration>
+						</execution>
+						<execution>
+							<id>add-test-resource</id>
+							<phase>generate-test-resources</phase>
+							<goals>
+								<goal>add-test-resource</goal>
+							</goals>
+							<configuration>
+								<resources>
+									<resource>
+										<directory>src/it/resources</directory>
+									</resource>
+									<resource>
+										<directory>src/e2e/resources</directory>
+									</resource>
+									<resource>
+										<directory>src/bdd/resources</directory>
+									</resource>
+								</resources>
 							</configuration>
 						</execution>
 					</executions>
@@ -630,21 +662,6 @@
 				<artifactId>maven-failsafe-plugin</artifactId>
 			</plugin>
 		</plugins>
-		
-		<testResources>
-			<testResource>
-				<directory>src/test/resources</directory>
-			</testResource>
-			<testResource>
-				<directory>src/it/resources</directory>
-			</testResource>
-			<testResource>
-				<directory>src/e2e/resources</directory>
-			</testResource>
-			<testResource>
-				<directory>src/bdd/resources</directory>
-			</testResource>
-		</testResources>
 	</build>
 
 	<profiles>

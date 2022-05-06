@@ -19,7 +19,7 @@ Feature: Login View
     And The user clicks the Login button
     Then The Lists, Details, Addition-Modification and User Views are showed
     And The user text shows "<name> <surname>"
-    And The log text shows that the last login is happened on "<in>"
+    And The log text shows that the last login is happened at "<in>"
     
     Examples: 
       | name     | surname | email                  | password   | in                       | out                      |

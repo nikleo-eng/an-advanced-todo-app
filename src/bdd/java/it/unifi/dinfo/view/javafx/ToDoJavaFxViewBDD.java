@@ -26,7 +26,9 @@ import io.cucumber.junit.CucumberOptions;
  * </pre>
  */
 @RunWith(Cucumber.class)
-@CucumberOptions(features = "src/bdd/resources")
+@CucumberOptions(features = "src/bdd/resources", 
+	glue = { "it.unifi.dinfo.repository.mysql", "it.unifi.dinfo.view.javafx" }, 
+	objectFactory = ToDoJavaFxObjectFactory.class)
 public class ToDoJavaFxViewBDD {
 	
 }
