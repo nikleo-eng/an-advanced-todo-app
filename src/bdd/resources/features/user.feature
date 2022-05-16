@@ -28,7 +28,7 @@ Feature: User View
     And The Confirm Password registration input field is empty
     And Between the logs in the datatase there is an other log for the user with the email "mario.rossi@test.it"
     
-	Scenario: Successful refresh lists
+	Scenario: Successful lists refresh
 	  Given The database contains a list with the following values
       | name       | LIST                |
       | user_email | mario.rossi@test.it |
