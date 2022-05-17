@@ -7,7 +7,7 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>An Advanced ToDo App</name>
-	<description>A project for the Advanced Programming Techniques Course</description>
+	<description>A project for the Advanced Programming Techniques course</description>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -45,6 +45,7 @@
 		
 		<javafx.version>11.0.2</javafx.version>
 		<guice.version>5.1.0</guice.version>
+		<cucumber.version>7.3.3</cucumber.version>
 	</properties>
 
 	<dependencyManagement>
@@ -313,6 +314,30 @@
 			<version>jdk-11+26</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>io.cucumber</groupId>
+			<artifactId>cucumber-java</artifactId>
+			<version>${cucumber.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.cucumber</groupId>
+			<artifactId>cucumber-junit</artifactId>
+			<version>${cucumber.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.cucumber</groupId>
+			<artifactId>cucumber-guice</artifactId>
+			<version>${cucumber.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.cucumber</groupId>
+			<artifactId>cucumber-core</artifactId>
+			<version>${cucumber.version}</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -460,7 +485,28 @@
 								<sources>
 									<source>src/it/java</source>
 									<source>src/e2e/java</source>
+									<source>src/bdd/java</source>
 								</sources>
+							</configuration>
+						</execution>
+						<execution>
+							<id>add-test-resource</id>
+							<phase>generate-test-resources</phase>
+							<goals>
+								<goal>add-test-resource</goal>
+							</goals>
+							<configuration>
+								<resources>
+									<resource>
+										<directory>src/it/resources</directory>
+									</resource>
+									<resource>
+										<directory>src/e2e/resources</directory>
+									</resource>
+									<resource>
+										<directory>src/bdd/resources</directory>
+									</resource>
+								</resources>
 							</configuration>
 						</execution>
 					</executions>
@@ -494,6 +540,21 @@
 								</excludes>
 								<includes>
 									<include>**/*E2E.java</include>
+								</includes>
+							</configuration>
+						</execution>
+						<execution>
+							<id>bdd-tests</id>
+							<goals>
+								<goal>integration-test</goal>
+								<goal>verify</goal>
+							</goals>
+							<configuration>
+								<excludes>
+									<exclude>**/*IT.java</exclude>
+								</excludes>
+								<includes>
+									<include>**/*BDD.java</include>
 								</includes>
 							</configuration>
 						</execution>
@@ -601,18 +662,6 @@
 				<artifactId>maven-failsafe-plugin</artifactId>
 			</plugin>
 		</plugins>
-		
-		<testResources>
-			<testResource>
-				<directory>src/test/resources</directory>
-			</testResource>
-			<testResource>
-				<directory>src/it/resources</directory>
-			</testResource>
-			<testResource>
-				<directory>src/e2e/resources</directory>
-			</testResource>
-		</testResources>
 	</build>
 
 	<profiles>
