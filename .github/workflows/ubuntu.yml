@@ -1,4 +1,4 @@
-name: An-Advanced-ToDo-App CI/CD in Linux
+name: An-Advanced-ToDo-App CI/CD in Ubuntu
 
 on:
   push:
@@ -12,7 +12,7 @@ jobs:
     env:
       workdir: .
 
-    name: Build on Linux
+    name: Build on Ubuntu
     steps:
     - uses: actions/checkout@v2
       with:
