@@ -77,5 +77,5 @@ jobs:
       if: ${{ always() }}
       with:
         name: javafx-dependencies
-        path: '**/target/maven-javafx-dependencies/macintosh'
+        path: '**/target/maven-javafx-dependencies/mac'
         if-no-files-found: ignore
