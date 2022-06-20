@@ -1,6 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>it.unifi.dinfo</groupId>
 	<artifactId>an-advanced-todo-app</artifactId>
@@ -13,7 +11,11 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>11</maven.compiler.source>
 		<maven.compiler.target>11</maven.compiler.target>
-		
+
+		<manifest.multi.release>true</manifest.multi.release>
+		<manifest.main.class>it.unifi.dinfo.app.main.ToDoAppMain</manifest.main.class>
+		<manifest.built.by>DINFO - UniFI</manifest.built.by>
+
 		<sonar.coverage.exclusions>
 			**/it/unifi/dinfo/app/main/*.*,
 			**/it/unifi/dinfo/guice/**/*.*,
@@ -26,7 +28,7 @@
 			${project.build.directory}/surefire-reports,
 			${project.build.directory}/failsafe-reports
 		</sonar.junit.reportPaths>
-		
+
 		<sonar.issue.ignore.multicriteria>
 			e01,e02
 		</sonar.issue.ignore.multicriteria>
@@ -36,13 +38,13 @@
 		<sonar.issue.ignore.multicriteria.e01.resourceKey>
 	    	**/it/unifi/dinfo/view/javafx/spec/*.*
 	    </sonar.issue.ignore.multicriteria.e01.resourceKey>
-	    <sonar.issue.ignore.multicriteria.e02.ruleKey>
+		<sonar.issue.ignore.multicriteria.e02.ruleKey>
 	    	java:S3577
 	    </sonar.issue.ignore.multicriteria.e02.ruleKey>
 		<sonar.issue.ignore.multicriteria.e02.resourceKey>
 	    	**/it/unifi/dinfo/view/javafx/*E2E.*
 	    </sonar.issue.ignore.multicriteria.e02.resourceKey>
-		
+
 		<javafx.version>11.0.2</javafx.version>
 		<guice.version>5.1.0</guice.version>
 		<cucumber.version>7.3.3</cucumber.version>
@@ -361,22 +363,126 @@
 					<version>3.2.4</version>
 					<executions>
 						<execution>
+							<id>shade-win</id>
 							<goals>
 								<goal>shade</goal>
 							</goals>
 							<configuration>
+								<artifactSet>
+									<excludes>
+										<exclude>org.openjfx:javafx-*:linux</exclude>
+										<exclude>org.openjfx:javafx-*:mac</exclude>
+									</excludes>
+								</artifactSet>
 								<shadedArtifactAttached>true</shadedArtifactAttached>
 								<transformers>
-									<transformer 
-										implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+									<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
 										<!-- https://issues.apache.org/jira/browse/LOG4J2-2834 -->
 										<manifestEntries>
-											<Multi-Release>true</Multi-Release>
+											<Multi-Release>${manifest.multi.release}</Multi-Release>
+											<Main-Class>${manifest.main.class}</Main-Class>
+											<Built-By>${manifest.built.by}</Built-By>
 										</manifestEntries>
-										<mainClass>it.unifi.dinfo.app.main.ToDoAppMain</mainClass>
 									</transformer>
 								</transformers>
-								<finalName>${project.artifactId}-${project.version}-jar-with-dependencies</finalName>
+								<filters>
+									<filter>
+										<artifact>*:*</artifact>
+										<excludes>
+											<exclude>module-info.class</exclude>
+											<exclude>META-INF/MANIFEST.MF</exclude>
+											<exclude>META-INF/DEPENDENCIES</exclude>
+											<exclude>META-INF/LICENSE</exclude>
+											<exclude>META-INF/LICENSE.txt</exclude>
+											<exclude>META-INF/NOTICE</exclude>
+											<exclude>META-INF/README</exclude>
+											<exclude>META-INF/versions/9/module-info.class</exclude>
+										</excludes>
+									</filter>
+								</filters>
+								<finalName>${project.artifactId}-${project.version}-win-jar-with-dependencies</finalName>
+							</configuration>
+						</execution>
+						<execution>
+							<id>shade-linux</id>
+							<goals>
+								<goal>shade</goal>
+							</goals>
+							<configuration>
+								<artifactSet>
+									<excludes>
+										<exclude>org.openjfx:javafx-*:win</exclude>
+										<exclude>org.openjfx:javafx-*:mac</exclude>
+									</excludes>
+								</artifactSet>
+								<shadedArtifactAttached>true</shadedArtifactAttached>
+								<transformers>
+									<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+										<!-- https://issues.apache.org/jira/browse/LOG4J2-2834 -->
+										<manifestEntries>
+											<Multi-Release>${manifest.multi.release}</Multi-Release>
+											<Main-Class>${manifest.main.class}</Main-Class>
+											<Built-By>${manifest.built.by}</Built-By>
+										</manifestEntries>
+									</transformer>
+								</transformers>
+								<filters>
+									<filter>
+										<artifact>*:*</artifact>
+										<excludes>
+											<exclude>module-info.class</exclude>
+											<exclude>META-INF/MANIFEST.MF</exclude>
+											<exclude>META-INF/DEPENDENCIES</exclude>
+											<exclude>META-INF/LICENSE</exclude>
+											<exclude>META-INF/LICENSE.txt</exclude>
+											<exclude>META-INF/NOTICE</exclude>
+											<exclude>META-INF/README</exclude>
+											<exclude>META-INF/versions/9/module-info.class</exclude>
+										</excludes>
+									</filter>
+								</filters>
+								<finalName>${project.artifactId}-${project.version}-linux-jar-with-dependencies</finalName>
+							</configuration>
+						</execution>
+						<execution>
+							<id>shade-mac</id>
+							<goals>
+								<goal>shade</goal>
+							</goals>
+							<configuration>
+								<artifactSet>
+									<excludes>
+										<exclude>org.openjfx:javafx-*:win</exclude>
+										<exclude>org.openjfx:javafx-*:linux</exclude>
+									</excludes>
+								</artifactSet>
+								<shadedArtifactAttached>true</shadedArtifactAttached>
+								<transformers>
+									<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+										<!-- https://issues.apache.org/jira/browse/LOG4J2-2834 -->
+										<manifestEntries>
+											<Multi-Release>${manifest.multi.release}</Multi-Release>
+											<Main-Class>${manifest.main.class}</Main-Class>
+											<Built-By>${manifest.built.by}</Built-By>
+										</manifestEntries>
+									</transformer>
+								</transformers>
+								<filters>
+									<filter>
+										<artifact>*:*</artifact>
+										<excludes>
+											<exclude>module-info.class</exclude>
+											<exclude>META-INF/MANIFEST.MF</exclude>
+											<exclude>META-INF/DEPENDENCIES</exclude>
+											<exclude>META-INF/LICENSE</exclude>
+											<exclude>META-INF/LICENSE.txt</exclude>
+											<exclude>META-INF/NOTICE</exclude>
+											<exclude>META-INF/README</exclude>
+											<exclude>META-INF/versions/9/module-info.class</exclude>
+										</excludes>
+									</filter>
+								</filters>
+								<finalName>${project.artifactId}-${project.version}-mac-jar-with-dependencies</finalName>
 							</configuration>
 						</execution>
 					</executions>
@@ -386,9 +492,11 @@
 					<version>3.0.2</version>
 					<configuration>
 						<archive>
-							<manifest>
-								<mainClass>it.unifi.dinfo.app.main.ToDoAppMain</mainClass>
-							</manifest>
+							<manifestEntries>
+								<Multi-Release>${manifest.multi.release}</Multi-Release>
+								<Main-Class>${manifest.main.class}</Main-Class>
+								<Built-By>${manifest.built.by}</Built-By>
+							</manifestEntries>
 						</archive>
 					</configuration>
 				</plugin>
@@ -566,14 +674,14 @@
 					<version>3.3.0</version>
 					<executions>
 						<execution>
-							<id>copy-dependencies-javafx-windows</id>
+							<id>copy-dependencies-javafx-win</id>
 							<phase>package</phase>
 							<goals>
 								<goal>copy-dependencies</goal>
 							</goals>
 							<configuration>
 								<outputDirectory>
-									${project.build.directory}/maven-javafx-dependencies/windows
+									${project.build.directory}/maven-javafx-dependencies/win
 								</outputDirectory>
 								<includeScope>runtime</includeScope>
 								<includeClassifiers>win</includeClassifiers>
@@ -596,14 +704,14 @@
 							</configuration>
 						</execution>
 						<execution>
-							<id>copy-dependencies-javafx-macintosh</id>
+							<id>copy-dependencies-javafx-mac</id>
 							<phase>package</phase>
 							<goals>
 								<goal>copy-dependencies</goal>
 							</goals>
 							<configuration>
 								<outputDirectory>
-									${project.build.directory}/maven-javafx-dependencies/macintosh
+									${project.build.directory}/maven-javafx-dependencies/mac
 								</outputDirectory>
 								<includeScope>runtime</includeScope>
 								<includeClassifiers>mac</includeClassifiers>

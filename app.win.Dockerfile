@@ -10,6 +10,6 @@ SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPref
 
 COPY .docker-util/docker-cmd.win.ps1 /App/docker-cmd.win.ps1
 COPY /target/maven-javafx-dependencies/windows /Lib
-COPY /target/*jar-with-dependencies.jar /App/app.jar
+COPY /target/*win-jar-with-dependencies.jar /App/app.jar
 
 CMD C:\App\docker-cmd.win.ps1
