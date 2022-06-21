@@ -9,7 +9,7 @@ ENV MY_SQL_PASS password
 SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';"]
 
 COPY .docker-util/docker-cmd.win.ps1 /App/docker-cmd.win.ps1
-COPY /target/maven-javafx-dependencies/windows /Lib
+COPY /target/maven-javafx-dependencies/win /Lib
 COPY /target/*win-jar-with-dependencies.jar /App/app.jar
 
 CMD C:\App\docker-cmd.win.ps1

@@ -4,5 +4,5 @@
 !/.docker-util/wait-for-it.sh
 !/.docker-util/initialize-mysql.ps1
 !/target/maven-javafx-dependencies/linux/*.jar
-!/target/maven-javafx-dependencies/windows/*.jar
+!/target/maven-javafx-dependencies/win/*.jar
 !/target/*jar-with-dependencies.jar
