@@ -1,9 +1,9 @@
 # An Advanced ToDo App
 A project for the Advanced Programming Techniques course
 
-![build on MacOS](https://github.com/nikleo-eng/an-advanced-todo-app/actions/workflows/mac-os.yml/badge.svg)
-![build on Ubuntu](https://github.com/nikleo-eng/an-advanced-todo-app/actions/workflows/ubuntu.yml/badge.svg)
-![build on Windows](https://github.com/nikleo-eng/an-advanced-todo-app/actions/workflows/windows.yml/badge.svg)
+[![An-Advanced-ToDo-App CI/CD in MacOS](https://github.com/nikleo-eng/an-advanced-todo-app/actions/workflows/mac-os.yml/badge.svg)](https://github.com/nikleo-eng/an-advanced-todo-app/actions/workflows/mac-os.yml)
+[![An-Advanced-ToDo-App CI/CD in Ubuntu](https://github.com/nikleo-eng/an-advanced-todo-app/actions/workflows/ubuntu.yml/badge.svg)](https://github.com/nikleo-eng/an-advanced-todo-app/actions/workflows/ubuntu.yml)
+[![An-Advanced-ToDo-App CI/CD in Windows](https://github.com/nikleo-eng/an-advanced-todo-app/actions/workflows/windows.yml/badge.svg)](https://github.com/nikleo-eng/an-advanced-todo-app/actions/workflows/windows.yml)
 
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=nikleo-eng_an-advanced-todo-app&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=nikleo-eng_an-advanced-todo-app)
 [![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=nikleo-eng_an-advanced-todo-app&metric=sqale_index)](https://sonarcloud.io/summary/new_code?id=nikleo-eng_an-advanced-todo-app)
