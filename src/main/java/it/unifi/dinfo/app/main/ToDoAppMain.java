@@ -1,9 +1,7 @@
 package it.unifi.dinfo.app.main;
 
-import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.core.config.Configurator;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
@@ -19,7 +17,6 @@ import javafx.application.Platform;
 import javafx.stage.Stage;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
-import picocli.CommandLine.Help.Visibility;
 import picocli.CommandLine.Option;
 
 @Command(name = "an-advanced-todo-app", mixinStandardHelpOptions = true)
@@ -41,14 +38,6 @@ public class ToDoAppMain implements Runnable {
 
 	@Option(names = { "--my-sql-pass" }, description = "MySql Database Pass", required = true)
 	private String mySqlDbPass;
-	
-	@Option(names = { "--log4j-root-level" }, description = "Log4j Root Level", required = false, 
-			defaultValue = "INFO", showDefaultValue = Visibility.ALWAYS)
-	private String log4jRootLevel;
-	
-	@Option(names = { "--log4j-hibernate-level" }, description = "Log4j Hibernate Level", required = false, 
-			defaultValue = "INFO", showDefaultValue = Visibility.ALWAYS)
-	private String log4jHibernateLevel;
 
 	public static void main(String[] args) {
 		new CommandLine(new ToDoAppMain()).execute(args);
@@ -56,11 +45,6 @@ public class ToDoAppMain implements Runnable {
 
 	@Override
 	public void run() {
-		Configurator.setLevel(LogManager.getRootLogger().getName(), 
-				Level.getLevel(log4jRootLevel) != null ? Level.getLevel(log4jRootLevel) : Level.OFF);
-		Configurator.setLevel(LogManager.getLogger("org.hibernate.type").getName(), 
-				Level.getLevel(log4jHibernateLevel) != null ? Level.getLevel(log4jHibernateLevel): Level.OFF);
-		
 		LOGGER.info("Application Runned");
 		Injector injector = Guice.createInjector(
 				Modules.combine(
