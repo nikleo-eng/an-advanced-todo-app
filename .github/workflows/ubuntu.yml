@@ -65,16 +65,19 @@ jobs:
       with:
         name: final-jar
         path: '**/target/an-advanced-todo-app-*linux*.jar'
-        if-no-files-found: ignore
+        if-no-files-found: error
     - name: Upload JavaFX Dependencies
       uses: actions/upload-artifact@v2
       if: ${{ always() }}
       with:
         name: javafx-dependencies
         path: '**/target/maven-javafx-dependencies/linux'
-        if-no-files-found: ignore
+        if-no-files-found: error
   tag-release:
     runs-on: ubuntu-latest
+    if: ${{ success() }}
+    needs:
+    - build
     env:
       workdir: .
 
