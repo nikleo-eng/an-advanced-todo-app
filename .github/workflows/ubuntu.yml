@@ -87,7 +87,7 @@ jobs:
            an-advanced-todo-app-${{ env.app_version }}.tar.gz,
            javafx-dependencies-${{ env.app_version }}.tar.gz
         artifactContentType: application/gzip
-        commit: ${{ GITHUB_SHA }}
+        commit: ${{ env.GITHUB_SHA }}
         draft: false
         generateReleaseNotes: false
         name: v${{ env.app_version }}
