@@ -59,40 +59,38 @@ jobs:
       with:
         name: surefire-report
         path: '**/target/site'
+    - name: Add SHORT_SHA Env Property
+      run: echo "short_sha=`echo ${GITHUB_SHA} | cut -c1-7`" >> $GITHUB_ENV
+      if: ${{ success() }}
     - name: Add APP_VERSION Env Property
       run: >
          echo "app_version=$(mvn help:evaluate -Dexpression=project.version
          -q -DforceStdout)" >> $GITHUB_ENV
       working-directory: ${{ env.workdir }}
       if: ${{ success() }}
-    - name: Create Compressed Archive of Final JARs
+    - name: Create Compressed Archive of Final JAR and JavaFX Dependencies
       run: >
-         tar -czf an-advanced-todo-app-${{ env.app_version }}.tar.gz
-         -C ./target ./target/an-advanced-todo-app*.jar
-      working-directory: ${{ env.workdir }}
+         tar -czf an-advanced-todo-app-${{ env.app_version }}-linux.tar.gz
+         an-advanced-todo-app-${{ env.app_version }}-linux*.jar
+         maven-javafx-dependencies/linux/*.jar
+      working-directory: ${{ env.workdir }}/target
       if: ${{ success() }}
-    - name: Create Compressed Archive of JavaFX Dependencies
-      run: >
-         tar -czf javafx-dependencies-${{ env.app_version }}.tar.gz
-         -C ./target/maven-javafx-dependencies ./target/maven-javafx-dependencies
-      working-directory: ${{ env.workdir }}
-      if: ${{ success() }}
-    - name: Create Tag and Release with Final JARs and JavaFX Dependencies
+    - name: Create Tag and Release
       uses: ncipollo/release-action@v1
       if: ${{ success() }}
       with:
         allowUpdates: true
         artifactErrorsFailBuild: true
         artifacts: >
-           an-advanced-todo-app-${{ env.app_version }}.tar.gz,
-           javafx-dependencies-${{ env.app_version }}.tar.gz
-        artifactContentType: application/gzip
+           target/an-advanced-todo-app-${{ env.app_version }}.jar,
+           target/an-advanced-todo-app-${{ env.app_version }}-linux.tar.gz
+        artifactContentType: raw
         commit: ${{ env.GITHUB_SHA }}
         draft: false
         generateReleaseNotes: false
-        name: v${{ env.app_version }}
-        omitBody: false
-        omitBodyDuringUpdate: false
+        name: v${{ env.app_version }}-${{ env.short_sha }}
+        omitBody: true
+        omitBodyDuringUpdate: true
         omitDraftDuringUpdate: true
         omitName: false
         omitNameDuringUpdate: false
@@ -100,5 +98,5 @@ jobs:
         prerelease: false
         removeArtifacts: false
         replacesArtifacts: true
-        tag: v${{ env.app_version }}
+        tag: v${{ env.app_version }}-${{ env.short_sha }}
         token: ${{ secrets.GITHUB_TOKEN }}
