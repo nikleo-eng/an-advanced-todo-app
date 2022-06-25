@@ -75,22 +75,51 @@ jobs:
       with:
         name: surefire-report
         path: '**/target/site'
+    - name: Upload Final JAR
+      uses: actions/upload-artifact@v2
+      if: ${{ always() }}
+      with:
+        name: final-jar
+        path: '**/target/an-advanced-todo-app-*win*.jar'
+        if-no-files-found: ignore
+    - name: Upload JavaFX Dependencies
+      uses: actions/upload-artifact@v2
+      if: ${{ always() }}
+      with:
+        name: javafx-dependencies
+        path: '**/target/maven-javafx-dependencies/win'
+        if-no-files-found: ignore
+  tag-release:
+    runs-on: ubuntu-latest
+    env:
+      workdir: .
+
+    name: Tag&Release on Ubuntu
+    steps:
+    - name: Download Final JAR
+      uses: actions/download-artifact@v2
+      with:
+        name: final-jar
+    - name: Download JavaFX Dependencies
+      uses: actions/download-artifact@v2
+      with:
+        name: javafx-dependencies
     - name: Add SHORT_SHA Env Property
-      shell: bash
       run: echo "short_sha=`echo ${GITHUB_SHA} | cut -c1-7`" >> $GITHUB_ENV
       if: ${{ success() }}
     - name: Add APP_VERSION Env Property
-      shell: bash
       run: >
          echo "app_version=$(mvn help:evaluate -Dexpression=project.version
          -q -DforceStdout)" >> $GITHUB_ENV
       working-directory: ${{ env.workdir }}
       if: ${{ success() }}
+    - name: Install ZIP Utility
+      run: sudo apt install zip
     - name: Create Compressed Archive of Final JAR and JavaFX Dependencies
       run: >
-         Get-ChildItem -Path an-advanced-todo-app-${{ env.app_version }}-win*.jar,
-         maven-javafx-dependencies\win\*.jar | Compress-Archive
-         -DestinationPath an-advanced-todo-app-${{ env.app_version }}-win.zip
+         zip -q an-advanced-todo-app-${{ env.app_version }}-win.zip
+         an-advanced-todo-app-${{ env.app_version }}-win*.jar
+         maven-javafx-dependencies/win/*.jar
       working-directory: ${{ env.workdir }}/target
       if: ${{ success() }}
     - name: Create Tag and Release
@@ -99,9 +128,7 @@ jobs:
       with:
         allowUpdates: true
         artifactErrorsFailBuild: true
-        artifacts: >
-           target/an-advanced-todo-app-${{ env.app_version }}.jar,
-           target/an-advanced-todo-app-${{ env.app_version }}-win.zip
+        artifacts: target/an-advanced-todo-app-${{ env.app_version }}-win.zip
         artifactContentType: raw
         commit: ${{ env.GITHUB_SHA }}
         draft: false

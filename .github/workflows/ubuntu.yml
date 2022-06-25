@@ -59,6 +59,35 @@ jobs:
       with:
         name: surefire-report
         path: '**/target/site'
+    - name: Upload Final JAR
+      uses: actions/upload-artifact@v2
+      if: ${{ always() }}
+      with:
+        name: final-jar
+        path: '**/target/an-advanced-todo-app-*linux*.jar'
+        if-no-files-found: ignore
+    - name: Upload JavaFX Dependencies
+      uses: actions/upload-artifact@v2
+      if: ${{ always() }}
+      with:
+        name: javafx-dependencies
+        path: '**/target/maven-javafx-dependencies/linux'
+        if-no-files-found: ignore
+  tag-release:
+    runs-on: ubuntu-latest
+    env:
+      workdir: .
+
+    name: Tag&Release on Ubuntu
+    steps:
+    - name: Download Final JAR
+      uses: actions/download-artifact@v2
+      with:
+        name: final-jar
+    - name: Download JavaFX Dependencies
+      uses: actions/download-artifact@v2
+      with:
+        name: javafx-dependencies
     - name: Add SHORT_SHA Env Property
       run: echo "short_sha=`echo ${GITHUB_SHA} | cut -c1-7`" >> $GITHUB_ENV
       if: ${{ success() }}
@@ -81,9 +110,7 @@ jobs:
       with:
         allowUpdates: true
         artifactErrorsFailBuild: true
-        artifacts: >
-           target/an-advanced-todo-app-${{ env.app_version }}.jar,
-           target/an-advanced-todo-app-${{ env.app_version }}-linux.tar.gz
+        artifacts: target/an-advanced-todo-app-${{ env.app_version }}-linux.tar.gz
         artifactContentType: raw
         commit: ${{ env.GITHUB_SHA }}
         draft: false
