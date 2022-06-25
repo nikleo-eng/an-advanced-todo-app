@@ -28,7 +28,7 @@ jobs:
         path: |
           ~/.m2
           ~/.sonar/cache
-        key: ${{ runner.os }}-m2-${{ hashFiles('pom.xml', '**/ubuntu.yml') }}
+        key: ${{ runner.os }}-m2-${{ hashFiles('pom.xml', '**/ubuntu.yml', '**/tag-release.yml') }}
         restore-keys: ${{ runner.os }}-m2-
     - name: Build with Maven, SonarCloud and Docker
       run: >
@@ -73,64 +73,8 @@ jobs:
         name: javafx-dependencies
         path: '**/target/maven-javafx-dependencies/linux'
         if-no-files-found: error
-  tag-release:
-    runs-on: ubuntu-latest
-    if: ${{ success() }}
-    needs:
-    - build
-    env:
-      workdir: .
-
-    name: Tag&Release on Ubuntu
-    steps:
-    - name: Checkout Project
-      uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
-    - name: Download Final JAR
-      uses: actions/download-artifact@v2
-      with:
-        name: final-jar
-    - name: Download JavaFX Dependencies
-      uses: actions/download-artifact@v2
-      with:
-        name: javafx-dependencies
-    - name: Add SHORT_SHA Env Property
-      run: echo "short_sha=`echo ${GITHUB_SHA} | cut -c1-7`" >> $GITHUB_ENV
-      if: ${{ success() }}
-    - name: Add APP_VERSION Env Property
-      run: >
-         echo "app_version=$(mvn help:evaluate -Dexpression=project.version
-         -q -DforceStdout)" >> $GITHUB_ENV
-      working-directory: ${{ env.workdir }}
-      if: ${{ success() }}
-    - name: Create Compressed Archive of Final JAR and JavaFX Dependencies
-      run: >
-         tar -czf an-advanced-todo-app-${{ env.app_version }}-linux.tar.gz
-         an-advanced-todo-app-${{ env.app_version }}-linux*.jar
-         maven-javafx-dependencies/linux/*.jar
-      working-directory: ${{ env.workdir }}/target
-      if: ${{ success() }}
-    - name: Create Tag and Release
-      uses: ncipollo/release-action@v1
+    - name: Call Tag&Release Workflow
+      uses: ./.github/workflows/tag-release.yml
       if: ${{ success() }}
       with:
-        allowUpdates: true
-        artifactErrorsFailBuild: true
-        artifacts: target/an-advanced-todo-app-${{ env.app_version }}-linux.tar.gz
-        artifactContentType: raw
-        commit: ${{ env.GITHUB_SHA }}
-        draft: false
-        generateReleaseNotes: false
-        name: v${{ env.app_version }}-${{ env.short_sha }}
-        omitBody: true
-        omitBodyDuringUpdate: true
-        omitDraftDuringUpdate: true
-        omitName: false
-        omitNameDuringUpdate: false
-        omitPrereleaseDuringUpdate: true
-        prerelease: false
-        removeArtifacts: false
-        replacesArtifacts: true
-        tag: v${{ env.app_version }}-${{ env.short_sha }}
-        token: ${{ secrets.GITHUB_TOKEN }}
+        os: linux
