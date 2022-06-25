@@ -68,13 +68,13 @@ jobs:
     - name: Create Compressed Archive of Final JARs
       run: >
          tar -czf an-advanced-todo-app-${{ env.app_version }}.tar.gz
-         -C ./target an-advanced-todo-app*.jar
+         -C ./target ./target/an-advanced-todo-app*.jar
       working-directory: ${{ env.workdir }}
       if: ${{ success() }}
     - name: Create Compressed Archive of JavaFX Dependencies
       run: >
          tar -czf javafx-dependencies-${{ env.app_version }}.tar.gz
-         -C ./target/maven-javafx-dependencies .
+         -C ./target/maven-javafx-dependencies ./target/maven-javafx-dependencies
       working-directory: ${{ env.workdir }}
       if: ${{ success() }}
     - name: Create Tag and Release with Final JARs and JavaFX Dependencies
