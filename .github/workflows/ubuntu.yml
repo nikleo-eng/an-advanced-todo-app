@@ -59,9 +59,6 @@ jobs:
       with:
         name: surefire-report
         path: '**/target/site'
-    - name: Add SHORT_SHA Env Property
-      run: echo "short_sha=`echo ${GITHUB_SHA} | cut -c1-7`" >> $GITHUB_ENV
-      if: ${{ success() }}
     - name: Add APP_VERSION Env Property
       run: >
          echo "app_version=$(mvn help:evaluate -Dexpression=project.version
@@ -80,34 +77,28 @@ jobs:
          ./target/maven-javafx-dependencies
       working-directory: ${{ env.workdir }}
       if: ${{ success() }}
-    - name: Create Release
-      id: create_release
-      uses: actions/create-release@v1
+    - name: Create Tag and Release with Final JARs and JavaFX Dependencies
+      uses: ncipollo/release-action@v1
       if: ${{ success() }}
       with:
+        allowUpdates: true
+        artifactErrorsFailBuild: true
+        artifacts: >
+           an-advanced-todo-app-${{ env.app_version }}.tar.gz,
+           javafx-dependencies-${{ env.app_version }}.tar.gz
+        artifactContentType: application/gzip
+        commit: ${{ GITHUB_SHA }}
         draft: false
+        generateReleaseNotes: false
+        name: v${{ env.app_version }}
+        omitBody: true
+        omitBodyDuringUpdate: true
+        omitDraftDuringUpdate: true
+        omitName: false
+        omitNameDuringUpdate: false
+        omitPrereleaseDuringUpdate: true
         prerelease: false
-        release_name: v${{ env.app_version }}-${{ env.short_sha }}
-        tag_name: v${{ env.app_version }}-${{ env.short_sha }}
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}}
-    - name: Release Final JARs
-      uses: actions/upload-release-asset@v1
-      if: ${{ success() }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./an-advanced-todo-app-${{ env.app_version }}.tar.gz
-        asset_name: an-advanced-todo-app-${{ env.app_version }}.tar.gz
-        asset_content_type: application/gzip
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    - name: Release JavaFX Dependencies
-      uses: actions/upload-release-asset@v1
-      if: ${{ success() }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./javafx-dependencies-${{ env.app_version }}.tar.gz
-        asset_name: javafx-dependencies-${{ env.app_version }}.tar.gz
-        asset_content_type: application/gzip
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        removeArtifacts: false
+        replacesArtifacts: true
+        tag: v${{ env.app_version }}
+        token: ${{ secrets.GITHUB_TOKEN }}
